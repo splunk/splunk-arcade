@@ -1,0 +1,19 @@
+
+{% extends "base-no-bars.html" %}
+{% block content %}
+
+      <div class="content-page">
+                <div class="content">
+                    Congratulations! <b>{{ user['username'] }}</b> You have successfully logged in! <br> Please wait for while we spin up your Personal Arcade Instance!  <br><br>
+
+
+
+<button class="btn btn-primary" type="button" disabled>
+  <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+ Waiting For Game Cabinet Pod to start!!
+</button>
+                </div>
+      </div>
+{% endblock %}
+
+

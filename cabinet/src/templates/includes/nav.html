@@ -1,0 +1,10 @@
+<header>
+    <nav>
+        <ul class="nav nav-pills">
+            <li class="nav-item"><a href="{{ url_for('routes.home') }}" class="nav-link {% if home %}active{% endif %}">Home</a></li>
+            <li class="nav-item"><a href="{{ url_for('routes.gamelist') }}" class="nav-link {% if gamelist %}active{% endif %}">Games</a></li>
+            <li class="nav-item"><a href="{{ url_for('routes.addgame') }}" class="nav-link {% if addgame %}active{% endif %}">Add Game</a></li>
+        </ul>
+    </nav>
+    <hr style="clear:both">
+</header>

@@ -1,0 +1,113 @@
+{{- range $playerName := $.Values.players }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $.Values.appName }}-cabinet-{{ $playerName }}
+  namespace: {{ $.Release.Namespace }}
+  labels:
+    chart: "{{ $.Chart.Name }}-{{ $.Chart.Version }}"
+    release: {{ $.Release.Name }}
+    heritage: {{ $.Release.Service }}
+    revision: "{{ $.Release.Revision }}"
+    app.kubernetes.io/name: "{{ $.Values.appName }}-cabinet"
+    app.kubernetes.io/instance: "{{ $.Values.appName }}-cabinet-{{ $playerName }}"
+spec:
+  selector:
+    matchLabels:
+      chart: "{{ $.Chart.Name }}-{{ $.Chart.Version }}"
+      release: {{ $.Release.Name }}
+      heritage: {{ $.Release.Service }}
+      app.kubernetes.io/name: "{{ $.Values.appName }}-cabinet"
+      app.kubernetes.io/instance: "{{ $.Values.appName }}-cabinet-{{ $playerName }}"
+  replicas: {{ $.Values.scoreboard.replicaCount }}
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      {{- if (eq (int $.Values.scoreboard.replicaCount) 1) }}
+      maxUnavailable: 0
+      {{- else }}
+      maxUnavailable: 1
+      {{- end }}
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        chart: "{{ $.Chart.Name }}-{{ $.Chart.Version }}"
+        release: {{ $.Release.Name }}
+        heritage: {{ $.Release.Service }}
+        app.kubernetes.io/name: "{{ $.Values.appName }}-cabinet"
+        app.kubernetes.io/instance: "{{ $.Values.appName }}-cabinet-{{ $playerName }}"
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    chart: "{{ $.Chart.Name }}-{{ $.Chart.Version }}"
+                    release: {{ $.Release.Name }}
+                    heritage: {{ $.Release.Service }}
+                    app.kubernetes.io/name: "{{ $.Values.appName }}-cabinet"
+                    app.kubernetes.io/instance: "{{ $.Values.appName }}-cabinet-{{ $playerName }}"
+                topologyKey: kubernetes.io/hostname
+            - weight: 50
+              podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    chart: "{{ $.Chart.Name }}-{{ $.Chart.Version }}"
+                    release: {{ $.Release.Name }}
+                    heritage: {{ $.Release.Service }}
+                    app.kubernetes.io/name: "{{ $.Values.appName }}-cabinet"
+                    app.kubernetes.io/instance: "{{ $.Values.appName }}-cabinet-{{ $playerName }}"
+                topologyKey: topology.kubernetes.io/zone
+      terminationGracePeriodSeconds: 10
+      serviceAccountName: default
+      containers:
+        - name: player
+          image: {{ $.Values.cabinet.image }}
+          imagePullPolicy: {{ $.Values.cabinet.imagePullPolicy }}
+          resources:
+            requests:
+              memory: {{ $.Values.cabinet.resources.requests.memory }}
+              cpu: {{ $.Values.cabinet.resources.requests.cpu }}
+            limits:
+              memory: {{ $.Values.cabinet.resources.limits.memory }}
+              cpu: {{ $.Values.cabinet.resources.limits.cpu }}
+          env:
+            - name: NODE_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: http://$(NODE_IP):4317
+            - name: OTEL_EXPORTER_HEALTH_ENDPOINT
+              value: http://$(NODE_IP):13133
+            - name: PLAYER_NAME
+              value: {{ $playerName }}
+            - name: SECRET_KEY
+              value: "SECRET_KEY"
+            - name: DATABASE_URL
+              value: "postgresql://postgres:password@splunk-arcade-postgresql/myapp"
+            - name: REDIS_HOST
+              value: "splunk-arcade-redis-master"
+            - name: SCOREBOARD_HOST
+              value: "{{ $.Values.appName }}-scoreboard"
+            - name: OTEL_SERVICE_NAME
+              value: "splunk-arcade-player"
+            - name: OTEL_RESOURCE_ATTRIBUTES
+              value: "service.name=$(OTEL_SERVICE_NAME),service.namespace=splunk-arcade,deployment.environment=gameify"
+          ports:
+            - name: http
+              containerPort: 5000
+          livenessProbe:
+            httpGet:
+              path: /alive
+              port: http
+              scheme: HTTP
+            successThreshold: 1
+            failureThreshold: 2
+            periodSeconds: 30
+            timeoutSeconds: 5
+{{- end }}

@@ -1,0 +1,97 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.appName }}-scoreboard
+  namespace: {{ .Release.Namespace }}
+  labels:
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    revision: "{{ .Release.Revision }}"
+    app.kubernetes.io/name: "{{ .Values.appName }}-scoreboard"
+spec:
+  selector:
+    matchLabels:
+      chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+      release: {{ .Release.Name }}
+      heritage: {{ .Release.Service }}
+      app.kubernetes.io/name: "{{ .Values.appName }}-scoreboard"
+  replicas: {{ $.Values.scoreboard.replicaCount }}
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      {{- if (eq (int $.Values.scoreboard.replicaCount) 1) }}
+      maxUnavailable: 0
+      {{- else }}
+      maxUnavailable: 1
+      {{- end }}
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+        release: {{ .Release.Name }}
+        heritage: {{ .Release.Service }}
+        app.kubernetes.io/name: "{{ .Values.appName }}-scoreboard"
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+                    release: {{ .Release.Name }}
+                    heritage: {{ .Release.Service }}
+                    app.kubernetes.io/name: "{{ .Values.appName }}-scoreboard"
+                topologyKey: kubernetes.io/hostname
+            - weight: 50
+              podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+                    release: {{ .Release.Name }}
+                    heritage: {{ .Release.Service }}
+                    app.kubernetes.io/name: "{{ .Values.appName }}-scoreboard"
+                topologyKey: topology.kubernetes.io/zone
+      terminationGracePeriodSeconds: 10
+      serviceAccountName: default
+      containers:
+        - name: scoreboard
+          image: {{ .Values.scoreboard.image }}
+          imagePullPolicy: {{ $.Values.scoreboard.imagePullPolicy }}
+          resources:
+            requests:
+              memory: {{ $.Values.scoreboard.resources.requests.memory }}
+              cpu: {{ $.Values.scoreboard.resources.requests.cpu }}
+            limits:
+              memory: {{ $.Values.scoreboard.resources.limits.memory }}
+              cpu: {{ $.Values.scoreboard.resources.limits.cpu }}
+          env:
+            - name: NODE_IP
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: status.hostIP
+            - name: REDIS_HOST
+              value: "splunk-arcade-redis-master"
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: http://$(NODE_IP):4317
+            - name: OTEL_SERVICE_NAME
+              value: "splunk-arcade-scoreboard"
+            - name: OTEL_RESOURCE_ATTRIBUTES
+              value: "service.name=$(OTEL_SERVICE_NAME),service.namespace=splunk-arcade,deployment.environment=gameify"
+          ports:
+            - name: http
+              containerPort: 5000
+          livenessProbe:
+            httpGet:
+              path: /alive
+              port: http
+              scheme: HTTP
+            successThreshold: 1
+            failureThreshold: 2
+            periodSeconds: 30
+            timeoutSeconds: 5

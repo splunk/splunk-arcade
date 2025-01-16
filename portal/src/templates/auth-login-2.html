@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en" data-topbar-color="brand">
+    <head>
+        <meta charset="utf-8" />
+        <title>Log In 2 | Minton - Admin & Dashboard Template</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
+        <meta content="Coderthemes" name="author" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+        <!-- App favicon -->
+        <link rel="shortcut icon" href="{{ url_for('static',filename='assets/images/favicon.ico')}}">
+
+		<!-- App css -->
+		<link href="{{  url_for('static',filename='assets/css/bootstrap.min.css' ) }}" rel="stylesheet" type="text/css" />
+		<link href="{{url_for('static',filename='assets/css/app.min.css')}}" rel="stylesheet" type="text/css" id="app-stylesheet" />
+
+		<!-- icons -->
+		<link href="{{ url_for('static',filename='assets/css/icons.min.css')}}" rel="stylesheet" type="text/css" />
+
+		<!-- Theme Config Js -->
+		<script src="{{ url_for('static',filename='assets/js/config.js')}}"></script>
+
+
+    </head>
+
+    <body class=auth-fluid-pages pb-0">
+
+        <div class="auth-fluid">
+            <!-- Auth fluid right content -->
+            <div class="auth-fluid-right">
+                <div class="auth-user-testimonial">
+                    <h3 class="mb-3 text-white">Very elegant & impressive!</h3>
+                    <p class="lead fw-normal"><i class="mdi mdi-format-quote-open"></i> I've been using this theme for a while and I must say that whenever I am looking for a design - I refer to this theme for specifics & implementation. With wide arrays of components, designs, charts - I would highly recommend this theme for anyone using it for dashboard or project management usage.. <i class="mdi mdi-format-quote-close"></i>
+                    </p>
+                    <h5 class="text-white">
+                        - Admin User
+                    </h5>
+                </div> <!-- end auth-user-testimonial-->
+            </div>
+            <!-- end Auth fluid right content -->
+
+            <!--Auth fluid left content -->
+            <div class="auth-fluid-form-box">
+                <div class="align-items-center d-flex h-100">
+                    <div class="card-body">
+
+                        <!-- Logo -->
+                        <div class="auth-brand text-center text-lg-start">
+                            <div class="auth-logo">
+                                <a href="index.html.old" class="logo logo-dark text-center">
+                                    <span class="logo-lg">
+                                        <img src="{{ url_for('static',filename='assets/images/logo-dark.png')}}" alt="" height="22">
+                                    </span>
+                                </a>
+            
+                                <a href="index.html.old" class="logo logo-light text-center">
+                                    <span class="logo-lg">
+                                        <img src="{{ url_for('static',filename='assets/images/Splunk-Corp-Logo-K-rgb.png')}}" alt="" height="100">
+                                        <img src="{{ url_for('static',filename='assets/images/logo-light.png')}}" alt="" height="100">
+
+                                    </span>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- title-->
+                        <h4 class="mt-0">Sign In</h4>
+                        <p class="text-muted mb-4">Enter your email address and password to access admin panel.</p>
+
+                        <!-- form -->
+                        <form action="" method="post">
+                            {{ form.hidden_tag() }}
+                            <div class="mb-2">
+                                {{ form.username.label }}<br>
+                                {{ form.username(size=32, class_="form-control") }}
+                                  {% for error in form.username.errors %}
+                                    <span style="color: red;">[{{ error }}]</span>
+                                    {% endfor %}
+
+
+                            </div>
+                            <div class="mb-2">
+                                <a href="auth-recoverpw-2.html" class="text-muted float-end"><small>Forgot your password?</small></a>
+                                {{ form.password.label }}
+                                <div class="input-group input-group-merge">
+                                    <br>
+                                {{ form.password(size=32, class_="form-control") }}<br>
+                                    {% for error in form.password.errors %}
+                                        <span style="color: red;">[{{ error }}]</span>
+                                    {% endfor %}
+
+
+                                    <div class="input-group-text" data-password="false">
+                                        <span class="password-eye"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <div class="form-check">
+                                     {{ form.remember_me() }}
+                                    <label class="form-check-label" for="checkbox-signin">
+                                       {{ form.remember_me.label }}
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="d-grid text-center">
+                                {{ form.submit() }}
+                            </div>
+
+                        </form>
+                        <!-- end form-->
+
+                        <!-- Footer-->
+                        <footer class="footer footer-alt">
+                            <p class="text-muted">Don't have an account? <a href="{{ url_for('routes.register') }}" class="text-primary fw-medium ms-1">Sign Up</a></p>
+                        </footer>
+
+                    </div> <!-- end .card-body -->
+                </div> <!-- end .align-items-center.d-flex.h-100-->
+            </div>
+            <!-- end auth-fluid-form-box-->
+        </div>
+        <!-- end auth-fluid-->
+
+        <!-- Vendor js -->
+        <script src="{{ url_for('static',filename='assets/js/vendor.min.js')}}"></script>
+
+        <!-- App js -->
+        <script src="{{ url_for('static',filename='assets/js/app.min.js')}}"></script>
+        
+    </body>
+</html>

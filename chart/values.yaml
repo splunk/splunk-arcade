@@ -1,0 +1,95 @@
+---
+appName: splunk-arcade
+
+ingress-nginx:
+  enabled: true
+  namespaceOverride: ingress-nginx
+
+redis:
+  auth:
+    enabled: false
+  persistence:
+    # just for now/for testing
+    enabled: false
+
+postgresql:
+  auth:
+    enablePostgresUser: true
+    password: "password"
+    database: "myapp"
+
+splunk-otel-collector:
+  clusterName: gamify
+  environment: gamify
+  agent:
+    discovery:
+      enabled: true
+  gateway:
+    enabled: false
+  splunkObservability:
+    realm: us1
+    accessToken: REPLACE_ME
+    profilingEnabled: true
+
+scoreboard:
+  image: splunk-arcade/scoreboard:latest
+  imagePullPolicy: Always
+  replicaCount: 1
+  resources:
+    requests:
+      memory: 128Mi
+      cpu: 50m
+    limits:
+      memory: 512Mi
+      cpu: 500m
+
+portal:
+  image: splunk-arcade/portal:latest
+  imagePullPolicy: Always
+  replicaCount: 1
+  resources:
+    requests:
+      memory: 128Mi
+      cpu: 50m
+    limits:
+      memory: 512Mi
+      cpu: 500m
+
+playerRouter:
+  image: splunk-arcade/player-router:latest
+  imagePullPolicy: Always
+  replicaCount: 3
+  resources:
+    requests:
+      memory: 128Mi
+      cpu: 250m
+    limits:
+      memory: 512Mi
+      cpu: 500m
+
+cabinet:
+  image: splunk-arcade/cabinet:latest
+  imagePullPolicy: Always
+  replicaCount: 1
+  resources:
+    requests:
+      memory: 128Mi
+      cpu: 250m
+    limits:
+      memory: 512Mi
+      cpu: 500m
+
+quiz:
+  image: splunk-arcade/quiz:latest
+  imagePullPolicy: Always
+  replicaCount: 1
+  resources:
+    requests:
+      memory: 128Mi
+      cpu: 250m
+    limits:
+      memory: 512Mi
+      cpu: 500m
+
+# only used for dev on cabinet, otherwise spawn player cabinets via registration portal
+players: []

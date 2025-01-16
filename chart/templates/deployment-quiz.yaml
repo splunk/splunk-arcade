@@ -1,0 +1,89 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.appName }}-quiz
+  namespace: {{ .Release.Namespace }}
+  labels:
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    revision: "{{ .Release.Revision }}"
+    app.kubernetes.io/name: "{{ .Values.appName }}-quiz"
+spec:
+  selector:
+    matchLabels:
+      chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+      release: {{ .Release.Name }}
+      heritage: {{ .Release.Service }}
+      app.kubernetes.io/name: "{{ .Values.appName }}-quiz"
+  replicas: {{ $.Values.quiz.replicaCount }}
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      {{- if (eq (int $.Values.quiz.replicaCount) 1) }}
+      maxUnavailable: 0
+      {{- else }}
+      maxUnavailable: 1
+      {{- end }}
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+        release: {{ .Release.Name }}
+        heritage: {{ .Release.Service }}
+        app.kubernetes.io/name: "{{ .Values.appName }}-quiz"
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+                    release: {{ .Release.Name }}
+                    heritage: {{ .Release.Service }}
+                    app.kubernetes.io/name: "{{ .Values.appName }}-quiz"
+                topologyKey: kubernetes.io/hostname
+            - weight: 50
+              podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+                    release: {{ .Release.Name }}
+                    heritage: {{ .Release.Service }}
+                    app.kubernetes.io/name: "{{ .Values.appName }}-quiz"
+                topologyKey: topology.kubernetes.io/zone
+      terminationGracePeriodSeconds: 10
+      serviceAccountName: default
+      containers:
+        - name: quiz
+          image: {{ .Values.quiz.image }}
+          imagePullPolicy: {{ $.Values.quiz.imagePullPolicy }}
+          resources:
+            requests:
+              memory: {{ $.Values.quiz.resources.requests.memory }}
+              cpu: {{ $.Values.quiz.resources.requests.cpu }}
+            limits:
+              memory: {{ $.Values.quiz.resources.limits.memory }}
+              cpu: {{ $.Values.quiz.resources.limits.cpu }}
+          env:
+            - name: NODE_IP
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: status.hostIP
+          ports:
+            - name: http
+              containerPort: 5000
+          livenessProbe:
+            httpGet:
+              path: /alive
+              port: http
+              scheme: HTTP
+            successThreshold: 1
+            failureThreshold: 2
+            periodSeconds: 30
+            timeoutSeconds: 5

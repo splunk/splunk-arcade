@@ -1,0 +1,15 @@
+dependencies:
+- name: ingress-nginx
+  repository: https://kubernetes.github.io/ingress-nginx
+  version: 4.11.3
+- name: splunk-otel-collector
+  repository: https://signalfx.github.io/splunk-otel-collector-chart
+  version: 0.113.0
+- name: redis
+  repository: oci://registry-1.docker.io/bitnamicharts
+  version: 20.5.0
+- name: postgresql
+  repository: oci://registry-1.docker.io/bitnamicharts
+  version: 16.2.5
+digest: sha256:b1172a335553e26a37fb0cb9ddb22bf217bf489b3900a99872c1196bcc297a79
+generated: "2024-12-24T07:10:16.04423-08:00"

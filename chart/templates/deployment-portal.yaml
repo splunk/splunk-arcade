@@ -1,0 +1,104 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.appName }}-portal
+  namespace: {{ .Release.Namespace }}
+  labels:
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    revision: "{{ .Release.Revision }}"
+    app.kubernetes.io/name: "{{ .Values.appName }}-portal"
+spec:
+  selector:
+    matchLabels:
+      chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+      release: {{ .Release.Name }}
+      heritage: {{ .Release.Service }}
+      app.kubernetes.io/name: "{{ .Values.appName }}-portal"
+  replicas: {{ $.Values.portal.replicaCount }}
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      {{- if (eq (int $.Values.portal.replicaCount) 1) }}
+      maxUnavailable: 0
+      {{- else }}
+      maxUnavailable: 1
+      {{- end }}
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+        release: {{ .Release.Name }}
+        heritage: {{ .Release.Service }}
+        app.kubernetes.io/name: "{{ .Values.appName }}-portal"
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+                    release: {{ .Release.Name }}
+                    heritage: {{ .Release.Service }}
+                    app.kubernetes.io/name: "{{ .Values.appName }}-portal"
+                topologyKey: kubernetes.io/hostname
+            - weight: 50
+              podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+                    release: {{ .Release.Name }}
+                    heritage: {{ .Release.Service }}
+                    app.kubernetes.io/name: "{{ .Values.appName }}-portal"
+                topologyKey: topology.kubernetes.io/zone
+      terminationGracePeriodSeconds: 10
+      serviceAccountName: "{{ .Values.appName }}-service-account"
+      containers:
+        - name: portal
+          image: {{ .Values.portal.image }}
+          imagePullPolicy: {{ $.Values.portal.imagePullPolicy }}
+          resources:
+            requests:
+              memory: {{ $.Values.portal.resources.requests.memory }}
+              cpu: {{ $.Values.portal.resources.requests.cpu }}
+            limits:
+              memory: {{ $.Values.portal.resources.limits.memory }}
+              cpu: {{ $.Values.portal.resources.limits.cpu }}
+          env:
+            - name: NODE_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: http://$(NODE_IP):4317
+            - name: OTEL_EXPORTER_HEALTH_ENDPOINT
+              value: http://$(NODE_IP):13133
+            - name: SECRET_KEY
+              value: "SECRET_KEY"
+            - name: DATABASE_URL
+              value: "postgresql://postgres:password@splunk-arcade-postgresql/myapp"
+            - name: REDIS_HOST
+              value: "splunk-arcade-redis-master"
+            - name: SCOREBOARD_HOST
+              value: "{{ $.Values.appName }}-scoreboard"
+            - name: OTEL_SERVICE_NAME
+              value: "splunk-arcade-player"
+            - name: OTEL_RESOURCE_ATTRIBUTES
+              value: "service.name=$(OTEL_SERVICE_NAME),service.namespace=splunk-arcade,deployment.environment=gameify"
+          ports:
+            - name: http
+              containerPort: 5000
+          livenessProbe:
+            httpGet:
+              path: /alive
+              port: http
+              scheme: HTTP
+            successThreshold: 1
+            failureThreshold: 2
+            periodSeconds: 30
+            timeoutSeconds: 5

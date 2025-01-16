@@ -1,0 +1,29 @@
+{{- range $playerName := $.Values.players }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ $.Values.appName }}-cabinet-{{ $playerName }}
+  namespace: {{ $.Release.Namespace }}
+  labels:
+    chart: "{{ $.Chart.Name }}-{{ $.Chart.Version }}"
+    release: {{ $.Release.Name }}
+    heritage: {{ $.Release.Service }}
+    revision: "{{ $.Release.Revision }}"
+    app.kubernetes.io/name: "{{ $.Values.appName }}-cabinet"
+    app.kubernetes.io/instance: "{{ $.Values.appName }}-cabinet-{{ $playerName }}"
+spec:
+  type: ClusterIP
+  sessionAffinity: None
+  ports:
+    - name: http
+      port: 80
+      protocol: TCP
+      targetPort: 5000
+  selector:
+    chart: "{{ $.Chart.Name }}-{{ $.Chart.Version }}"
+    release: {{ $.Release.Name }}
+    heritage: {{ $.Release.Service }}
+    app.kubernetes.io/name: "{{ $.Values.appName }}-cabinet"
+    app.kubernetes.io/instance: "{{ $.Values.appName }}-cabinet-{{ $playerName }}"
+{{- end }}

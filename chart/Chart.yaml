@@ -1,0 +1,20 @@
+---
+apiVersion: v2
+name: splunk-arcade
+description: Deploy the Splunk Arcade!
+type: application
+version: 0.0.0
+dependencies:
+  - name: ingress-nginx
+    repository: https://kubernetes.github.io/ingress-nginx
+    version: 4.11.3
+    condition: ingress-nginx.enabled
+  - name: splunk-otel-collector
+    repository: https://signalfx.github.io/splunk-otel-collector-chart
+    version: 0.113.0
+  - name: redis
+    repository: oci://registry-1.docker.io/bitnamicharts
+    version: 20.5.0
+  - name: postgresql
+    repository: oci://registry-1.docker.io/bitnamicharts
+    version: 16.2.5

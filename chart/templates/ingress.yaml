@@ -1,0 +1,36 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ $.Values.appName }}
+  namespace: {{ $.Release.Namespace }}
+  labels:
+    chart: "{{ $.Chart.Name }}-{{ $.Chart.Version }}"
+    release: {{ $.Release.Name }}
+    heritage: {{ $.Release.Service }}
+    revision: "{{ $.Release.Revision }}"
+    app.kubernetes.io/name: "{{ $.Values.appName }}-ingress"
+    app.kubernetes.io/instance: "{{ $.Values.appName }}-ingress"
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/use-regex: "true"
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: splunk-arcade.home
+      http:
+        paths:
+          - backend:
+              service:
+                name: "{{ $.Values.appName }}-portal"
+                port:
+                  number: 80
+            path: /
+            pathType: ImplementationSpecific
+          - backend:
+              service:
+                name: "{{ $.Values.appName }}-player-router"
+                port:
+                  number: 80
+            path: /player/.*
+            pathType: ImplementationSpecific

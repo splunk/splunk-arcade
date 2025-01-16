@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Enhanced Frogger-style Arcade Game</title>
+    <style>
+      body,
+      html {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #1a1a1a;
+      }
+      .arcade-cabinet {
+        position: relative;
+        width: 600px;
+        height: 800px;
+      }
+      #gameCanvas {
+        position: absolute;
+        top: 100px;
+        left: 100px;
+        border: 5px solid #333;
+        border-radius: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="arcade-cabinet">
+      <svg width="600" height="800" viewBox="0 0 600 800">
+        <!-- Cabinet body -->
+        <rect x="50" y="0" width="500" height="800" fill="#4a4a4a" />
+
+        <!-- Screen area -->
+        <rect x="75" y="75" width="450" height="450" fill="#2a2a2a" />
+
+        <!-- Control panel -->
+        <rect x="75" y="550" width="450" height="200" fill="#3a3a3a" />
+
+        <!-- Joystick -->
+        <circle cx="200" cy="650" r="30" fill="#ff0000" />
+
+        <!-- Buttons -->
+        <circle cx="350" cy="625" r="20" fill="#00ff00" />
+        <circle cx="400" cy="625" r="20" fill="#0000ff" />
+        <circle cx="450" cy="625" r="20" fill="#ffff00" />
+
+        <!-- Speaker grills -->
+        <rect x="100" y="25" width="100" height="10" fill="#222" />
+        <rect x="400" y="25" width="100" height="10" fill="#222" />
+
+        <!-- Coin slot -->
+        <rect x="275" y="50" width="50" height="15" fill="#111" />
+      </svg>
+      <canvas id="gameCanvas" width="400" height="440"></canvas>
+    </div>
+    <script
+      src="https://cdn.signalfx.com/o11y-gdi-rum/v0.19.1/splunk-otel-web.js"
+      crossorigin="anonymous"
+    ></script>
+    <script src="../../static/assets/js/app.min.js"></script>
+    <script src="../../static/assets/js/vendor.min.js"></script>
+    <script>
+      const canvas = document.getElementById("gameCanvas");
+      const ctx = canvas.getContext("2d");
+
+      SplunkRum.init({
+        realm: "us1",
+        rumAccessToken: "z1-tm3Dq9bkbmmszH_Pi9g",
+        applicationName: "logger",
+        version: 1.0,
+        deploymentEnvironment: "dev",
+      });
+
+      let intervalID;
+      let level = 1;
+      let filledPositions = 0;
+
+
+      const GRID_SIZE = 40;
+      const ROWS = 11;
+      const COLS = 10;
+
+      const player = {
+        x: 4 * GRID_SIZE,
+        y: 10 * GRID_SIZE,
+        width: GRID_SIZE,
+        height: GRID_SIZE,
+        color: "green",
+      };
+
+      const rivers = [
+        { y: 1 * GRID_SIZE, height: GRID_SIZE },
+        { y: 2 * GRID_SIZE, height: GRID_SIZE },
+        { y: 3 * GRID_SIZE, height: GRID_SIZE },
+      ];
+
+      const logs = [
+        {
+          x: 0,
+          y: 1 * GRID_SIZE,
+          width: 2 * GRID_SIZE,
+          height: GRID_SIZE,
+          speed: 1.5,
+          color: "brown",
+        },
+        {
+          x: 5 * GRID_SIZE,
+          y: 1 * GRID_SIZE,
+          width: 2 * GRID_SIZE,
+          height: GRID_SIZE,
+          speed: 1.5,
+          color: "brown",
+        },
+        {
+          x: 0,
+          y: 2 * GRID_SIZE,
+          width: 3 * GRID_SIZE,
+          height: GRID_SIZE,
+          speed: -1.2,
+          color: "brown",
+        },
+        {
+          x: 6 * GRID_SIZE,
+          y: 2 * GRID_SIZE,
+          width: 2 * GRID_SIZE,
+          height: GRID_SIZE,
+          speed: -1.2,
+          color: "brown",
+        },
+        {
+          x: 0,
+          y: 3 * GRID_SIZE,
+          width: 2 * GRID_SIZE,
+          height: GRID_SIZE,
+          speed: 1.3,
+          color: "brown",
+        },
+        {
+          x: 5 * GRID_SIZE,
+          y: 3 * GRID_SIZE,
+          width: 3 * GRID_SIZE,
+          height: GRID_SIZE,
+          speed: 1.3,
+          color: "brown",
+        },
+      ];
+
+      const roads = [
+        { y: 5 * GRID_SIZE, height: GRID_SIZE },
+        { y: 6 * GRID_SIZE, height: GRID_SIZE },
+        { y: 7 * GRID_SIZE, height: GRID_SIZE },
+        { y: 8 * GRID_SIZE, height: GRID_SIZE },
+      ];
+
+      const vehicles = [
+        {
+          x: 0,
+          y: 5 * GRID_SIZE,
+          width: 1.5 * GRID_SIZE,
+          height: GRID_SIZE,
+          speed: 2,
+          color: "red",
+          type: "car",
+        },
+        {
+          x: 5 * GRID_SIZE,
+          y: 6 * GRID_SIZE,
+          width: 2 * GRID_SIZE,
+          height: GRID_SIZE,
+          speed: -1.5,
+          color: "blue",
+          type: "truck",
+        },
+        {
+          x: 0,
+          y: 7 * GRID_SIZE,
+          width: 1.5 * GRID_SIZE,
+          height: GRID_SIZE,
+          speed: 1.8,
+          color: "yellow",
+          type: "car",
+        },
+        {
+          x: 5 * GRID_SIZE,
+          y: 8 * GRID_SIZE,
+          width: 2 * GRID_SIZE,
+          height: GRID_SIZE,
+          speed: -1.7,
+          color: "purple",
+          type: "truck",
+        },
+      ];
+
+      const endPositions = [
+        {
+          x: 1 * GRID_SIZE,
+          y: 0,
+          width: GRID_SIZE,
+          height: GRID_SIZE,
+          filled: false,
+        },
+        {
+          x: 3 * GRID_SIZE,
+          y: 0,
+          width: GRID_SIZE,
+          height: GRID_SIZE,
+          filled: false,
+        },
+        {
+          x: 5 * GRID_SIZE,
+          y: 0,
+          width: GRID_SIZE,
+          height: GRID_SIZE,
+          filled: false,
+        },
+        {
+          x: 7 * GRID_SIZE,
+          y: 0,
+          width: GRID_SIZE,
+          height: GRID_SIZE,
+          filled: false,
+        },
+        {
+          x: 9 * GRID_SIZE,
+          y: 0,
+          width: GRID_SIZE,
+          height: GRID_SIZE,
+          filled: false,
+        },
+      ];
+
+      function postState() {
+        dict = {
+          version: 1,
+          title: "logger v1.0",
+          game_session_id: "{{ gamesession }}",
+          player_name: "{{ user.username }}",
+          player_id: "{{ user.uuid }}",
+          active: true,
+          level: level,
+          lives_remaining: 3,
+          current_score: filledPositions,
+          position: [player.x, player.y],
+        };
+
+        $.ajax({
+          type: "POST",
+          url: "http://54.153.86.146/v2/add_game_data/", //localhost Flask
+          data: JSON.stringify(dict),
+          contentType: "application/json",
+        });
+      }
+
+      function drawPlayer() {
+        ctx.fillStyle = player.color;
+        ctx.beginPath();
+        ctx.arc(
+          player.x + player.width / 2,
+          player.y + player.height / 2,
+          player.width / 2,
+          0,
+          Math.PI * 2
+        );
+        ctx.fill();
+      }
+
+      function drawRoads() {
+        ctx.fillStyle = "#333";
+        roads.forEach((road) => {
+          ctx.fillRect(0, road.y, canvas.width, road.height);
+          // Draw dashed lines
+          ctx.setLineDash([20, 20]);
+          ctx.strokeStyle = "yellow";
+          ctx.beginPath();
+          ctx.moveTo(0, road.y + road.height / 2);
+          ctx.lineTo(canvas.width, road.y + road.height / 2);
+          ctx.stroke();
+          ctx.setLineDash([]);
+        });
+      }
+
+      function drawVehicles() {
+        vehicles.forEach((vehicle) => {
+          ctx.fillStyle = vehicle.color;
+          ctx.fillRect(vehicle.x, vehicle.y, vehicle.width, vehicle.height);
+
+          // Draw windows
+          ctx.fillStyle = "lightblue";
+          if (vehicle.type === "car") {
+            ctx.fillRect(vehicle.x + vehicle.width - 15, vehicle.y + 5, 10, 20);
+          } else {
+            ctx.fillRect(vehicle.x + vehicle.width - 25, vehicle.y + 5, 15, 20);
+          }
+
+          // Draw wheels
+          ctx.fillStyle = "black";
+          ctx.beginPath();
+          ctx.arc(
+            vehicle.x + 15,
+            vehicle.y + vehicle.height,
+            5,
+            0,
+            Math.PI * 2
+          );
+          ctx.arc(
+            vehicle.x + vehicle.width - 15,
+            vehicle.y + vehicle.height,
+            5,
+            0,
+            Math.PI * 2
+          );
+          ctx.fill();
+        });
+      }
+
+      function drawRivers() {
+        ctx.fillStyle = "blue";
+        rivers.forEach((river) => {
+          ctx.fillRect(0, river.y, canvas.width, river.height);
+        });
+      }
+
+      function drawLogs() {
+        logs.forEach((log) => {
+          ctx.fillStyle = log.color;
+          ctx.fillRect(log.x, log.y, log.width, log.height);
+          // Add wood grain effect
+          ctx.strokeStyle = "rgba(0,0,0,0.3)";
+          for (let i = 0; i < log.width; i += 10) {
+            ctx.beginPath();
+            ctx.moveTo(log.x + i, log.y);
+            ctx.lineTo(log.x + i, log.y + log.height);
+            ctx.stroke();
+          }
+        });
+      }
+
+      function drawEndPositions() {
+        ctx.fillStyle = "#004d00"; // Dark green background for the entire top row
+        ctx.fillRect(0, 0, canvas.width, GRID_SIZE);
+
+        endPositions.forEach((pos) => {
+          ctx.fillStyle = pos.filled ? "lightgreen" : "yellow";
+          ctx.fillRect(pos.x, pos.y, pos.width, pos.height);
+        });
+      }
+
+      function drawLevel() {
+        ctx.fillStyle = "white";
+        ctx.font = "20px Arial";
+        ctx.fillText(`Level: ${level}`, 10, 30);
+      }
+
+      function drawStartArea() {
+        ctx.fillStyle = "#4CAF50";
+        ctx.fillRect(0, 9 * GRID_SIZE, canvas.width, 2 * GRID_SIZE);
+        ctx.fillStyle = "white";
+        ctx.font = "20px Arial";
+        ctx.fillText("START", canvas.width / 2 - 30, 10.5 * GRID_SIZE);
+      }
+
+      function moveVehicles() {
+        vehicles.forEach((vehicle) => {
+          vehicle.x += vehicle.speed;
+          if (vehicle.x > canvas.width) {
+            vehicle.x = -vehicle.width;
+          } else if (vehicle.x + vehicle.width < 0) {
+            vehicle.x = canvas.width;
+          }
+        });
+      }
+
+      function moveLogs() {
+        logs.forEach((log) => {
+          log.x += log.speed;
+          if (log.x > canvas.width) {
+            log.x = -log.width;
+          } else if (log.x + log.width < 0) {
+            log.x = canvas.width;
+          }
+        });
+      }
+
+      function checkCollision() {
+        return vehicles.some(
+          (vehicle) =>
+            player.x < vehicle.x + vehicle.width &&
+            player.x + player.width > vehicle.x &&
+            player.y < vehicle.y + vehicle.height &&
+            player.y + player.height > vehicle.y
+        );
+      }
+
+      function isInRiver() {
+        return rivers.some(
+          (river) =>
+            player.y + player.height > river.y &&
+            player.y < river.y + river.height
+        );
+      }
+
+      function isOnLog() {
+        return logs.some(
+          (log) =>
+            player.x < log.x + log.width &&
+            player.x + player.width > log.x &&
+            player.y + player.height > log.y &&
+            player.y < log.y + log.height
+        );
+      }
+
+      function movePlayerWithLog() {
+        logs.forEach((log) => {
+          if (
+            player.x < log.x + log.width &&
+            player.x + player.width > log.x &&
+            player.y + player.height > log.y &&
+            player.y < log.y + log.height
+          ) {
+            player.x += log.speed;
+          }
+        });
+      }
+
+      function checkWin() {
+        endPositions.forEach((pos) => {
+          if (
+            !pos.filled &&
+            player.x < pos.x + pos.width &&
+            player.x + player.width > pos.x &&
+            player.y < pos.y + pos.height &&
+            player.y + player.height > pos.y
+          ) {
+            pos.filled = true;
+            filledPositions++;
+            if (filledPositions === endPositions.length) {
+              level++;
+              resetLevel();
+            } else {
+              resetPlayer();
+            }
+          }
+        });
+      }
+
+      function resetPlayer() {
+        player.x = 4 * GRID_SIZE;
+        player.y = 10 * GRID_SIZE;
+      }
+
+      function resetLevel() {
+        filledPositions = 0;
+        endPositions.forEach((pos) => (pos.filled = false));
+        resetPlayer();
+        // Increase difficulty (e.g., speed up vehicles and logs)
+        vehicles.forEach((v) => (v.speed *= 1.2));
+        logs.forEach((l) => (l.speed *= 1.2));
+        logs.forEach((l) => (l.width = l.width - (level - 1) * GRID_SIZE));
+      }
+
+      function gameLoop() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        if (!intervalID) {
+          intervalID = setInterval(postState, 2000);
+        }
+
+        drawStartArea();
+        drawRoads();
+        drawRivers();
+        drawLogs();
+        drawVehicles();
+        drawEndPositions();
+        drawPlayer();
+        drawLevel();
+
+        moveVehicles();
+        moveLogs();
+
+        if (isInRiver() && !isOnLog()) {
+          resetPlayer();
+        } else if (checkCollision()) {
+          resetPlayer();
+        } else if (isOnLog()) {
+          movePlayerWithLog();
+        }
+
+        checkWin();
+
+        // Keep player within canvas
+        player.x = Math.max(0, Math.min(canvas.width - player.width, player.x));
+
+        requestAnimationFrame(gameLoop);
+      }
+
+      document.addEventListener("keydown", (e) => {
+        switch (e.key) {
+          case "ArrowUp":
+            if (player.y > 0) player.y -= GRID_SIZE;
+            break;
+          case "ArrowDown":
+            if (player.y < canvas.height - player.height) player.y += GRID_SIZE;
+            break;
+          case "ArrowLeft":
+            if (player.x > 0) player.x -= GRID_SIZE;
+            break;
+          case "ArrowRight":
+            if (player.x < canvas.width - player.width) player.x += GRID_SIZE;
+            break;
+        }
+      });
+
+      gameLoop();
+    </script>
+  </body>
+</html>
