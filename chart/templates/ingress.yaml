@@ -29,6 +29,13 @@ spec:
             pathType: ImplementationSpecific
           - backend:
               service:
+                name: "{{ $.Values.appName }}-portal"
+                port:
+                  number: 80
+            path: /scoreboard
+            pathType: ImplementationSpecific
+          - backend:
+              service:
                 name: "{{ $.Values.appName }}-player-router"
                 port:
                   number: 80

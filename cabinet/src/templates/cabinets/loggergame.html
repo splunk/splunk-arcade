@@ -62,8 +62,8 @@
       src="https://cdn.signalfx.com/o11y-gdi-rum/v0.19.1/splunk-otel-web.js"
       crossorigin="anonymous"
     ></script>
-    <script src="../../static/assets/js/app.min.js"></script>
-    <script src="../../static/assets/js/vendor.min.js"></script>
+    <script src="{{ url_for('static', filename='assets/js/app.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='assets/js/vendor.min.js') }}"></script>
     <script>
       const canvas = document.getElementById("gameCanvas");
       const ctx = canvas.getContext("2d");
@@ -237,7 +237,7 @@
       function postState() {
         dict = {
           version: 1,
-          title: "logger v1.0",
+          title: "logger",
           game_session_id: "{{ gamesession }}",
           player_name: "{{ user_username }}",
           player_id: "{{ user_uuid }}",
@@ -246,6 +246,7 @@
           lives_remaining: 3,
           current_score: filledPositions,
           position: [player.x, player.y],
+          version: "v1.0"
         };
 
         const arcadeEndpoint = "{{ arcade_endpoint }}";

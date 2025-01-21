@@ -34,6 +34,8 @@ from src.forms import (
 )
 from src.models import Games, User
 
+from src.cluster import APP_NAME
+
 routes = Blueprint("routes", __name__)
 
 
@@ -66,10 +68,10 @@ def page_not_found(e):
 @routes.route("/")
 @login_required
 def index():
-    if current_user.is_authenticated:
-        return redirect(url_for("routes.wait_arcade", login=True))
-    else:
+    if not current_user.is_authenticated:
         return redirect(url_for("routes.login"))
+
+    return redirect(url_for("routes.wait_arcade", login=True))
 
 
 @routes.route("/login", methods=["GET", "POST"])
@@ -130,7 +132,7 @@ def login():
 
         return redirect(next_page)
 
-    return render_template("auth-login.html", title="Sign In", form=form)
+    return render_template("auth-login.html", title="Log In", form=form)
 
 
 @routes.route("/logout")
@@ -169,17 +171,28 @@ def register():
 
 @routes.route("/wait-arcade", methods=["GET"])
 def wait_arcade():
-    if current_user.is_authenticated:
-        if player_deployment_ready(player_id=session["username"]):
-            resp = make_response(
-                redirect(f"http://{ARCADE_HOST}/player/{session["username"]}", code=302),
-            )
+    if not current_user.is_authenticated:
+        return redirect(url_for("routes.login"))
 
-            return resp
+    if player_deployment_ready(player_id=session["username"]):
+        resp = make_response(
+            redirect(f"http://{ARCADE_HOST}/player/{session["username"]}", code=302),
+        )
 
-        return render_template("wait-arcade.html", title="Home", user=session)
+        return resp
 
-    return redirect(url_for("routes.login"))
+    return render_template("wait-arcade.html", title="Waiting", user=session)
+
+
+@routes.route("/scoreboard")
+@login_required
+def scoreboard():
+    if not current_user.is_authenticated:
+        return redirect(url_for("routes.login"))
+
+    scores = requests.get(f"http://{APP_NAME}-scoreboard/v2/")
+
+    return render_template("scoreboard.html", title="Scoreboard", user=session, score_data=scores.json(),)
 
 
 @routes.route("/otel-health", methods=["GET"])
