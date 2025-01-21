@@ -1,5 +1,6 @@
 ---
 appName: splunk-arcade
+arcadeHost: splunk-arcade.home
 
 ingress-nginx:
   enabled: true

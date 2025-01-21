@@ -69,7 +69,9 @@ spec:
             limits:
               memory: {{ $.Values.playerRouter.resources.limits.memory }}
               cpu: {{ $.Values.playerRouter.resources.limits.cpu }}
-          env: []
+          env:
+            - name: ARCADE_HOST
+              value: "{{ $.Values.arcadeHost }}"
           ports:
             - name: http
               containerPort: 5000

@@ -1,7 +1,7 @@
 import sqlalchemy as sa
 from flask_wtf import FlaskForm
 from wtforms import BooleanField, PasswordField, StringField, SubmitField, TextAreaField
-from wtforms.validators import DataRequired, Email, EqualTo, Length, ValidationError
+from wtforms.validators import DataRequired, Email, EqualTo, Length, NoneOf, ValidationError
 
 from . import db
 from .models import User
@@ -28,7 +28,18 @@ class GameDeleteForm(FlaskForm):
 class RegistrationForm(FlaskForm):
     first_name = StringField("First Name", validators=[DataRequired()])
     last_name = StringField("Last Name", validators=[DataRequired()])
-    username = StringField("Username", validators=[DataRequired()])
+    username = StringField(
+        "Username",
+        validators=[
+            DataRequired(),
+            NoneOf(
+                values=[
+                    "devplayer",
+                ],
+                message="This username is not allowed.",
+            ),
+        ],
+    )
     email = StringField("Email", validators=[DataRequired(), Email()])
     password = PasswordField("Password", validators=[DataRequired()])
     password2 = PasswordField("Repeat Password", validators=[DataRequired(), EqualTo("password")])

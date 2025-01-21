@@ -11,11 +11,20 @@ metadata:
     revision: "{{ .Release.Revision }}"
 rules:
   - apiGroups:
+      - ""
+    resources:
+      - services
+    verbs:
+      - get
+      - create
+      - delete
+  - apiGroups:
       - apps
     resources:
       - deployments
     verbs:
       - get
+      - list
       - create
       - delete
   - apiGroups:

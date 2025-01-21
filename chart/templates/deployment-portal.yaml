@@ -90,6 +90,12 @@ spec:
               value: "splunk-arcade-player"
             - name: OTEL_RESOURCE_ATTRIBUTES
               value: "service.name=$(OTEL_SERVICE_NAME),service.namespace=splunk-arcade,deployment.environment=gameify"
+            - name: PLAYER_IMAGE
+              value: "{{ $.Values.cabinet.image }}"
+            - name: PLAYER_IMAGE_PULL_POLICY
+              value: "{{ $.Values.cabinet.imagePullPolicy }}"
+            - name: ARCADE_HOST
+              value: "{{ $.Values.arcadeHost }}"
           ports:
             - name: http
               containerPort: 5000

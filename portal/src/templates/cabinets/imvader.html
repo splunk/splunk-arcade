@@ -157,9 +157,10 @@
           version: version,
         };
 
+        const arcadeEndpoint = "{{ arcade_endpoint }}";
         $.ajax({
           type: "POST",
-          url: "http://carl.splunk-arcade.home/v2/add_game_data/", //localhost Flask
+          url: arcadeEndpoint,
           data: JSON.stringify(dict),
           contentType: "application/json",
         });

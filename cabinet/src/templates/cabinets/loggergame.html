@@ -239,8 +239,8 @@
           version: 1,
           title: "logger v1.0",
           game_session_id: "{{ gamesession }}",
-          player_name: "{{ user.username }}",
-          player_id: "{{ user.uuid }}",
+          player_name: "{{ user_username }}",
+          player_id: "{{ user_uuid }}",
           active: true,
           level: level,
           lives_remaining: 3,
@@ -248,9 +248,10 @@
           position: [player.x, player.y],
         };
 
+        const arcadeEndpoint = "{{ arcade_endpoint }}";
         $.ajax({
           type: "POST",
-          url: "http://54.153.86.146/v2/add_game_data/", //localhost Flask
+          url: arcadeEndpoint,
           data: JSON.stringify(dict),
           contentType: "application/json",
         });

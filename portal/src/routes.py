@@ -5,11 +5,22 @@ from urllib.parse import urlsplit
 
 import requests
 import sqlalchemy as sa
-from flask import Blueprint, flash, jsonify, redirect, render_template, request, session, url_for
+from flask import (
+    Blueprint,
+    flash,
+    jsonify,
+    make_response,
+    redirect,
+    render_template,
+    request,
+    session,
+    url_for,
+)
 from flask_login import current_user, login_required, login_user, logout_user
 from opentelemetry import trace
 
 from src.cluster import (
+    ARCADE_HOST,
     player_deployment_create,
     player_deployment_ready,
 )
@@ -30,15 +41,14 @@ routes = Blueprint("routes", __name__)
 @routes.before_request
 def before_request():
     if current_user.is_authenticated:
-        user = db.first_or_404(sa.select(User).where(User.username == current_user.username))
+        found_user = db.first_or_404(sa.select(User).where(User.username == current_user.username))
         current_user.last_seen = datetime.now(UTC)
         db.session.commit()
-        print(user.username)
-        session["username"] = user.username
-        session["user_id"] = user.id
-        session["first_name"] = user.first_name
-        session["last_name"] = user.last_name
-        session["email"] = user.email
+        session["username"] = found_user.username
+        session["user_id"] = found_user.id
+        session["first_name"] = found_user.first_name
+        session["last_name"] = found_user.last_name
+        session["email"] = found_user.email
 
 
 @routes.route("/alive", methods=["GET"])
@@ -48,9 +58,17 @@ def alive():
 
 @routes.route("/whichuser", methods=["GET"])
 def whichuser():
-    print(player_deployment_ready(player_id="bilbo"))
     if current_user.is_authenticated:
+        if player_deployment_ready(player_id=session["username"]):
+            resp = make_response(
+                redirect(f"http://{ARCADE_HOST}/player/{session["username"]}", code=302),
+            )
+
+            return resp
+
         return render_template("logged-in-waiting.html", title="Home", user=session)
+
+    return redirect(url_for("routes.login"))
 
 
 @routes.route("/")
@@ -94,8 +112,6 @@ def home():
 @routes.route("/login", methods=["GET", "POST"])
 def login():
     u = User.admin_json
-    # print(db.session.query(sa.sql.exists().where(Games.title == g['title'])).scalar())
-    print(u["username"], u["password"])
 
     exists = db.session.query(User).filter_by(username=u["username"]).scalar() is not None
     if not exists:
@@ -109,21 +125,48 @@ def login():
 
     if current_user.is_authenticated:
         return redirect(url_for("routes.whichuser", login=True))
+
     form = LoginForm()
+
     if form.validate_on_submit():
+        if form.username.data == "devplayer":
+            devplayer_user = db.session.scalar(sa.select(User).where(User.username == "devplayer"))
+
+            if devplayer_user is not None:
+                login_user(devplayer_user, remember=False)
+                return redirect(url_for("routes.whichuser", login=True))
+
+            # ensure devplayer user exists
+            devplayer_user = User(
+                username="devplayer",
+                email="devplayer@splunk.com",
+                uuid=uuid.uuid4(),
+                first_name="dev",
+                last_name="player",
+            )
+            devplayer_user.set_password("password")
+            db.session.add(devplayer_user)
+            db.session.commit()
+
+            login_user(devplayer_user, remember=False)
+            return redirect(url_for("routes.whichuser", login=True))
+
         user = db.session.scalar(sa.select(User).where(User.username == form.username.data))
+
         if user is None or not user.check_password(form.password.data):
             flash("Invalid username or password")
-            return redirect(url_for("routes.login"))
-        login_user(user, remember=form.remember_me.data)
-        # STORE USER INFO IN SESSION
 
-        print(user)
+            return redirect(url_for("routes.login"))
+
+        login_user(user, remember=form.remember_me.data)
 
         next_page = url_for("routes.login")
+
         if not next_page or urlsplit(next_page).netloc != "":
             next_page = url_for("routes.whichuser", login=True)
+
         return redirect(next_page)
+
     return render_template("auth-login-2.html", title="Sign In", form=form)
 
 
@@ -137,9 +180,10 @@ def logout():
 def register():
     if current_user.is_authenticated:
         return redirect(url_for("routes.index"))
+
     form = RegistrationForm()
+
     if form.validate_on_submit():
-        print("form validation...")
         user = User(
             username=form.username.data,
             email=form.email.data,
@@ -153,11 +197,10 @@ def register():
         flash("Congratulations, you are now a registered user!")
 
         # create the players deployment
-        print("SPAWN DEPLOYMENT")
         player_deployment_create(form.username.data)
-        print("DONE SPAWN")
+
         return redirect(url_for("routes.login"))
-    print("return register page")
+
     return render_template("auth-register.html", title="Register", form=form)
 
 

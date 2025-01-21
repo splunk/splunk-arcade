@@ -66,12 +66,6 @@ class Post(db.Model):
         return f"<Post {self.body}>"
 
 
-class Workshop(db.Model):
-    id: so.Mapped[int] = so.mapped_column(primary_key=True)
-    title: so.Mapped[str] = so.mapped_column(sa.String(140))
-    description: so.Mapped[str] = so.mapped_column(sa.String(140))
-
-
 class Games(db.Model):
     id: so.Mapped[int] = so.mapped_column(primary_key=True)
     title: so.Mapped[str] = so.mapped_column(sa.String(140))

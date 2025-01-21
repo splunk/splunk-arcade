@@ -1,2 +1,32 @@
+# jetbrains goodies
+.idea
+
+# macos stuff
 .DS_Store
 */.DS_Store
+
+# private dir for notes and such
+private/
+.private/
+
+# log output
+*.log
+
+# vscode
+.vscode
+.devcontainer
+
+# coverage
+cover.out
+
+# devspace cache
+*.devspace
+
+# direnv file
+.envrc
+
+# build files
+cmd/clabverter/build/
+
+# for local dev venv stuff
+venv

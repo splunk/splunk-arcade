@@ -147,8 +147,8 @@
         dict = {
           game_session_id: "{{ gamesession }}",
           title: "imvaders v" + version,
-          player_name: "{{ user.username }}",
-          player_id: "{{ user.uuid }}",
+          player_name: "{{ user_username }}",
+          player_id: "{{ user_uuid }}",
           active: !gameOver,
           level: level,
           lives_remaining: lives,

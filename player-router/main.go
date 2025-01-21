@@ -136,18 +136,18 @@ func (r *Router) proxy(wr http.ResponseWriter, req *http.Request) {
 	log.Printf("received %q on %q endpoint from %q", req.Method, req.RequestURI, req.RemoteAddr)
 
 	requestURIParts := strings.Split(req.RequestURI, "/")
-	if len(requestURIParts) < 2 {
+	if len(requestURIParts) < 3 {
 		http.Error(wr, "failed parsing player id from uri", http.StatusInternalServerError)
 
 		return
 	}
 
-	playerID := requestURIParts[1]
-	proxiedRequestTarget := fmt.Sprintf("http://splunk-arcade-cabinet-%s/%s", playerID, playerID)
+	playerID := requestURIParts[2]
+	proxiedRequestTarget := fmt.Sprintf("http://splunk-arcade-cabinet-player-%s", playerID)
 
 	if len(requestURIParts) > 2 {
 		remainingURIPart := strings.Join(requestURIParts[2:], "/")
-		proxiedRequestTarget = fmt.Sprintf("%s/%s", proxiedRequestTarget, remainingURIPart)
+		proxiedRequestTarget = fmt.Sprintf("%s/player/%s", proxiedRequestTarget, remainingURIPart)
 	}
 
 	log.Printf("proxying for player %q to %q", playerID, proxiedRequestTarget)
@@ -163,7 +163,17 @@ func (r *Router) proxy(wr http.ResponseWriter, req *http.Request) {
 
 	proxiedRequest.Header = req.Header
 
-	client := &http.Client{}
+	client := &http.Client{
+		CheckRedirect: func(req *http.Request, via []*http.Request) error {
+			if req.URL.Host == "splunk-arcade.home" {
+				// dont go to the public address, just pass it to the service here in the cluster
+				// otherwise.... good luck?
+				req.URL.Host = "splunk-arcade-portal"
+			}
+
+			return nil
+		},
+	}
 
 	resp, err := client.Do(proxiedRequest)
 	if err != nil {
