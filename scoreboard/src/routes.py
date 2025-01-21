@@ -12,7 +12,23 @@ def alive():
     return jsonify(success=True)
 
 
-@routes.route("/v2/scoreboard-update/", methods=["POST"])
+@routes.route("/v2/", methods=["GET"])
+def get_scoreboard():
+    redis = get_redis_conn()
+
+    scoreboard = {}
+
+    for key in redis.scan_iter():
+        if redis.type(key) == "hash":
+            hash_data = redis.hgetall(key)
+
+            for field, value in hash_data.items():
+                scoreboard[field] = value
+
+    return jsonify(scoreboard)
+
+
+@routes.route("/v2/update/", methods=["POST"])
 def update_scoreboard():
     redis = get_redis_conn()
 
@@ -39,19 +55,3 @@ def update_scoreboard():
     ArcadeMetrics.scoreboard_metric_processor(attr=scoreboard_update)
 
     return "Scoreboard updated successfully!"
-
-
-@routes.route("/v2/scoreboard/", methods=["GET"])
-def get_scoreboard():
-    redis = get_redis_conn()
-
-    scoreboard = {}
-
-    for key in redis.scan_iter():
-        if redis.type(key) == "hash":
-            hash_data = redis.hgetall(key)
-
-            for field, value in hash_data.items():
-                scoreboard[field] = value
-
-    return jsonify(scoreboard)

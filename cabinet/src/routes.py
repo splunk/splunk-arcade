@@ -29,7 +29,6 @@ def page_not_found(e):
     return redirect(url_for("routes.index"))
 
 
-
 @routes.route("/")
 @login_required
 def index():
@@ -85,14 +84,14 @@ def playgame():
             user_username=current_user.username,
             user_uuid=current_user.uuid,
             gamesession=uuid.uuid4(),
-            arcade_endpoint=f"{ARCADE_HOST}/{PLAYER_NAME}/v2/add_game_data/",
+            arcade_endpoint=f"http://{ARCADE_HOST}/player/{PLAYER_NAME}/v2/update_score/",
         )
     else:
         return redirect(url_for("routes.login"))
 
 
-@routes.route("/v2/add_game_data/", methods=["GET", "POST"])
-def add_message():
+@routes.route("/v2/update_score/", methods=["GET", "POST"])
+def update_score():
     content = request.get_json(force=True)
 
     current_span = trace.get_current_span()
@@ -100,7 +99,8 @@ def add_message():
         current_span.set_attribute(k, v)
 
     requests.post(
-        f"http://{os.environ.get("SCOREBOARD_HOST", "scoreboard")}/v2/scoreboard-update/",
+        f"http://{os.environ.get("SCOREBOARD_HOST", "scoreboard")}/v2/update/",
         json=content,
     )
+
     return content
