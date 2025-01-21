@@ -9,7 +9,7 @@ vars:
     source: env
     default: splunk-arcade
 
-  SPLUNK_ARCADE_DISABLE_LOCAL_REGISTRY:
+  SPLUNK_ARCADE_LOCAL_REGISTRY_ENABLED:
     source: env
     default: true
 
@@ -30,7 +30,7 @@ vars:
   COMMIT_HASH: $(git describe --always --abbrev=8)
 
 localRegistry:
-  enabled: ${SPLUNK_ARCADE_DISABLE_LOCAL_REGISTRY}
+  enabled: ${SPLUNK_ARCADE_LOCAL_REGISTRY_ENABLED}
 
 images:
   py-dev:

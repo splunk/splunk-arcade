@@ -10,7 +10,8 @@ redis:
   auth:
     enabled: false
   persistence:
-    # just for now/for testing
+    # we just use this as a session cache, so probably not really needed to have
+    # persistence
     enabled: false
 
 postgresql:
