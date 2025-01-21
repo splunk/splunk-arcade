@@ -1,14 +1,10 @@
-Here’s a clearer, better-formatted version of your instructions:
-
----
-
 ### Environment Variable Configuration
 
 You need to configure the following environment variables (or include them in your `devspace.yaml` file):
 
 - `SPLUNK_ARCADE_OBSERVABILITY_ACCESS_TOKEN`
 - `SPLUNK_ARCADE_OBSERVABILITY_REALM`
-- `SPLUNK_ARCADE_DOMAIN`
+- `SPLUNK_ARCADE_DOMAIN` **TBD**
 
 For K3s, if you’re using a local registry, configure the following environment variable:
 
