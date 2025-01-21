@@ -237,7 +237,7 @@
       function postState() {
         dict = {
           version: 1,
-          title: "logger v1.0",
+          title: "logger",
           game_session_id: "{{ gamesession }}",
           player_name: "{{ user_username }}",
           player_id: "{{ user_uuid }}",
@@ -246,6 +246,7 @@
           lives_remaining: 3,
           current_score: filledPositions,
           position: [player.x, player.y],
+          version: "v1.0"
         };
 
         const arcadeEndpoint = "{{ arcade_endpoint }}";

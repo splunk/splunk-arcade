@@ -24,15 +24,19 @@
                 <table>
                     <thead>
                     <tr>
-                        <th>Field</th>
-                        <th>Value</th>
+                        <th>Game</th>
+                        <th>Version</th>
+                        <th>Player</th>
+                        <th>Score</th>
                     </tr>
                     </thead>
                     <tbody>
                     {% for score_entry in score_data %}
                     <tr>
-                        <td>{{ score_entry.field }}</td>
-                        <td>{{ score_entry.value }}</td>
+                        <td>{{ score_entry["title"] }}</td>
+                        <td>{{ score_entry["version"] }}</td>
+                        <td>{{ score_entry["player_name"] }}</td>
+                        <td>{{ score_entry["current_score"] }}</td>
                     </tr>
                     {% endfor %}
                     </tbody>

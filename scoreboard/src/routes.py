@@ -16,14 +16,11 @@ def alive():
 def get_scoreboard():
     redis = get_redis_conn()
 
-    scoreboard = {}
+    scoreboard = []
 
-    for key in redis.scan_iter():
-        if redis.type(key) == "hash":
-            hash_data = redis.hgetall(key)
-
-            for field, value in hash_data.items():
-                scoreboard[field] = value
+    for key in redis.scan_iter(match="scores:*"):
+        score_entry = redis.hgetall(key)
+        scoreboard.append(score_entry)
 
     return jsonify(scoreboard)
 
@@ -50,7 +47,7 @@ def update_scoreboard():
             x = v
         scoreboard_update[k] = x
 
-    redis.hmset(scoreboard_update["game_session_id"], scoreboard_update)
+    redis.hmset(f"scores:{scoreboard_update["game_session_id"]}", scoreboard_update)
 
     ArcadeMetrics.scoreboard_metric_processor(attr=scoreboard_update)
 
