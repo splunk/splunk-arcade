@@ -12,7 +12,6 @@ from flask import (
     make_response,
     redirect,
     render_template,
-    request,
     session,
     url_for,
 )
@@ -56,55 +55,19 @@ def alive():
     return jsonify(success=True)
 
 
-@routes.route("/whichuser", methods=["GET"])
-def whichuser():
-    if current_user.is_authenticated:
-        if player_deployment_ready(player_id=session["username"]):
-            resp = make_response(
-                redirect(f"http://{ARCADE_HOST}/player/{session["username"]}", code=302),
-            )
+@routes.app_errorhandler(404)
+def page_not_found(e):
+    _ = e
 
-            return resp
-
-        return render_template("logged-in-waiting.html", title="Home", user=session)
-
-    return redirect(url_for("routes.login"))
+    # redirect anything that would 404 to index
+    return redirect(url_for("routes.index"))
 
 
 @routes.route("/")
 @login_required
 def index():
-    return render_template("index.html", title="Home", user=session)
-
-
-@routes.route("/profile", methods=["GET", "POST"])
-@login_required
-def profile_page():
-    form = ProfileForm()
-    if form.validate_on_submit():
-        user = User(
-            username=form.username.data,
-            email=form.email.data,
-            uuid=uuid.uuid4(),
-            first_name=form.first_name.data,
-            last_name=form.last_name.data,
-            twitter=form.twitter.data,
-        )
-        user.set_password(form.password.data)
-        db.session.add(user)
-        db.session.commit()
-
     if current_user.is_authenticated:
-        return render_template("profile.html", title="Home", user=session, form=form)
-    else:
-        return redirect(url_for("routes.login"))
-
-
-@routes.route("/home")
-@login_required
-def home():
-    if current_user.is_authenticated:
-        return render_template("home.html", home=True, login=True)
+        return redirect(url_for("routes.wait_arcade", login=True))
     else:
         return redirect(url_for("routes.login"))
 
@@ -124,7 +87,7 @@ def login():
         db.session.commit()
 
     if current_user.is_authenticated:
-        return redirect(url_for("routes.whichuser", login=True))
+        return redirect(url_for("routes.wait_arcade", login=True))
 
     form = LoginForm()
 
@@ -134,7 +97,7 @@ def login():
 
             if devplayer_user is not None:
                 login_user(devplayer_user, remember=False)
-                return redirect(url_for("routes.whichuser", login=True))
+                return redirect(url_for("routes.wait_arcade", login=True))
 
             # ensure devplayer user exists
             devplayer_user = User(
@@ -149,7 +112,7 @@ def login():
             db.session.commit()
 
             login_user(devplayer_user, remember=False)
-            return redirect(url_for("routes.whichuser", login=True))
+            return redirect(url_for("routes.wait_arcade", login=True))
 
         user = db.session.scalar(sa.select(User).where(User.username == form.username.data))
 
@@ -163,11 +126,11 @@ def login():
         next_page = url_for("routes.login")
 
         if not next_page or urlsplit(next_page).netloc != "":
-            next_page = url_for("routes.whichuser", login=True)
+            next_page = url_for("routes.wait_arcade", login=True)
 
         return redirect(next_page)
 
-    return render_template("auth-login-2.html", title="Sign In", form=form)
+    return render_template("auth-login.html", title="Sign In", form=form)
 
 
 @routes.route("/logout")
@@ -204,38 +167,30 @@ def register():
     return render_template("auth-register.html", title="Register", form=form)
 
 
-@routes.route("/user/<username>")
-@login_required
-def user(username):
-    user = db.first_or_404(sa.select(User).where(User.username == username))
-    posts = [{"author": user, "body": "Test post #1"}, {"author": user, "body": "Test post #2"}]
-    return render_template("user.html", user=user, posts=posts)
+@routes.route("/wait-arcade", methods=["GET"])
+def wait_arcade():
+    if current_user.is_authenticated:
+        if player_deployment_ready(player_id=session["username"]):
+            resp = make_response(
+                redirect(f"http://{ARCADE_HOST}/player/{session["username"]}", code=302),
+            )
 
+            return resp
 
-@routes.route("/edit_profile", methods=["GET", "POST"])
-@login_required
-def edit_profile():
-    form = EditProfileForm()
-    if form.validate_on_submit():
-        current_user.username = form.username.data
-        current_user.about_me = form.about_me.data
-        db.session.commit()
-        flash("Your changes have been saved.")
-        return redirect(url_for("routes.edit_profile"))
-    elif request.method == "GET":
-        form.username.data = current_user.username
-        form.about_me.data = current_user.about_me
-    return render_template("edit_profile.html", title="Edit Profile", form=form)
+        return render_template("wait-arcade.html", title="Home", user=session)
+
+    return redirect(url_for("routes.login"))
 
 
 @routes.route("/otel-health", methods=["GET"])
 def otel_health():
     otelhealth = requests.get(os.environ.get("OTEL_EXPORTER_HEALTH_ENDPOINT"))
 
-    print(otelhealth.json())
     current_span = trace.get_current_span()
+
     for k, v in otelhealth.json().items():
         current_span.set_attribute(k, v)
+
     if otelhealth.json()["status"] == "Server available":
         data = {"message": "Hello from Flask!"}
         return jsonify(data)

@@ -1,20 +1,58 @@
-
-{% extends "base-no-bars.html" %}
-{% block content %}
+<!DOCTYPE html>
+<html lang="en" data-topbar-color="brand">
+<head>
+    <meta charset="utf-8" />
+    <title>Waiting for the fun to start...</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta http-equiv="Refresh" content="5">
 
-      <div class="content-page">
-                <div class="content">
-                    Congratulations! <b>{{ user['username'] }}</b> You have successfully logged in! <br> Please wait for while we spin up your Personal Arcade Instance!  <br><br>
+    <!-- App favicon -->
+    <link rel="shortcut icon" href="{{ url_for('static',filename='assets/images/favicon.ico')}}">
+
+    <!-- App css -->
+    <link href="{{  url_for('static',filename='assets/css/bootstrap.min.css' ) }}" rel="stylesheet" type="text/css" />
+    <link href="{{url_for('static',filename='assets/css/app.min.css')}}" rel="stylesheet" type="text/css" id="app-stylesheet" />
+
+    <!-- icons -->
+    <link href="{{ url_for('static',filename='assets/css/icons.min.css')}}" rel="stylesheet" type="text/css" />
+
+    <!-- Theme Config Js -->
+    <script src="{{ url_for('static',filename='assets/js/config.js')}}"></script>
 
 
+</head>
 
-<button class="btn btn-primary" type="button" disabled>
-  <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
- Waiting For Game Cabinet Pod to start!!
-</button>
-                </div>
-      </div>
-{% endblock %}
+<body class=auth-fluid-pages pb-0">
 
+<div class="auth-fluid">
+    <!-- Auth fluid right content -->
+    <div class="auth-fluid-right">
+    </div>
+    <!-- end Auth fluid right content -->
 
+    <!--Auth fluid left content -->
+    <div class="auth-fluid-form-box">
+        <div class="content">
+            Congratulations! <b>{{ user['username'] }}</b> You have successfully logged in!
+            <br>
+            Please wait for while we spin up your Personal Arcade Instance!
+            <br><br>
+            <button class="btn btn-primary" type="button" disabled>
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                Waiting For Game Cabinet Pod to start!!
+            </button>
+        </div>
+    </div>
+    <!-- end auth-fluid-form-box-->
+</div>
+<!-- end auth-fluid-->
+
+<!-- Vendor js -->
+<script src="{{ url_for('static',filename='assets/js/vendor.min.js')}}"></script>
+
+<!-- App js -->
+<script src="{{ url_for('static',filename='assets/js/app.min.js')}}"></script>
+
+</body>
+</html>
