@@ -13,6 +13,10 @@ vars:
     source: env
     default: true
 
+  SPLUNK_ARCADE_OBSERVABILITY_REALM:
+    source: env
+    default: us1
+
   SPLUNK_ARCADE_OBSERVABILITY_ACCESS_TOKEN:
     source: env
     default: REPLACE_ME
@@ -110,6 +114,7 @@ deployments:
       values:
         splunk-otel-collector:
           splunkObservability:
+            realm: ${SPLUNK_ARCADE_OBSERVABILITY_REALM}
             accessToken: ${SPLUNK_ARCADE_OBSERVABILITY_ACCESS_TOKEN}
         cabinet:
           image: ${CABINET_IMAGE}
