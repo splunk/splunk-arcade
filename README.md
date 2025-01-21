@@ -1,3 +1,35 @@
+### Prerequisites
+Ensure your system meets the following requirements:
+- A Linux distribution (e.g., Ubuntu, CentOS, Fedora, etc.)
+- `curl` installed (for downloading DevSpace)
+- `kubectl` installed (for Kubernetes management)
+- A running Kubernetes cluster (local or remote)
+
+### Download and Install DevSpace
+
+#### Install using `curl`
+
+1. Run the following command to download and install the latest version of DevSpace:
+
+   ```bash
+   curl -L -o devspace "https://github.com/loft-sh/devspace/releases/latest/download/devspace-linux-amd64" && sudo install -c -m 0755 devspace /usr/local/bin
+   ```
+
+2. Verify the installation by checking the version of DevSpace:
+
+   ```bash
+   devspace --version
+   ```
+
+   You should see the version number of DevSpace if the installation was successful.
+
+---
+
+### Additional Notes
+
+- If you encounter issues or need more advanced configuration, refer to the [official DevSpace documentation](https://devspace.sh/docs).
+- Ensure that your Kubernetes context (`kubectl config use-context`) is properly set up to connect to the desired cluster.
+
 ### Environment Variable Configuration
 
 You need to configure the following environment variables (or include them in your `devspace.yaml` file):
