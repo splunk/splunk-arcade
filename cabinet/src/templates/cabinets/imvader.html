@@ -140,8 +140,6 @@
         "https://assets.mixkit.co/active_storage/sfx/220/220-preview.mp3"
       );
 
-      const sessionId = crypto.randomUUID();
-
       function postState() {
         if(!gameOver) gameDuration+=2;
         dict = {
@@ -159,9 +157,10 @@
           version: version,
         };
 
+        const arcadeEndpoint = "{{ arcade_endpoint }}";
         $.ajax({
           type: "POST",
-          url: "http://carl.splunk-arcade.home/v2/add_game_data/", //localhost Flask
+          url: arcadeEndpoint,
           data: JSON.stringify(dict),
           contentType: "application/json",
         });
