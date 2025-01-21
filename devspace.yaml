@@ -13,7 +13,7 @@ vars:
     source: env
     default: true
 
-  SPLUNK_OBSERVABILITY_ACCESS_TOKEN:
+  SPLUNK_ARCADE_OBSERVABILITY_ACCESS_TOKEN:
     source: env
     default: REPLACE_ME
 
@@ -108,6 +108,8 @@ deployments:
       chart:
         name: ./chart/
       values:
+        splunk-otel-collector:
+          splunkObservability: ${SPLUNK_ARCADE_OBSERVABILITY_ACCESS_TOKEN}
         cabinet:
           image: ${CABINET_IMAGE}
           imagePullPolicy: ${IMAGE_PULL_POLICY}
@@ -139,6 +141,12 @@ dev:
     - port: "8080:5000"
 
 profiles:
+  - name: prod
+    patches:
+      - op: replace
+        path: deployments.splunk-arcade.helm.values.arcadeHost
+        value: splunkarcade.com
+
   - name: dev-cabinet
     patches:
       - op: add
