@@ -2,7 +2,6 @@
     
 {% block content %}
 
-<!--  Display a list of games here --->
 <h3>Games: {{ game }} </h3>
 
 <div class="gamelist">
@@ -16,7 +15,6 @@
         </thead>
         <tbody>
 
-        <!-- Construct the rest of games here -->
         {% for data in gameData %}
         <tr>
             <td scope='row'>{{ data["title"] }}</td>

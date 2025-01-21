@@ -21,6 +21,24 @@ def alive():
     return jsonify(success=True)
 
 
+@routes.app_errorhandler(404)
+def page_not_found(e):
+    _ = e
+
+    # redirect anything that would 404 to index
+    return redirect(url_for("routes.index"))
+
+
+
+@routes.route("/")
+@login_required
+def index():
+    if current_user.is_authenticated:
+        return redirect(url_for("routes.gamelist", login=True))
+    else:
+        return redirect(url_for("routes.login"))
+
+
 @routes.route("/login")
 def login():
     return redirect(f"http://{ARCADE_HOST}/login", code=302)
@@ -29,12 +47,6 @@ def login():
 @routes.route("/logout")
 def logout():
     return redirect(f"http://{ARCADE_HOST}/logout", code=302)
-
-
-@routes.route("/")
-@login_required
-def index():
-    return render_template("index.html", title="Home", user=session)
 
 
 @routes.route("/gamelist", methods=["GET", "POST"])

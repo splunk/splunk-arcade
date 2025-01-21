@@ -6,7 +6,6 @@
             <h1>You are playing:</h1>
             <p>Title: {{ data.title }}</p>
             <p>Description: {{ data.description }}</p>
-            <p>uri: {{ data.uri }}</p>
         </div>
     </div>
 
@@ -15,7 +14,5 @@
     {% endif %}      
     {% if "Logger" in data.title  %}
         {% include 'cabinets/loggergame.html' %}
-    {% endif %}      
-
-    
+    {% endif %}
 {% endblock %}
