@@ -2,7 +2,7 @@
 <html lang="en" data-topbar-color="brand">
     <head>
         <meta charset="utf-8" />
-        <title>Waiting for the fun to start...</title>
+        <title>Splunk Arcade Scoreboard</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta http-equiv="Refresh" content="5">
@@ -20,7 +20,23 @@
             </div>
 
             <div class="auth-fluid-form-box">
-                SCOREBOARD GOES HERE
+                <!-- placeholder data from scoreboard service -->
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Field</th>
+                        <th>Value</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for score_entry in score_data %}
+                    <tr>
+                        <td>{{ score_entry.field }}</td>
+                        <td>{{ score_entry.value }}</td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
             </div>
         </div>
     </body>

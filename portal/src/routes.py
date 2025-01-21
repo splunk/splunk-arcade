@@ -34,6 +34,8 @@ from src.forms import (
 )
 from src.models import Games, User
 
+from src.cluster import APP_NAME
+
 routes = Blueprint("routes", __name__)
 
 
@@ -188,7 +190,9 @@ def scoreboard():
     if not current_user.is_authenticated:
         return redirect(url_for("routes.login"))
 
-    return render_template("scoreboard.html", title="Scoreboard", user=session)
+    scores = requests.get(f"http://{APP_NAME}-scoreboard/v2/")
+
+    return render_template("scoreboard.html", title="Scoreboard", user=session, score_data=scores.json(),)
 
 
 @routes.route("/otel-health", methods=["GET"])
