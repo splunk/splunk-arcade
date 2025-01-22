@@ -31,23 +31,13 @@ def page_not_found(e):
     return redirect(url_for("routes.index"))
 
 
-@routes.route("/")
+@routes.route("/", methods=["GET", "POST"])
 @login_required
 def index():
     if current_user.is_authenticated:
         return redirect(url_for("routes.gamelist", login=True))
     else:
-        return redirect(url_for("routes.login"))
-
-
-@routes.route("/login")
-def login():
-    return redirect(f"http://{ARCADE_HOST}/login", code=302)
-
-
-@routes.route("/logout")
-def logout():
-    return redirect(f"http://{ARCADE_HOST}/logout", code=302)
+        return redirect(f"http://{ARCADE_HOST}/login", code=302)
 
 
 @routes.route("/gamelist", methods=["GET", "POST"])
@@ -66,12 +56,12 @@ def gamelist():
             db.session.commit()
 
     if current_user.is_authenticated:
-        return render_template("gamelist.html", gamelist=True, gameData=gamelist)
+        return render_template("gamelist.html", gamelist=True, gameData=gamelist, scoreboard_endpoint=f"http://{ARCADE_HOST}/scoreboard", logout_endpoint=f"http://{ARCADE_HOST}/logout",)
     else:
         return redirect(url_for("routes.login"))
 
 
-@routes.route("/playgame", methods=["GET", "POST"])
+@routes.route("/playgame", methods=["POST", "GET"])
 @login_required
 def playgame():
     if current_user.is_authenticated:
@@ -87,6 +77,8 @@ def playgame():
             user_uuid=current_user.uuid,
             gamesession=uuid.uuid4(),
             arcade_endpoint=f"http://{ARCADE_HOST}/player/{PLAYER_NAME}/v2/update_score/",
+            scoreboard_endpoint=f"http://{ARCADE_HOST}/scoreboard",
+            logout_endpoint=f"http://{ARCADE_HOST}/logout",
         )
     else:
         return redirect(url_for("routes.login"))
