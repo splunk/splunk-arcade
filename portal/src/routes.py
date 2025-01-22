@@ -58,11 +58,18 @@ def alive():
 
 
 @routes.app_errorhandler(404)
-def page_not_found(e):
+def page_not_found_handler(e):
     _ = e
 
     # redirect anything that would 404 to index
     return redirect(url_for("routes.index"))
+
+
+@routes.app_errorhandler(Exception)
+def exception_handler(e):
+    # crash for any non 404 exception, we want to let k8s deal w/ crash loop
+    print(f"unhandled exception {e}, crashing... bye")
+    os._exit(1)
 
 
 @routes.route("/")
