@@ -21,6 +21,28 @@
         <div class="container-fluid text-center top-container">
             <img style="max-width:400px; max-height:400px" src="{{ url_for('static', filename='assets/images/logo-light.png') }}">
         </div>
+        <div class="navbar">
+            <style>
+                .navbar {
+                    display: flex;
+                    justify-content: center;
+                    padding: 10px;
+                }
+                .navbar a {
+                    color: white;
+                    text-decoration: none;
+                    margin: 0 15px;
+                    padding: 8px 12px;
+                }
+                .navbar a:hover {
+                    background-color: #575757;
+                    border-radius: 4px;
+                }
+            </style>
+            <a href="{{ url_for('routes.gamelist') }}">Game List</a>
+            <a href="{{ scoreboard_endpoint }}">Scoreboard</a>
+            <a href="{{ url_for('routes.logout') }}">Logout</a>
+        </div>
         <div class="container game_container">
             {% block content %}
             {% endblock %}

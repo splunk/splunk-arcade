@@ -13,7 +13,7 @@ from src.routes import routes
 class Config:
     SECRET_KEY = os.environ.get("SECRET_KEY")
 
-    SQLALCHEMY_DATABASE_URI = os.environ["DATABASE_URL"]
+    SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URL")
 
     SESSION_TYPE = "redis"
     SESSION_PERMANENT = False
