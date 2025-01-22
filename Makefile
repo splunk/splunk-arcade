@@ -7,7 +7,7 @@ docker-lint: ## Run linters for all the arcade service images
 	hadolint cabinet/Dockerfile
 	hadolint player-router/Dockerfile
 	hadolint portal/Dockerfile
-	hadolint quiz/Dockerfile
+	hadolint player-content/Dockerfile
 	hadolint scoreboard/Dockerfile
 	hadolint dev.go.Dockerfile
 	hadolint dev.py.Dockerfile
@@ -17,24 +17,24 @@ docker-lint: ## Run linters for all the arcade service images
 python-deps: ## Install the deps for all the python packages (for dev reasons only)
 	python -m pip install -r cabinet/requirements.txt
 	python -m pip install -r portal/requirements.txt
-	python -m pip install -r quiz/requirements.txt
+	python -m pip install -r player-content/requirements.txt
 	python -m pip install -r scoreboard/requirements.txt
 	python -m pip install -r requirements-dev.txt
 
 python-fmt: ## Run formatter on all python bits
 	venv/bin/python -m ruff check --select I --fix cabinet/
 	venv/bin/python -m ruff check --select I --fix portal/
-	venv/bin/python -m ruff check --select I --fix quiz/
+	venv/bin/python -m ruff check --select I --fix player-content/
 	venv/bin/python -m ruff check --select I --fix scoreboard/
 	venv/bin/python -m ruff format cabinet/
 	venv/bin/python -m ruff format portal/
-	venv/bin/python -m ruff format quiz/
+	venv/bin/python -m ruff format player-content/
 	venv/bin/python -m ruff format scoreboard/
 
 python-lint: python-fmt ## Run linter on all the python bits
 	venv/bin/python -m ruff check cabinet/
 	venv/bin/python -m ruff check portal/
-	venv/bin/python -m ruff check quiz/
+	venv/bin/python -m ruff check player-content/
 	venv/bin/python -m ruff check scoreboard/
 
 clean-pvcs: ## Cleanup any pvcs for redis/postgres

@@ -16,7 +16,7 @@ WORKDIR /app
 
 COPY cabinet/requirements.txt cabinet-requirements.txt
 COPY portal/requirements.txt portal-requirements.txt
-COPY quiz/requirements.txt quiz-requirements.txt
+COPY player-content/requirements.txt quiz-requirements.txt
 COPY scoreboard/requirements.txt scoreboard-requirements.txt
 RUN pip install --no-cache-dir -r cabinet-requirements.txt -r portal-requirements.txt -r quiz-requirements.txt -r scoreboard-requirements.txt
 

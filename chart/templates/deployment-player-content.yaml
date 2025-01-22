@@ -2,26 +2,26 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.appName }}-quiz
+  name: {{ .Values.appName }}-player-content
   namespace: {{ .Release.Namespace }}
   labels:
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
     revision: "{{ .Release.Revision }}"
-    app.kubernetes.io/name: "{{ .Values.appName }}-quiz"
+    app.kubernetes.io/name: "{{ .Values.appName }}-player-content"
 spec:
   selector:
     matchLabels:
       chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
       release: {{ .Release.Name }}
       heritage: {{ .Release.Service }}
-      app.kubernetes.io/name: "{{ .Values.appName }}-quiz"
-  replicas: {{ $.Values.quiz.replicaCount }}
+      app.kubernetes.io/name: "{{ .Values.appName }}-player-content"
+  replicas: {{ $.Values.playerContent.replicaCount }}
   strategy:
     rollingUpdate:
       maxSurge: 1
-      {{- if (eq (int $.Values.quiz.replicaCount) 1) }}
+      {{- if (eq (int $.Values.playerContent.replicaCount) 1) }}
       maxUnavailable: 0
       {{- else }}
       maxUnavailable: 1
@@ -33,7 +33,7 @@ spec:
         chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
         release: {{ .Release.Name }}
         heritage: {{ .Release.Service }}
-        app.kubernetes.io/name: "{{ .Values.appName }}-quiz"
+        app.kubernetes.io/name: "{{ .Values.appName }}-player-content"
     spec:
       affinity:
         podAntiAffinity:
@@ -45,7 +45,7 @@ spec:
                     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
                     release: {{ .Release.Name }}
                     heritage: {{ .Release.Service }}
-                    app.kubernetes.io/name: "{{ .Values.appName }}-quiz"
+                    app.kubernetes.io/name: "{{ .Values.appName }}-player-content"
                 topologyKey: kubernetes.io/hostname
             - weight: 50
               podAffinityTerm:
@@ -54,21 +54,21 @@ spec:
                     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
                     release: {{ .Release.Name }}
                     heritage: {{ .Release.Service }}
-                    app.kubernetes.io/name: "{{ .Values.appName }}-quiz"
+                    app.kubernetes.io/name: "{{ .Values.appName }}-player-content"
                 topologyKey: topology.kubernetes.io/zone
       terminationGracePeriodSeconds: 10
       serviceAccountName: default
       containers:
-        - name: quiz
-          image: {{ .Values.quiz.image }}
-          imagePullPolicy: {{ $.Values.quiz.imagePullPolicy }}
+        - name: player-content
+          image: {{ .Values.playerContent.image }}
+          imagePullPolicy: {{ $.Values.playerContent.imagePullPolicy }}
           resources:
             requests:
-              memory: {{ $.Values.quiz.resources.requests.memory }}
-              cpu: {{ $.Values.quiz.resources.requests.cpu }}
+              memory: {{ $.Values.playerContent.resources.requests.memory }}
+              cpu: {{ $.Values.playerContent.resources.requests.cpu }}
             limits:
-              memory: {{ $.Values.quiz.resources.limits.memory }}
-              cpu: {{ $.Values.quiz.resources.limits.cpu }}
+              memory: {{ $.Values.playerContent.resources.limits.memory }}
+              cpu: {{ $.Values.playerContent.resources.limits.cpu }}
           env:
             - name: NODE_IP
               valueFrom:

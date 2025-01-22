@@ -96,8 +96,8 @@ cabinet:
       memory: 512Mi
       cpu: 500m
 
-quiz:
-  image: splunk-arcade/quiz:latest
+playerContent:
+  image: splunk-arcade/player-content:latest
   imagePullPolicy: Always
   replicaCount: 1
   resources:
