@@ -26,6 +26,21 @@ splunk-otel-collector:
   agent:
     discovery:
       enabled: true
+    config:
+      receivers:
+        hostmetrics:
+          scrapers:
+            filesystem:
+              exclude_mount_points:
+                match_type: regexp
+                mount_points:
+                  - /var/*
+                  - /snap/*
+                  - /boot/*
+                  - /boot
+                  - /opt/orbstack/*
+                  - /mnt/machines/*
+                  - /Users/*
   gateway:
     enabled: false
   splunkObservability:
