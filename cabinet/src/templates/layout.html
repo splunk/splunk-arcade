@@ -12,7 +12,7 @@
         <link rel="shortcut icon" href="{{ url_for('static',filename='assets/images/favicon.ico')}}">
         <link rel="stylesheet" type="text/css"  href="{{  url_for('static',filename='assets/css/bootstrap.min.css' ) }}"/>
         <link rel="stylesheet" type="text/css" id="app-stylesheet" href="{{url_for('static',filename='assets/css/app.min.css')}}"/>
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='assets/css/icons.min.css')}}"/>>
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='assets/css/icons.min.css')}}"/>
 
         <script src="{{ url_for('static',filename='assets/js/config.js')}}"></script>
         <script src="http://code.jquery.com/jquery-latest.js"></script>
@@ -41,7 +41,7 @@
             </style>
             <a href="{{ url_for('routes.gamelist') }}">Game List</a>
             <a href="{{ scoreboard_endpoint }}">Scoreboard</a>
-            <a href="{{ url_for('routes.logout') }}">Logout</a>
+            <a href="{{ logout_endpoint }}">Logout</a>
         </div>
         <div class="container game_container">
             {% block content %}

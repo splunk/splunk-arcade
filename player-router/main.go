@@ -183,17 +183,7 @@ func (r *Router) proxy(wr http.ResponseWriter, req *http.Request) {
 
 	proxiedRequest.Header = req.Header
 
-	client := &http.Client{
-		CheckRedirect: func(req *http.Request, via []*http.Request) error {
-			if req.URL.Host == "splunk-arcade.home" {
-				// dont go to the public address, just pass it to the service here in the cluster
-				// otherwise.... good luck?
-				req.URL.Host = "splunk-arcade-portal"
-			}
-
-			return nil
-		},
-	}
+	client := &http.Client{}
 
 	resp, err := doRequestWithRetry(client, proxiedRequest)
 	if err != nil {
