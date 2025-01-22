@@ -18,6 +18,8 @@ import (
 
 const (
 	timeoutSeconds = 5
+	maxRetries     = 5
+	retryDelay     = 1
 )
 
 const (
@@ -132,6 +134,24 @@ func (r *Router) health(wr http.ResponseWriter, req *http.Request) {
 	wr.WriteHeader(http.StatusOK)
 }
 
+func doRequestWithRetry(client *http.Client, req *http.Request) (*http.Response, error) {
+	var resp *http.Response
+	var err error
+
+	for i := 0; i < maxRetries; i++ {
+		resp, err = client.Do(req)
+		if err == nil {
+			return resp, nil
+		}
+
+		log.Printf("attempt %d failed: %s, retrying in %ds...", i+1, err, retryDelay)
+
+		time.Sleep(retryDelay)
+	}
+
+	return nil, fmt.Errorf("all retries failed: %w", err)
+}
+
 func (r *Router) proxy(wr http.ResponseWriter, req *http.Request) {
 	log.Printf("received %q on %q endpoint from %q", req.Method, req.RequestURI, req.RemoteAddr)
 
@@ -175,7 +195,7 @@ func (r *Router) proxy(wr http.ResponseWriter, req *http.Request) {
 		},
 	}
 
-	resp, err := client.Do(proxiedRequest)
+	resp, err := doRequestWithRetry(client, proxiedRequest)
 	if err != nil {
 		log.Printf("do proxied request err: %s", err)
 
