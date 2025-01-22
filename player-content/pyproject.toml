@@ -6,8 +6,8 @@ requires = [
 ]
 
 [project]
-name = "quiz"
-description = "The splunk arcade quiz service"
+name = "player-content"
+description = "The splunk arcade player content service"
 readme = "README.md"
 license = { file = "LICENSE" }
 requires-python = ">=3.12"
