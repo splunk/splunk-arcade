@@ -6,7 +6,8 @@ APP_NAME = "splunk-arcade"
 NAMESPACE = "splunk-arcade"
 IMAGE_PLAYER_CABINET = os.getenv("PLAYER_IMAGE") or "splunk-arcade/cabinet:latest"
 IMAGE_PULL_POLICY = os.getenv("PLAYER_IMAGE_PULL_POLICY") or "IfNotPresent"
-ARCADE_HOST = os.getenv("ARCADE_HOST") or "splunk-arcade.com"
+ARCADE_HOST = os.getenv("ARCADE_HOST") or "www.splunkarcade.com"
+PLAYER_CONTENT_HOST = os.getenv("PLAYER_CONTENT_HOST") or f"{APP_NAME}-player-content"
 
 
 class _Config:
@@ -105,7 +106,6 @@ def player_deployment_create(player_id: str) -> None:
                                     name="SECRET_KEY",
                                     value="SECRET_KEY",
                                 ),
-                                # TODO dont need this right? cuz only portal tickles db?
                                 client.V1EnvVar(
                                     name="DATABASE_URL",
                                     value=f"postgresql://postgres:password@{APP_NAME}-postgresql/myapp",
@@ -127,6 +127,10 @@ def player_deployment_create(player_id: str) -> None:
                                 client.V1EnvVar(
                                     name="ARCADE_HOST",
                                     value=ARCADE_HOST,
+                                ),
+                                client.V1EnvVar(
+                                    name="PLAYER_CONTENT_HOST",
+                                    value=PLAYER_CONTENT_HOST,
                                 ),
                             ],
                             ports=[

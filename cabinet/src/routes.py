@@ -110,11 +110,11 @@ def update_score():
 def get_question(module: str):
     content = requests.get(f"http://{PLAYER_CONTENT_HOST}/quiz/question/{module}")
 
-    return jsonify(content)
+    return content.json()
 
 
 @routes.route("/walkthrough/<string:module>/<string:stage>", methods=["GET"])
 def get_walkthrough(module: str, stage: str):
     content = requests.get(f"http://{PLAYER_CONTENT_HOST}/walkthrough/{module}/{stage}")
 
-    return jsonify(content)
+    return content.json()
