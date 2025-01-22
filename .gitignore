@@ -30,3 +30,6 @@ cmd/clabverter/build/
 
 # for local dev venv stuff
 venv
+
+# python things
+__pycache__

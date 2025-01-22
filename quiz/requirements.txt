@@ -1,4 +1,2 @@
-Flask>=3.1.0,<4.0.0
-redis>=5.2.1,<6.0.0
-splunk-opentelemetry[all]>=1.21.0,<2.0.0
-waitress>=3.0.2,<4.0.0
+fastapi[standard]>=0.115.6,<0.116.0
+uvicorn>=0.34.0,<0.35.0

@@ -1,11 +1,18 @@
-from flask import Flask
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
-from src.routes import routes
+from src.routes import router
 
 
 def create_app():
-    app = Flask(__name__)
-
-    app.register_blueprint(routes)
+    app = FastAPI()
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["*"],
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
+    app.include_router(router)
 
     return app

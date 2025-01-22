@@ -1,3 +1,3 @@
 #!/bin/bash
 
-splunk-py-trace python app.py
+python app.py
