@@ -1,8 +1,17 @@
-from flask import Blueprint, jsonify
+from fastapi import APIRouter
+from fastapi.responses import JSONResponse
 
-routes = Blueprint("routes", __name__)
+from src.questions import _Questions
 
 
-@routes.route("/alive", methods=["GET"])
+router = APIRouter()
+
+@router.get("/alive")
 def alive():
-    return jsonify(success=True)
+    return JSONResponse(content={"success": True})
+
+
+@router.get("/question/{module}/")
+async def get_question(module: str) -> JSONResponse:
+    q = _Questions()
+    return JSONResponse(content=q.random_question_for_module(module))

@@ -4,7 +4,7 @@ COLOR_RED="\033[0;31m"
 COLOR_CYAN="\033[0;36m"
 COLOR_RESET="\033[0m"
 
-RUN_CMD="python app.py --port=5000"
+RUN_CMD="./entrypoint.sh"
 
 echo -e "${COLOR_RED}
   _____ ____  _      __ __  ____   __  _       ____  ____      __   ____  ___      ___
