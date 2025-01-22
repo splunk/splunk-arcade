@@ -78,18 +78,6 @@ def index():
 
 @routes.route("/login", methods=["GET", "POST"])
 def login():
-    u = {"username": "admin", "email": "admin@splunk.com", "password": "password"}
-
-    exists = db.session.query(User).filter_by(username=u["username"]).scalar() is not None
-    if not exists:
-        users = User()
-        users.username = u["username"]
-        users.email = u["email"]
-        users.uuid = uuid.uuid4()
-        users.set_password(u["password"])
-        db.session.add(users)
-        db.session.commit()
-
     if current_user.is_authenticated:
         return redirect(url_for("routes.wait_arcade", login=True))
 
