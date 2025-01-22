@@ -149,9 +149,9 @@ dev:
 profiles:
   - name: prod
     patches:
-      - op: replace
+      - op: add
         path: deployments.splunk-arcade.helm.values.arcadeHost
-        value: splunkarcade.com
+        value: www.splunkarcade.com
 
   - name: dev-cabinet
     patches:
