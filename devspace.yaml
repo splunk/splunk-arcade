@@ -25,7 +25,7 @@ vars:
   CABINET_IMAGE: ${SPLUNK_ARCADE_REGISTRY}/cabinet
   SCOREBOARD_IMAGE: ${SPLUNK_ARCADE_REGISTRY}/scoreboard
   PORTAL_IMAGE: ${SPLUNK_ARCADE_REGISTRY}/portal
-  QUIZ_IMAGE: ${SPLUNK_ARCADE_REGISTRY}/quiz
+  PLAYER_CONTENT_IMAGE: ${SPLUNK_ARCADE_REGISTRY}/player-content
   PLAYER_ROUTER_IMAGE: ${SPLUNK_ARCADE_REGISTRY}/player-router
   PY_IMAGE_DEV: ${SPLUNK_ARCADE_REGISTRY}/py-dev
   GO_IMAGE_DEV: ${SPLUNK_ARCADE_REGISTRY}/go-dev
@@ -85,11 +85,11 @@ images:
       - latest
       - ${COMMIT_HASH}
 
-  quiz:
+  player-content:
     createPullSecret: false
-    image: ${QUIZ_IMAGE}
-    context: ./quiz
-    dockerfile: ./quiz/Dockerfile
+    image: ${PLAYER_CONTENT_IMAGE}
+    context: ./player-content
+    dockerfile: ./player-content/Dockerfile
     rebuildStrategy: ignoreContextChanges
     tags:
       - latest
@@ -125,8 +125,8 @@ deployments:
         portal:
           image: ${PORTAL_IMAGE}
           imagePullPolicy: ${IMAGE_PULL_POLICY}
-        quiz:
-          image: ${QUIZ_IMAGE}
+        player-content:
+          image: ${PLAYER_CONTENT_IMAGE}
           imagePullPolicy: ${IMAGE_PULL_POLICY}
         playerRouter:
           image: ${PLAYER_ROUTER_IMAGE}
@@ -236,17 +236,17 @@ profiles:
             ports:
               - port: "8080:5000"
 
-  - name: dev-quiz
+  - name: dev-player-content
     patches:
       - op: replace
         path: dev
         value:
           splunk-arcade:
             labelSelector:
-              app.kubernetes.io/name: splunk-arcade-quiz
+              app.kubernetes.io/name: splunk-arcade-player-content
             devImage: ${PY_IMAGE_DEV}
             sync:
-              - path: ./quiz/:/app
+              - path: ./player-content/:/app
                 disableDownload: true
                 excludeFile: .dockerignore
             terminal:
