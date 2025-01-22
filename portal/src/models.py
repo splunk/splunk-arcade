@@ -46,8 +46,6 @@ class User(UserMixin, db.Model):
         digest = md5(self.email.lower().encode("utf-8")).hexdigest()
         return f"https://www.gravatar.com/avatar/{digest}?d=identicon&s={size}"
 
-    admin_json = {"username": "admin", "email": "admin@splunk.com", "password": "password"}
-
 
 @login.user_loader
 def load_user(id):
