@@ -12,8 +12,10 @@ from src.models import Games
 routes = Blueprint("routes", __name__)
 
 
-ARCADE_HOST = os.getenv("ARCADE_HOST")
 PLAYER_NAME = os.getenv("PLAYER_NAME")
+ARCADE_HOST = os.getenv("ARCADE_HOST")
+SCOREBOARD_HOST = os.getenv("SCOREBOARD_HOST")
+PLAYER_CONTENT_HOST = os.getenv("PLAYER_CONTENT_HOST")
 
 
 @routes.route("/alive", methods=["GET"])
@@ -90,7 +92,7 @@ def playgame():
         return redirect(url_for("routes.login"))
 
 
-@routes.route("/v2/update_score/", methods=["GET", "POST"])
+@routes.route("/v2/update_score/", methods=["POST"])
 def update_score():
     content = request.get_json(force=True)
 
@@ -99,8 +101,20 @@ def update_score():
         current_span.set_attribute(k, v)
 
     requests.post(
-        f"http://{os.environ.get("SCOREBOARD_HOST", "scoreboard")}/v2/update/",
+        f"http://{SCOREBOARD_HOST}/v2/update/",
         json=content,
     )
 
-    return content
+
+@routes.route("/question/<string:module>", methods=["GET"])
+def get_question(module: str):
+    content = requests.get(f"http://{PLAYER_CONTENT_HOST}/quiz/question/{module}")
+
+    return jsonify(content)
+
+
+@routes.route("/walkthrough/<string:module>/<string:stage>", methods=["GET"])
+def get_walkthrough(module: str, stage: str):
+    content = requests.get(f"http://{PLAYER_CONTENT_HOST}/walkthrough/{module}/{stage}")
+
+    return jsonify(content)

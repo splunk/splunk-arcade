@@ -17,11 +17,11 @@ spec:
       release: {{ .Release.Name }}
       heritage: {{ .Release.Service }}
       app.kubernetes.io/name: "{{ .Values.appName }}-player-content"
-  replicas: {{ $.Values.quiz.replicaCount }}
+  replicas: {{ $.Values.playerContent.replicaCount }}
   strategy:
     rollingUpdate:
       maxSurge: 1
-      {{- if (eq (int $.Values.quiz.replicaCount) 1) }}
+      {{- if (eq (int $.Values.playerContent.replicaCount) 1) }}
       maxUnavailable: 0
       {{- else }}
       maxUnavailable: 1
@@ -59,7 +59,7 @@ spec:
       terminationGracePeriodSeconds: 10
       serviceAccountName: default
       containers:
-        - name: quiz
+        - name: player-content
           image: {{ .Values.playerContent.image }}
           imagePullPolicy: {{ $.Values.playerContent.imagePullPolicy }}
           resources:
