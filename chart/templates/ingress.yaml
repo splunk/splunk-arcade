@@ -36,13 +36,6 @@ spec:
             pathType: ImplementationSpecific
           - backend:
               service:
-                name: "{{ $.Values.appName }}-quiz"
-                port:
-                  number: 80
-            path: /quiz/.*
-            pathType: ImplementationSpecific
-          - backend:
-              service:
                 name: "{{ $.Values.appName }}-player-router"
                 port:
                   number: 80
