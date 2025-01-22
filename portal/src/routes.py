@@ -19,22 +19,17 @@ from flask_login import current_user, login_required, login_user, logout_user
 from opentelemetry import trace
 
 from src.cluster import (
+    APP_NAME,
     ARCADE_HOST,
     player_deployment_create,
     player_deployment_ready,
 )
 from src.db import db
 from src.forms import (
-    EditProfileForm,
-    GameAddForm,
-    GameDeleteForm,
     LoginForm,
-    ProfileForm,
     RegistrationForm,
 )
-from src.models import Games, User
-
-from src.cluster import APP_NAME
+from src.models import User
 
 routes = Blueprint("routes", __name__)
 
@@ -83,7 +78,7 @@ def index():
 
 @routes.route("/login", methods=["GET", "POST"])
 def login():
-    u = User.admin_json
+    u = {"username": "admin", "email": "admin@splunk.com", "password": "password"}
 
     exists = db.session.query(User).filter_by(username=u["username"]).scalar() is not None
     if not exists:
@@ -199,7 +194,12 @@ def scoreboard():
 
     scores = requests.get(f"http://{APP_NAME}-scoreboard/v2/")
 
-    return render_template("scoreboard.html", title="Scoreboard", user=session, score_data=scores.json(),)
+    return render_template(
+        "scoreboard.html",
+        title="Scoreboard",
+        user=session,
+        score_data=scores.json(),
+    )
 
 
 @routes.route("/otel-health", methods=["GET"])

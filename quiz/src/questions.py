@@ -7,7 +7,7 @@ class _Questions:
 
     def __new__(cls):
         if not cls._instance:
-            cls._instance = super(_Questions, cls).__new__(cls)
+            cls._instance = super().__new__(cls)
 
         return cls._instance
 
@@ -21,4 +21,4 @@ class _Questions:
         if _module not in self.content:
             raise Exception(f"module '{module}' is not in questions bank")
 
-        return self.content[_module][randint(0,  len(self.content[_module])-1)]
+        return self.content[_module][randint(0, len(self.content[_module]) - 1)]

@@ -3,8 +3,8 @@ from fastapi.responses import JSONResponse
 
 from src.questions import _Questions
 
-
 router = APIRouter()
+
 
 @router.get("/alive")
 def alive():
