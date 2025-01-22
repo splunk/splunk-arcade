@@ -39,7 +39,7 @@ spec:
                 name: "{{ $.Values.appName }}-quiz"
                 port:
                   number: 80
-            path: /quiz
+            path: /quiz/.*
             pathType: ImplementationSpecific
           - backend:
               service:
