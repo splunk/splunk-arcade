@@ -20,43 +20,49 @@
 
     <script>
         $.ajax({
-          type: 'GET',
-          url: '{{ url_for("routes.get_question", module="imvaders") }}',
-          success: function(response) {
-            var question = response.question;
-            var A = response.A;
-            var B = response.B;
-            var C = response.C;
-            var D = response.D;
-            var answer = response.answer;
+            type: 'GET',
+            url: '{{ url_for("routes.get_question", module="imvaders") }}',
+            success: function(response) {
+                var question = response.question;
+                var A = response.A;
+                var B = response.B;
+                var C = response.C;
+                var D = response.D;
+                var answer = response.answer;
 
-            $('div.question').append(question);
-            $('#OptionA').append(A);
-            $('#OptionB').append(B);
-            $('#OptionC').append(C);
-            $('#OptionD').append(D);
-            $('div.answer').append(answer);
+                $('div.question').append(question);
+                $('#OptionA').append(A);
+                $('#OptionB').append(B);
+                $('#OptionC').append(C);
+                $('#OptionD').append(D);
 
-          },
-          error: function(error) {
-            console.log('not implemented');
-          }
+                // Store the answer in a global variable for later comparison
+                window.correctAnswer = answer;
+            },
+            error: function(error) {
+                console.log('not implemented');
+            }
         });
-    </script>
-    <script>
+
         function checkAnswer() {
-            const choices = document.getElementsByName('question1');
+            const choices = document.getElementsByName('options');
             let selectedValue;
+
             for (const choice of choices) {
                 if (choice.checked) {
                     selectedValue = choice.value;
                     break;
                 }
             }
-            if (selectedValue === document.getElementById('OptionA').value) {
-                alert('Correct! Paris is the capital of France.');
+
+            if (selectedValue) {
+                if (selectedValue === window.correctAnswer) {
+                    alert('Correct!');
+                } else {
+                    alert(`Incorrect. The correct answer is: ${window.correctAnswer}`);
+                }
             } else {
-                alert('Incorrect. The correct answer is Paris.');
+                alert('Please select an answer before submitting.');
             }
         }
     </script>
@@ -66,22 +72,22 @@
         <ul class="choices">
             <li>
                 <label id="OptionA">
-                    <input type="radio" name="OptionA" value="a" > A)
+                    <input type="radio" name="options" value="A"> A)
                 </label>
             </li>
             <li>
                 <label id="OptionB">
-                    <input type="radio" name="OptionB" value="b"> B)
+                    <input type="radio" name="options" value="B"> B)
                 </label>
             </li>
             <li>
                 <label id="OptionC">
-                    <input type="radio" name="OptionC" value="c"> C)
+                    <input type="radio" name="options" value="C"> C)
                 </label>
             </li>
             <li>
                 <label id="OptionD">
-                    <input type="radio" name="OptionD" value="d"> D)
+                    <input type="radio" name="options" value="D"> D)
                 </label>
             </li>
         </ul>
