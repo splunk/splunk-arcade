@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Space Invaders Clone</title>
@@ -16,10 +17,127 @@
       #gameInfo {
         text-align: center;
         font-family: Arial, sans-serif;
+
       }
+       .question-container {
+            max-width: 250px;
+            margin: 0;
+            padding: 10px;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            float: right;
+
+        }
+        .question {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            color: #555;
+        }
+        .choices {
+            list-style: none;
+            padding: 0;
+        }
+        .choices li {
+            margin-bottom: 10px;
+        }
+        .choices input {
+            margin-right: 10px;
+        }
+        label {
+    cursor: pointer;
+    color: #555;
+    display: block;
+    padding: 10px;
+    margin: 3px;
+}
+        quiz.question {
+color:pink;
+font-size: 14px;
+}
+
     </style>
   </head>
   <body>
+  <!-- Dynamic Quiz Content -->
+  <script>
+
+$.ajax({
+  type: 'GET',
+  url: '{{ url_for("routes.get_question", module="imvaders") }}',
+  success: function(response) {
+  	// if your response is in JSON format, you can access response keys
+   // in the following format (both ways give same result)
+    var question = response.question;
+    var A = response.A;
+    var B = response.B;
+    var C = response.C;
+    var D = response.D;
+    var answer = response.answer; // OR var title = response['userId']);
+
+    // ...and then append to the DOM (your HTML) by selecting the
+    // element you want to append to, and using the append method
+    $('div.question').append(question);
+    $('#OptionA').append(A);
+    $('#OptionB').append(B);
+    $('#OptionC').append(C);
+    $('#OptionD').append(D);
+    $('div.answer').append(answer);
+
+  },
+  error: function(error) {
+  	console.log('not implemented');
+  }
+});
+</script>
+  <!-- END Dynamic Quiz Content -->>
+<div class="question-container">
+        <div class="question" id="question"></div>
+        <ul class="choices">
+            <li>
+                <label id="OptionA">
+                    <input type="radio" name="OptionA" value="a" > A)
+                </label>
+            </li>
+            <li>
+                <label id="OptionB">
+                    <input type="radio" name="OptionB" value="b"> B)
+                </label>
+            </li>
+            <li>
+                <label id="OptionC">
+                    <input type="radio" name="OptionC" value="c"> C)
+                </label>
+            </li>
+            <li>
+                <label id="OptionD">
+                    <input type="radio" name="OptionD" value="d"> D)
+                </label>
+            </li>
+        </ul>
+        <button type="button" onclick="checkAnswer()">Submit</button>
+    </div>
+
+
+  <script>
+        function checkAnswer() {
+            const choices = document.getElementsByName('question1');
+            let selectedValue;
+            for (const choice of choices) {
+                if (choice.checked) {
+                    selectedValue = choice.value;
+                    break;
+                }
+            }
+            if (selectedValue === 'c') {
+                alert('Correct! Paris is the capital of France.');
+            } else {
+                alert('Incorrect. The correct answer is Paris.');
+            }
+        }
+    </script>
+
     <div id="gameInfo">
       <h2>Trace Invaders</h2>
       <p>
