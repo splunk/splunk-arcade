@@ -87,7 +87,7 @@ spec:
             - name: SCOREBOARD_HOST
               value: "{{ $.Values.appName }}-scoreboard"
             - name: OTEL_SERVICE_NAME
-              value: "splunk-arcade-player"
+              value: "splunk-arcade-portal"
             - name: OTEL_RESOURCE_ATTRIBUTES
               value: "service.name=$(OTEL_SERVICE_NAME),service.namespace=splunk-arcade,deployment.environment=gameify"
             - name: PLAYER_IMAGE
