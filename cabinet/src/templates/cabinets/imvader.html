@@ -3,19 +3,23 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Space Invaders Clone</title>
+    <title>Space Imvaders</title>
     <style>
-      body {
-        background-color: black;
-        color: white;
-      }
       canvas {
         display: block;
         margin: 0 auto;
       }
-      #gameInfo {
+      gameInfo {
         text-align: center;
         font-family: Arial, sans-serif;
+
+      }
+      label {
+        cursor: pointer;
+        color: #555;
+        display: block;
+        padding: 10px;
+        margin: 3px;
       }
     </style>
   </head>
@@ -26,7 +30,7 @@
         Score: <span id="score">0</span> | Lives: <span id="lives">3</span> |
         Level: <span id="level">1</span>
       </p>
-      
+
     </div>
     <canvas id="gameCanvas" width="800" height="600"></canvas>
     <script
@@ -41,7 +45,7 @@
       const scoreElement = document.getElementById("score");
       const livesElement = document.getElementById("lives");
       const levelElement = document.getElementById("level");
-      
+
 
       // Game state
       let intervalID;
@@ -187,17 +191,6 @@
       // Stars
       const stars = [];
       const numStars = 100;
-
-      function initStars() {
-        for (let i = 0; i < numStars; i++) {
-          stars.push({
-            x: Math.random() * canvas.width,
-            y: Math.random() * canvas.height,
-            radius: Math.random() * 1.5,
-            speed: Math.random() * 0.5 + 0.1,
-          });
-        }
-      }
 
       // Update and draw stars
       function updateStars() {

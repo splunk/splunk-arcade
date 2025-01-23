@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+{% extends "layout-game.html" %}
 
 {% block content %}
     <div class="row">
@@ -15,4 +15,77 @@
     {% if "Logger" in data.title  %}
         {% include 'cabinets/loggergame.html' %}
     {% endif %}
+    {% endblock %}
+    {% block quiz %}
+
+    <script>
+        $.ajax({
+          type: 'GET',
+          url: '{{ url_for("routes.get_question", module="imvaders") }}',
+          success: function(response) {
+            var question = response.question;
+            var A = response.A;
+            var B = response.B;
+            var C = response.C;
+            var D = response.D;
+            var answer = response.answer;
+
+            $('div.question').append(question);
+            $('#OptionA').append(A);
+            $('#OptionB').append(B);
+            $('#OptionC').append(C);
+            $('#OptionD').append(D);
+            $('div.answer').append(answer);
+
+          },
+          error: function(error) {
+            console.log('not implemented');
+          }
+        });
+    </script>
+    <script>
+        function checkAnswer() {
+            const choices = document.getElementsByName('question1');
+            let selectedValue;
+            for (const choice of choices) {
+                if (choice.checked) {
+                    selectedValue = choice.value;
+                    break;
+                }
+            }
+            if (selectedValue === document.getElementById('OptionA').value) {
+                alert('Correct! Paris is the capital of France.');
+            } else {
+                alert('Incorrect. The correct answer is Paris.');
+            }
+        }
+    </script>
+
+    <div class="question-container">
+        <div class="question" id="question"></div>
+        <ul class="choices">
+            <li>
+                <label id="OptionA">
+                    <input type="radio" name="OptionA" value="a" > A)
+                </label>
+            </li>
+            <li>
+                <label id="OptionB">
+                    <input type="radio" name="OptionB" value="b"> B)
+                </label>
+            </li>
+            <li>
+                <label id="OptionC">
+                    <input type="radio" name="OptionC" value="c"> C)
+                </label>
+            </li>
+            <li>
+                <label id="OptionD">
+                    <input type="radio" name="OptionD" value="d"> D)
+                </label>
+            </li>
+        </ul>
+        <button type="button" onclick="checkAnswer()">Submit</button>
+    </div>
+
 {% endblock %}
