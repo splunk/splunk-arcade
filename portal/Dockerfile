@@ -9,8 +9,8 @@ RUN apt-get update -y && \
             ca-certificates \
             build-essential \
             gcc && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /var/cache/apt/archive/*.deb
+   apt-get clean && \
+   rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /var/cache/apt/archive/*.deb
 
 WORKDIR /app
 

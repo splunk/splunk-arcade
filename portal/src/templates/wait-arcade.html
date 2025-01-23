@@ -4,37 +4,44 @@
         <meta charset="utf-8" />
         <title>Waiting for the fun to start...</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta http-equiv="Refresh" content="5">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta http-equiv="Refresh" content="3">
 
-        <link rel="shortcut icon" href="{{ url_for('static',filename='assets/images/favicon.ico')}}">
-        <link rel="stylesheet" type="text/css" href="{{  url_for('static',filename='assets/css/bootstrap.min.css' ) }}"  />
-        <link rel="stylesheet" type="text/css" id="app-stylesheet" href="{{url_for('static',filename='assets/css/app.min.css')}}"  />
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='assets/css/icons.min.css')}}"  />
-        <script src="{{ url_for('static',filename='assets/js/config.js')}}"></script>
+        <link rel="shortcut icon" href="{{ url_for('static',filename='images/favicon.ico')}}">
+
+        <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
     </head>
 
-    <body class=auth-fluid-pages pb-0">
-        <div class="auth-fluid">
-            <div class="auth-fluid-right">
-            </div>
-
-            <div class="auth-fluid-form-box">
-                <div class="content">
-                    Congratulations! <b>{{ user['username'] }}</b> You have successfully logged in!
-                    <br>
-                    Please wait for while we spin up your Personal Arcade Instance!
-                    <br><br>
-                    <button class="btn btn-primary" type="button" disabled>
-                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                        Waiting For Game Cabinet Pod to start!!
-                    </button>
-                </div>
-            </div>
+    <body>
+    <section class="h-screen bg-gray-900 flex">
+        <div
+                class="w-1/2 h-full bg-cover bg-center"
+                style="background-image: url('{{ url_for('static', filename='images/arcade_bg.png') }}');">
         </div>
 
-        <script src="{{ url_for('static',filename='assets/js/vendor.min.js')}}"></script>
-        <script src="{{ url_for('static',filename='assets/js/app.min.js')}}"></script>
+        <div class="w-1/2 h-full flex flex-col items-center justify-center bg-gray-800 relative">
 
+            <div class="flex flex-col items-center justify-center space-y-4">
+                <p class="text-gray-300 text-lg">Waiting for your arcade to be deployed...</p>
+                <div class="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+            </div>
+
+            <br>
+            <br>
+            <br>
+            <br>
+
+            <div class="mt-8 text-gray-500 text-center">
+                Made with ❤️ by
+                <a
+                        href="https://www.splunk.com"
+                        target="_blank"
+                        class="text-blue-400 hover:text-blue-500"
+                >
+                    Splunk
+                </a>
+            </div>
+        </div>
+    </section>
     </body>
 </html>

@@ -91,7 +91,7 @@ spec:
             - name: REDIS_HOST
               value: "splunk-arcade-redis-master"
             - name: OTEL_SERVICE_NAME
-              value: "splunk-arcade-player"
+              value: "{{ $.Values.appName }}-cabinet-player-{{ $playerName }}"
             - name: OTEL_RESOURCE_ATTRIBUTES
               value: "service.name=$(OTEL_SERVICE_NAME),service.namespace=splunk-arcade,deployment.environment=gameify"
             - name: PLAYER_NAME

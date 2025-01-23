@@ -118,7 +118,7 @@ def player_deployment_create(player_id: str) -> None:
                                     name="SCOREBOARD_HOST", value=f"{APP_NAME}-scoreboard"
                                 ),
                                 client.V1EnvVar(
-                                    name="OTEL_SERVICE_NAME", value="splunk-arcade-player"
+                                    name="OTEL_SERVICE_NAME", value=f"{APP_NAME}-cabinet-player-{player_id}"
                                 ),
                                 client.V1EnvVar(
                                     name="OTEL_RESOURCE_ATTRIBUTES",
