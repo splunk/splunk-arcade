@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -euxo pipefail
+
 flask db init
 flask db migrate
 flask db upgrade
