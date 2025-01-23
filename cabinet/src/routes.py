@@ -87,7 +87,7 @@ def playgame():
             user_uuid=current_user.uuid,
             gamesession=uuid.uuid4(),
             arcade_endpoint=f"http://{ARCADE_HOST}/player/{PLAYER_NAME}/v2/update_score/",
-            quizendpoint = f"http://{ARCADE_HOST}/player/{PLAYER_NAME}/question/imvaders",
+            quizendpoint=f"http://{ARCADE_HOST}/player/{PLAYER_NAME}/question/imvaders",
         )
     else:
         return redirect(url_for("routes.login"))
@@ -105,6 +105,8 @@ def update_score():
         f"http://{SCOREBOARD_HOST}/v2/update/",
         json=content,
     )
+
+    return {}
 
 
 @routes.route("/question/<string:module>", methods=["GET"])

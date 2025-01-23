@@ -16,125 +16,36 @@
 
         <script src="{{ url_for('static',filename='assets/js/config.js')}}"></script>
         <script src="http://code.jquery.com/jquery-latest.js"></script>
-    </head>
+
         <style>
-      body {
-        background-color: black;
-        color: white;
-      }
-      canvas {
-        display: block;
-        margin: 0 auto;
-      }
-      #gameInfo {
-        text-align: center;
-        font-family: Arial, sans-serif;
-
-      }
-       .question-container {
-
-            margin: 0;
-            padding: 10px;
-            width: 90%;
-            background: #8c98a5;
-
-
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-
-
-        }
-        .question {
-            font-size: 1.2em;
-            margin-bottom: 20px;
-            color: #ffffff;
-        }
-        .choices {
-            list-style: none;
-            padding: 0;
-        }
-        .choices li {
-            margin-bottom: 10px;
-        }
-        .choices input {
-            margin-right: 10px;
-        }
-        label {
-    cursor: pointer;
-    color: #555;
-    display: block;
-    padding: 10px;
-    margin: 3px;
-}
-        quiz.question {
-color:pink;
-font-size: 14px;
-}
-        .contentcontainer {
-        background-color: black;
-    }
-
-    </style>
+            .navbar {
+                display: flex;
+                justify-content: center;
+                padding: 10px;
+            }
+            .navbar a {
+                color: white;
+                text-decoration: none;
+                margin: 0 15px;
+                padding: 8px 12px;
+            }
+            .navbar a:hover {
+                background-color: #575757;
+                border-radius: 4px;
+            }
+        </style>
+    </head>
     <body>
-    <!-- Begin Header -->
-      <header class="py-3 mb-3 border-bottom">
-    <div class="container-fluid d-grid gap-3 align-items-center" style="grid-template-columns: 1fr 2fr;">
-      <div class="dropdown">
-        <a href="#" class="d-flex align-items-center col-lg-4 mb-2 mb-lg-0 link-dark text-decoration-none dropdown-toggle" id="dropdownNavLink" data-bs-toggle="dropdown" aria-expanded="false">
-          <img width="150" src="{{ url_for('static', filename='assets/images/logo-light.png') }}">
-        </a>
-        <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownNavLink">
-          <li><a class="dropdown-item active" href="#" aria-current="page">Overview</a></li>
-          <li><a class="dropdown-item" href="#">Inventory</a></li>
-          <li><a class="dropdown-item" href="#">Customers</a></li>
-          <li><a class="dropdown-item" href="#">Products</a></li>
-          <li><hr class="dropdown-divider"></li>
-          <li><a class="dropdown-item" href="#">Reports</a></li>
-          <li><a class="dropdown-item" href="#">Analytics</a></li>
-        </ul>
-      </div>
-
-      <div class="d-flex align-items-center">
-        <form class="w-100 me-3">
-          <input type="search" class="form-control" placeholder="Search..." aria-label="Search">
-        </form>
-
-        <div class="flex-shrink-0 dropdown">
-          <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false">
-            <img src="https://github.com/mdo.png" alt="mdo" width="32" height="32" class="rounded-circle">
-          </a>
-          <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser2">
-            <li><a class="dropdown-item" href="#">New project...</a></li>
-            <li><a class="dropdown-item" href="#">Settings</a></li>
-            <li><a class="dropdown-item" href="#">Profile</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="#">Sign out</a></li>
-          </ul>
+        <div class="container-fluid text-center top-container">
+            <img style="max-width:400px; max-height:400px" src="{{ url_for('static', filename='assets/images/logo-light.png') }}">
         </div>
-      </div>
-    </div>
-  </header>
-
-  <div class="container-fluid pb-3">
-    <div class="d-grid gap-3" style="grid-template-columns: 1fr 2fr;">
-      <div class="bg-light border rounded-3">
-        {% block quiz %}
+        <div class="navbar">
+            <a href="{{ scoreboard_endpoint }}">Scoreboard</a>
+            <a href="{{ logout_endpoint }}">Logout</a>
+        </div>
+        <div class="container">
+            {% block content %}
             {% endblock %}
-      </div>
-      <div class="contentcontainer border rounded-3">
-        {% block content %}
-            {% endblock %}
-      </div>
-    </div>
-  </div>
-    <!-- End Header -->
-
-
-
-
-        <div class="container game_container">
-
         </div>
         <footer class="footer footer-alt">
             <script>document.write(new Date().getFullYear())</script> Made with love by <a href="www.splunk.com" class="text-dark">Splunk</a>

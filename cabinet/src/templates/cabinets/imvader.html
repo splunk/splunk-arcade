@@ -1,68 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Space Invaders Clone</title>
+    <title>Space Imvaders</title>
     <style>
-      body {
-        background-color: black;
-        color: white;
-      }
       canvas {
         display: block;
         margin: 0 auto;
       }
-      #gameInfo {
+      gameInfo {
         text-align: center;
         font-family: Arial, sans-serif;
 
       }
-       .question-container {
-
-            margin: 0;
-            padding: 10px;
-
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-
-
-        }
-        .question {
-            font-size: 1.2em;
-            margin-bottom: 20px;
-            color: #555;
-        }
-        .choices {
-            list-style: none;
-            padding: 0;
-        }
-        .choices li {
-            margin-bottom: 10px;
-        }
-        .choices input {
-            margin-right: 10px;
-        }
-        label {
-    cursor: pointer;
-    color: #555;
-    display: block;
-    padding: 10px;
-    margin: 3px;
-}
-        quiz.question {
-color:pink;
-font-size: 14px;
-}
-
+      label {
+        cursor: pointer;
+        color: #555;
+        display: block;
+        padding: 10px;
+        margin: 3px;
+      }
     </style>
   </head>
   <body>
-
-
-
     <div id="gameInfo">
       <h2>Trace Invaders</h2>
       <p>
@@ -230,17 +191,6 @@ font-size: 14px;
       // Stars
       const stars = [];
       const numStars = 100;
-
-      function initStars() {
-        for (let i = 0; i < numStars; i++) {
-          stars.push({
-            x: Math.random() * canvas.width,
-            y: Math.random() * canvas.height,
-            radius: Math.random() * 1.5,
-            speed: Math.random() * 0.5 + 0.1,
-          });
-        }
-      }
 
       // Update and draw stars
       function updateStars() {
