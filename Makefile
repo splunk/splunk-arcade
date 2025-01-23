@@ -37,6 +37,9 @@ python-lint: python-fmt ## Run linter on all the python bits
 	venv/bin/python -m ruff check player-content/
 	venv/bin/python -m ruff check scoreboard/
 
+build-tailwind: ## Builds tailwind css output files for ui components
+	cd portal && npm run tailwind-build
+
 clean-pvcs: ## Cleanup any pvcs for redis/postgres
 	kubectl delete pvc \
 		data-splunk-arcade-postgresql-0 \
