@@ -13,66 +13,124 @@
         <script src="http://code.jquery.com/jquery-latest.js"></script>
 
         <script>
-            $.ajax({
-                type: 'GET',
-                url: '{{ url_for("routes.get_walkthrough", module=data.title, stage=1) }}',
-                success: function(response) {
-                    var walkthrough_content = response;
+            let startTime = null;
+            let attemptsCount = 0;
 
-                    $('div.walkthrough').append(walkthrough_content);
-                },
-                error: function(error) {
-                    console.log(error);
-                }
-            });
-        </script>
+            function unlockQuizQuestion() {
+                $.ajax({
+                    type: 'GET',
+                    url: '{{ url_for("routes.get_question", module=data.title) }}',
+                    success: function(response) {
+                        const question = response.question;
 
-        <script>
-            $.ajax({
-                type: 'GET',
-                url: '{{ url_for("routes.get_question", module=data.title) }}',
-                success: function(response) {
-                    var question = response.question;
-                    var A = response.A;
-                    var B = response.B;
-                    var C = response.C;
-                    var D = response.D;
-                    var answer = response.answer;
+                        document.getElementById("quiz-message").style.display = "none";
+                        document.getElementById("quiz-options").style.display = "block";
+                        document.getElementById("quiz-question").textContent = question;
 
-                    $('div.question').append(question);
-                    $('#OptionA').append(A);
-                    $('#OptionB').append(B);
-                    $('#OptionC').append(C);
-                    $('#OptionD').append(D);
+                        attemptsCount = 0;
+                        startTime = new Date().getTime();
 
-                    window.correctAnswer = answer;
-                },
-                error: function(error) {
-                    console.log(error);
-                }
-            });
+                        const optionsList = document.getElementById("quiz-answer-options");
+                        optionsList.innerHTML = '';
 
-            function checkAnswer() {
-                const choices = document.getElementsByName('options');
-                let selectedValue;
+                        const options = ['A', 'B', 'C', 'D'];
+                        options.forEach((option, _) => {
+                            const li = document.createElement("li");
+                            li.classList.add("flex", "items-center");
 
-                for (const choice of choices) {
-                    if (choice.checked) {
-                        selectedValue = choice.value;
-                        break;
+                            const input = document.createElement("input");
+                            input.type = "radio";
+                            input.name = "quiz-answer";
+                            input.value = response[option];
+                            input.id = `option-${option}`;
+                            input.classList.add("mr-2", "accent-cyan-600");
+
+                            const label = document.createElement("label");
+                            label.setAttribute("for", `option-${option}`);
+                            label.classList.add("text-white", "cursor-pointer");
+                            label.textContent = response[option];
+
+                            li.appendChild(input);
+                            li.appendChild(label);
+
+                            optionsList.appendChild(li);
+
+                            if (option === response.answer) {
+                                window.correctAnswer = option;
+                            }
+                        });
+                    },
+                    error: function(error) {
+                        console.log(error);
                     }
-                }
+                });
+            }
 
-                if (selectedValue) {
-                    if (selectedValue === window.correctAnswer) {
-                        alert('Correct!');
+            function checkQuestionAnswer() {
+                const selectedOption = document.querySelector('input[name="quiz-answer"]:checked');
+
+                if (selectedOption) {
+                    const selectedAnswer = selectedOption.id.split("-")[1];
+
+                    const feedbackElement = document.createElement("div");
+                    feedbackElement.classList.add("quiz-feedback", "absolute", "top-1/2", "left-1/2", "transform", "-translate-x-1/2", "px-4", "py-2", "rounded-lg", "transition-all", "duration-300");
+
+                    attemptsCount++;
+
+                    if (selectedAnswer === window.correctAnswer) {
+                        const endTime = new Date().getTime();
+                        const timeTaken = (endTime - startTime) / 1000;
+                        feedbackElement.textContent = `Correct! It took you ${timeTaken.toFixed(2)} seconds and ${attemptsCount} attempt(s).`;
+                        feedbackElement.classList.add("bg-green-500", "text-white");
+
+                        console.log(`Time taken: ${timeTaken} seconds, Attempts: ${attemptsCount}`);
+
+                        $.ajax({
+                            type: 'POST',
+                            url: '{{ url_for("routes.record_answer", module=data.title) }}',
+                            data: JSON.stringify({
+                                question: document.getElementById("quiz-question").textContent,
+                                attempts: attemptsCount,
+                                time_taken: timeTaken
+                            }),
+                            contentType: 'application/json',
+                            success: function(response) {
+                                console.log('Answer recorded successfully:', response);
+                            },
+                            error: function(error) {
+                                console.log('Error recording answer:', error);
+                            }
+                        });
+
+                        document.getElementById("quiz-options").style.display = "none";
+                        document.getElementById("quiz-message").style.display = "block";
+
+                        startTime = null;
+                        attemptsCount = 0;
                     } else {
-                        alert(`Incorrect. The correct answer is: ${window.correctAnswer}`);
+                        feedbackElement.textContent = "Wrong answer. Try again!";
+                        feedbackElement.classList.add("bg-red-500", "text-white");
                     }
+
+                    document.body.appendChild(feedbackElement);
+
+                    setTimeout(() => {
+                        feedbackElement.classList.add("opacity-0");
+                        setTimeout(() => feedbackElement.remove(), 500);
+                    }, 2000);
                 } else {
-                    alert('Please select an answer before submitting.');
+                    const feedbackElement = document.createElement("div");
+                    feedbackElement.textContent = "Please select an answer before submitting.";
+                    feedbackElement.classList.add("bg-yellow-500", "text-white", "absolute", "top-1/2", "left-1/2", "transform", "-translate-x-1/2", "px-4", "py-2", "rounded-lg");
+                    document.body.appendChild(feedbackElement);
+
+                    setTimeout(() => {
+                        feedbackElement.classList.add("opacity-0");
+                        setTimeout(() => feedbackElement.remove(), 500);
+                    }, 2000);
                 }
             }
+
         </script>
     </head>
     <body class="flex flex-col bg-gray-800 bg-cover bg-center" style="background-image: url('{{ url_for('static', filename='images/arcade_bg.png') }}');">
@@ -135,9 +193,24 @@
                     class="absolute left-0 w-64 bg-gray-800 text-white shadow-lg transform -translate-x-full transition-transform duration-300 z-50 h-full"
                     style="top: 4rem;"
             >
-            <ul class="p-4 space-y-2">
-                <div class="walkthrough" id="walkthrough"></div>
-            </ul>
+                <ul class="p-4 space-y-2">
+                    <div class="walkthrough" id="walkthrough"></div>
+                </ul>
+
+                <div class="flex justify-between items-center p-4 border-t border-gray-700">
+                    <button
+                            id="prev-stage"
+                            class="bg-gray-700 hover:bg-gray-600 text-white py-2 px-4 w-15 rounded-lg"
+                    >
+                        ←
+                    </button>
+                    <button
+                            id="next-stage"
+                            class="bg-gray-700 hover:bg-gray-600 text-white py-2 px-4 w-15 rounded-lg"
+                    >
+                        →
+                    </button>
+                </div>
             </div>
 
             <div
@@ -146,30 +219,23 @@
                     style="top: 4rem;"
             >
                 <ul class="p-4">
-                    <div class="question" id="question"></div>
-                    <ul class="choices">
-                        <li>
-                            <label id="OptionA">
-                                <input type="radio" name="options" value="A"> A)
-                            </label>
-                        </li>
-                        <li>
-                            <label id="OptionB">
-                                <input type="radio" name="options" value="B"> B)
-                            </label>
-                        </li>
-                        <li>
-                            <label id="OptionC">
-                                <input type="radio" name="options" value="C"> C)
-                            </label>
-                        </li>
-                        <li>
-                            <label id="OptionD">
-                                <input type="radio" name="options" value="D"> D)
-                            </label>
-                        </li>
-                    </ul>
-                    <button type="button" onclick="checkAnswer()">Submit</button>
+                    <div class="quiz">
+                        <p id="quiz-message" class="text-center text-xl font-semibold">Play a level to unlock a question.</p>
+
+                        <div id="quiz-options" class="hidden space-y-4">
+                            <p id="quiz-question" class="text-lg font-medium"></p>
+                            <hr class="border-gray-600 my-4">
+                            <ul id="quiz-answer-options" class="space-y-2">
+                                <!-- populated from quiz fetch func -->
+                            </ul>
+                            <button id="submit-answer" class="w-full bg-cyan-600 hover:bg-cyan-700 text-white py-2 px-4 rounded-lg mt-4" onclick="checkQuestionAnswer()">
+                                Submit Answer
+                            </button>
+                        </div>
+
+                        <div id="quiz-feedback" class="mt-4 text-lg"></div>
+                    </div>
+                    </div>
                 </ul>
             </div>
         </main>
@@ -185,6 +251,86 @@
                     rightDrawer.classList.toggle('translate-x-full');
                 }
             }
+        </script>
+        <script>
+            /// this keeps the arrow keys from scrolling the page when playing a game
+            const gameContainer = document.getElementById("game-container");
+
+            gameContainer.addEventListener("keydown", function (event) {
+                if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(event.key)) {
+                    event.preventDefault();
+                }
+            });
+
+            gameContainer.setAttribute("tabindex", "0");
+            gameContainer.style.outline = "none";
+            gameContainer.focus();
+        </script>
+        <script>
+            // we want to disable scrolling (horizontally) so users dont see the "hidden" content panels
+            document.body.style.overflowX = "hidden";
+        </script>
+
+        <script>
+            let currentStage = 1;
+
+            function fetchWalkthroughStage(stage) {
+                $.ajax({
+                    type: "GET",
+                    url: "{{ url_for('routes.get_walkthrough', module=data.title, stage='') }}" + stage,
+                    success: function (response) {
+                        const walkthroughElement = document.getElementById("walkthrough");
+
+                        if (!walkthroughElement) {
+                            console.error("Walkthrough element not found");
+                            return;
+                        }
+
+                        walkthroughElement.innerHTML = "";
+
+                        // title; replace w/ actual title/content when service is updated to
+                        // return that ;p
+                        const t = document.createElement("span");
+                        t.className = "mr-4";
+                        t.innerHTML = `<strong>${response.module}</strong>`;
+                        walkthroughElement.appendChild(t);
+
+                        const c = document.createElement("span");
+                        c.className = "mr-4";
+                        c.innerHTML = `<strong>${response.stage}</strong>`;
+                        walkthroughElement.appendChild(c);
+                    },
+                    error: function (error) {
+                        console.error("Error fetching walkthrough stage:", error);
+                    },
+                });
+            }
+
+            function setupWalkthroughNavigation() {
+                const prevButton = document.getElementById("prev-stage");
+                const nextButton = document.getElementById("next-stage");
+
+                if (prevButton && nextButton) {
+                    prevButton.onclick = function () {
+                        if (currentStage > 1) {
+                            currentStage--;
+                            fetchWalkthroughStage(currentStage);
+                        } else {
+                            alert("You're already at the first stage!");
+                        }
+                    };
+
+                    nextButton.onclick = function () {
+                        currentStage++;
+                        fetchWalkthroughStage(currentStage);
+                    };
+                }
+            }
+
+            document.addEventListener("DOMContentLoaded", function () {
+                fetchWalkthroughStage(currentStage);
+                setupWalkthroughNavigation();
+            });
         </script>
 
         <footer class="mt-auto bg-gray-800 opacity-90 text-white p-4 text-center">

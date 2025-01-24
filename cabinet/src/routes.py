@@ -111,6 +111,15 @@ def get_question(module: str):
     return content.json()
 
 
+@routes.route("/answer/<string:module>", methods=["POST"])
+def record_answer(module: str):
+    content = request.get_json(force=True)
+
+    # TODO ship content to scoreboard to record/save in redis
+
+    return {}
+
+
 @routes.route("/walkthrough/<string:module>/<string:stage>", methods=["GET"])
 def get_walkthrough(module: str, stage: str):
     content = requests.get(f"http://{PLAYER_CONTENT_HOST}/walkthrough/{module}/{stage}")
