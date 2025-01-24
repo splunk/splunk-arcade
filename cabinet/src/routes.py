@@ -124,4 +124,8 @@ def record_answer(module: str):
 def get_walkthrough(module: str, stage: str):
     content = requests.get(f"http://{PLAYER_CONTENT_HOST}/walkthrough/{module}/{stage}")
 
+    if content.status_code == 422:
+        # signal to the front end that they ran out of content
+        return {}
+
     return content.json()
