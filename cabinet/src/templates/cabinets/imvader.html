@@ -39,6 +39,7 @@
       let lives = 3;
       let level = 1;
       let gameOver = false;
+      let levelUpPause = false;
       let enemyDirection = 1;
       let enemyDropDistance = 30;
       let enemySpeed = 1;
@@ -325,6 +326,8 @@
         initEnemies();
         levelUpSound.currentTime = 0;
         levelUpSound.play();
+        levelUpPause = true;
+        unlockQuizQuestion();
       }
 
       function gameLoop() {
@@ -352,6 +355,27 @@
 
           if (keys["KeyR"]) {
             restartGame();
+          }
+          requestAnimationFrame(gameLoop);
+          return;
+        } else if (levelUpPause) {
+          ctx.fillStyle = "white";
+          ctx.font = "48px Arial";
+          ctx.textAlign = "center";
+          ctx.fillText("NEXT LEVEL?", canvas.width / 2, canvas.height / 2);
+          ctx.font = "24px Arial";
+          ctx.fillText(
+                  `Final Score: ${score}`,
+                  canvas.width / 2,
+                  canvas.height / 2 + 50
+          );
+          ctx.fillText(
+                  "Press C to Continue",
+                  canvas.width / 2,
+                  canvas.height / 2 + 100
+          );
+          if (keys["KeyC"]) {
+            levelUpPause = false;
           }
           requestAnimationFrame(gameLoop);
           return;
