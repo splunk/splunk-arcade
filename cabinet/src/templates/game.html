@@ -186,6 +186,24 @@
                 }
             }
         </script>
+        <script>
+            /// this keeps the arrow keys from scrolling the page when playing a game
+            const gameContainer = document.getElementById("game-container");
+
+            gameContainer.addEventListener("keydown", function (event) {
+                if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(event.key)) {
+                    event.preventDefault();
+                }
+            });
+
+            gameContainer.setAttribute("tabindex", "0");
+            gameContainer.style.outline = "none";
+            gameContainer.focus();
+        </script>
+        <script>
+            // we want to disable scrolling (horizontally) so users dont see the "hidden" content panels
+            document.body.style.overflowX = "hidden";
+        </script>
 
         <footer class="mt-auto bg-gray-800 opacity-90 text-white p-4 text-center">
             <p>Made with ❤️ by <a href="https://www.splunk.com" target="_blank" class="text-blue-400 hover:text-blue-500">Splunk</a></p>
