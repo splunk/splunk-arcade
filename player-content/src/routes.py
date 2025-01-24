@@ -18,11 +18,11 @@ async def get_question(module: str) -> JSONResponse:
     return JSONResponse(content=q.random_question_for_module(module))
 
 
-@router.get("/walkthrough/{module}/{level}")
+@router.get("/walkthrough/{module}/{stage}")
 async def get_walkthrough(module: str, stage: int) -> JSONResponse:
     w = _Walkthroughs()
 
     try:
-        return JSONResponse(w.get_module_stage(module=module, stage=stage))
+        return JSONResponse(content=w.get_module_stage(module=module, stage=stage))
     except IndexError:
         raise HTTPException(status_code=422, detail=f"stage {stage} not present for module {module}")

@@ -2,7 +2,7 @@ import json
 from random import randint
 
 
-class _Walkthrough:
+class _Walkthroughs:
     _instance = None
 
     def __new__(cls):
