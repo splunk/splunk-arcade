@@ -605,6 +605,15 @@
   .w-10\/12 {
     width: calc(10/12 * 100%);
   }
+  .w-15 {
+    width: calc(var(--spacing) * 15);
+  }
+  .w-20 {
+    width: calc(var(--spacing) * 20);
+  }
+  .w-30 {
+    width: calc(var(--spacing) * 30);
+  }
   .w-32 {
     width: calc(var(--spacing) * 32);
   }
@@ -676,6 +685,13 @@
   .border {
     border-style: var(--tw-border-style);
     border-width: 1px;
+  }
+  .border-t {
+    border-top-style: var(--tw-border-style);
+    border-top-width: 1px;
+  }
+  .border-gray-700 {
+    border-color: var(--color-gray-700);
   }
   .bg-gray-700 {
     background-color: var(--color-gray-700);
