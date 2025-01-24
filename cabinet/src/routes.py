@@ -7,7 +7,8 @@ from flask_login import current_user, login_required
 from opentelemetry import trace
 
 from src.db import db
-from src.models import Games
+from src.login import login
+from src.models import User
 
 routes = Blueprint("routes", __name__)
 
@@ -16,6 +17,11 @@ PLAYER_NAME = os.getenv("PLAYER_NAME")
 ARCADE_HOST = os.getenv("ARCADE_HOST")
 SCOREBOARD_HOST = os.getenv("SCOREBOARD_HOST")
 PLAYER_CONTENT_HOST = os.getenv("PLAYER_CONTENT_HOST")
+
+
+@login.user_loader
+def load_user(id):
+    return db.session.get(User, int(id))
 
 
 @routes.route("/alive", methods=["GET"])
@@ -35,7 +41,7 @@ def page_not_found(e):
 @login_required
 def index():
     if current_user.is_authenticated:
-        return redirect(url_for("routes.gamelist", login=True))
+        return redirect(url_for("routes.home", login=True))
     else:
         return redirect(url_for("routes.login"))
 
@@ -50,47 +56,36 @@ def logout():
     return redirect(f"http://{ARCADE_HOST}/logout", code=302)
 
 
-@routes.route("/gamelist", methods=["GET", "POST"])
+@routes.route("/home", methods=["GET", "POST"])
 @login_required
-def gamelist():
-    gamelist = db.session.query(Games)
-
-    for g in Games.gamejson:
-        exists = db.session.query(Games).filter_by(title=g["title"]).scalar() is not None
-        if not exists:
-            games = Games()
-            games.title = g["title"]
-            games.description = g["description"]
-            games.gameurl = g["uri"]
-            db.session.add(games)
-            db.session.commit()
-
-    if current_user.is_authenticated:
-        return render_template("gamelist.html", gamelist=True, gameData=gamelist)
-    else:
+def home():
+    if not current_user.is_authenticated:
         return redirect(url_for("routes.login"))
+
+    return render_template("home.html")
 
 
 @routes.route("/playgame", methods=["GET", "POST"])
 @login_required
 def playgame():
-    if current_user.is_authenticated:
-        title = request.form.get("title")
-        description = request.form["description"]
-        uri = request.form.get("uri")
-        return render_template(
-            "playgame.html",
-            playgame=True,
-            gamelist=True,
-            data={"title": title, "description": description, "uri": uri},
-            user_username=current_user.username,
-            user_uuid=current_user.uuid,
-            gamesession=uuid.uuid4(),
-            arcade_endpoint=f"http://{ARCADE_HOST}/player/{PLAYER_NAME}/v2/update_score/",
-            quizendpoint=f"http://{ARCADE_HOST}/player/{PLAYER_NAME}/question/imvaders",
-        )
-    else:
+    if not current_user.is_authenticated:
         return redirect(url_for("routes.login"))
+
+    return render_template(
+        "playgame.html",
+        playgame=True,
+        gamelist=True,
+        data={
+            "title": request.form.get("title"),
+            "description": request.form["description"],
+            "uri": request.form.get("uri"),
+        },
+        user_username=current_user.username,
+        user_uuid=current_user.uuid,
+        gamesession=uuid.uuid4(),
+        arcade_endpoint=f"http://{ARCADE_HOST}/player/{PLAYER_NAME}/v2/update_score/",
+        quizendpoint=f"http://{ARCADE_HOST}/player/{PLAYER_NAME}/question/imvaders",
+    )
 
 
 @routes.route("/v2/update_score/", methods=["POST"])

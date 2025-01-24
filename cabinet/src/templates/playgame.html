@@ -1,14 +1,6 @@
 {% extends "layout-game.html" %}
 
 {% block content %}
-    <div class="row">
-        <div class="col-md-12 text-center">
-            <h1>You are playing:</h1>
-            <p>Title: {{ data.title }}</p>
-            <p>Description: {{ data.description }}</p>
-        </div>
-    </div>
-
     {% if "imvader" in data.title  %}
         {% include 'cabinets/imvader.html' %}
     {% endif %}      
@@ -66,32 +58,5 @@
             }
         }
     </script>
-
-    <div class="question-container">
-        <div class="question" id="question"></div>
-        <ul class="choices">
-            <li>
-                <label id="OptionA">
-                    <input type="radio" name="options" value="A"> A)
-                </label>
-            </li>
-            <li>
-                <label id="OptionB">
-                    <input type="radio" name="options" value="B"> B)
-                </label>
-            </li>
-            <li>
-                <label id="OptionC">
-                    <input type="radio" name="options" value="C"> C)
-                </label>
-            </li>
-            <li>
-                <label id="OptionD">
-                    <input type="radio" name="options" value="D"> D)
-                </label>
-            </li>
-        </ul>
-        <button type="button" onclick="checkAnswer()">Submit</button>
-    </div>
 
 {% endblock %}

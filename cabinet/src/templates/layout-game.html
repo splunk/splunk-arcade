@@ -1,90 +1,145 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta charset="utf-8"/>
+        <meta charset="utf-8" />
         <title>The Splunk Arcade!</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
-        <link rel="stylesheet"
-              href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-              integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
-              crossorigin="anonymous">
+        <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico')}}">
 
-        <link rel="shortcut icon" href="{{ url_for('static',filename='assets/images/favicon.ico')}}">
-        <link rel="stylesheet" type="text/css"
-              href="{{  url_for('static',filename='assets/css/bootstrap.min.css' ) }}"/>
-        <link rel="stylesheet" type="text/css" id="app-stylesheet"
-              href="{{url_for('static',filename='assets/css/app.min.css')}}"/>
-        <link rel="stylesheet" type="text/css"
-              href="{{ url_for('static',filename='assets/css/icons.min.css')}}"/>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/output.css')}}">
 
-        <script src="{{ url_for('static',filename='assets/js/config.js')}}"></script>
         <script src="http://code.jquery.com/jquery-latest.js"></script>
-
-        <style>
-            canvas {
-                display: block;
-                margin: 0 auto;
-            }
-            .choices li {
-                margin-bottom: 5px;
+        <script>
+            function openDrawer() {
+                const drawer = document.getElementById('drawer');
+                const openBtn = document.getElementById('open-drawer-btn');
+                drawer.classList.remove('-translate-x-full'); // Open the drawer
+                openBtn.classList.add('hidden'); // Hide the open button
             }
 
-            .choices input {
-                margin-right: 5px;
+            function closeDrawer() {
+                const drawer = document.getElementById('drawer');
+                const openBtn = document.getElementById('open-drawer-btn');
+                drawer.classList.add('-translate-x-full'); // Close the drawer
+                openBtn.classList.remove('hidden'); // Show the open button
             }
-            label {
-                cursor: pointer;
-                display: block;
-                padding: 5px;
-                margin: 3px;
+        </script>
+
+        <script>
+            $.ajax({
+                type: 'GET',
+                url: '{{ url_for("routes.get_question", module="imvaders") }}',
+                success: function(response) {
+                    var question = response.question;
+                    var A = response.A;
+                    var B = response.B;
+                    var C = response.C;
+                    var D = response.D;
+                    var answer = response.answer;
+
+                    $('div.question').append(question);
+                    $('#OptionA').append(A);
+                    $('#OptionB').append(B);
+                    $('#OptionC').append(C);
+                    $('#OptionD').append(D);
+
+                    // Store the answer in a global variable for later comparison
+                    window.correctAnswer = answer;
+                },
+                error: function(error) {
+                    console.log('not implemented');
+                }
+            });
+
+            function checkAnswer() {
+                const choices = document.getElementsByName('options');
+                let selectedValue;
+
+                for (const choice of choices) {
+                    if (choice.checked) {
+                        selectedValue = choice.value;
+                        break;
+                    }
+                }
+
+                if (selectedValue) {
+                    if (selectedValue === window.correctAnswer) {
+                        alert('Correct!');
+                    } else {
+                        alert(`Incorrect. The correct answer is: ${window.correctAnswer}`);
+                    }
+                } else {
+                    alert('Please select an answer before submitting.');
+                }
             }
-            .contentcontainer {
-                background-color: black;
-            }
-            .navbar {
-                display: flex;
-                justify-content: center;
-                padding: 10px;
-            }
-            .navbar a {
-                color: white;
-                text-decoration: none;
-                margin: 0 15px;
-                padding: 8px 12px;
-            }
-            .navbar a:hover {
-                background-color: #575757;
-                border-radius: 4px;
-            }
-        </style>
+        </script>
     </head>
-    <body>
-        <div class="container-fluid text-center top-container">
-            <img style="max-width:400px; max-height:400px" src="{{ url_for('static', filename='assets/images/logo-light.png') }}">
-        </div>
-        <div class="navbar">
-            <a href="{{ url_for('routes.gamelist') }}">Game List</a>
-            <a href="{{ scoreboard_endpoint }}">Scoreboard</a>
-            <a href="{{ logout_endpoint }}">Logout</a>
-        </div>
-        <div class="container-fluid pb-3">
-            <div class="d-grid gap-3" style="grid-template-columns: 1fr 2fr;">
-                <div class="bg-light border rounded-3">
-                    {% block quiz %}
-                    {% endblock %}
-                </div>
-                <div class="contentcontainer border rounded-3">
-                    {% block content %}
-                    {% endblock %}
-                </div>
-            </div>
-        </div>
+    <body class="min-h-screen flex flex-col bg-gray-800 bg-cover bg-center" style="background-image: url('{{ url_for('static', filename='images/arcade_bg.png') }}');">
+        <header>
+            <img src="{{ url_for('static', filename='images/arcade__.png')}}" class="mx-auto h-52">
+        </header>
 
-        <footer class="footer footer-alt">
-            <script>document.write(new Date().getFullYear())</script>
-            Made with love by <a href="www.splunk.com" class="text-dark">Splunk</a>
+        <nav class=" text-white">
+            <ul class="flex justify-center space-x-2">
+                <li><a href="{{ url_for('routes.home') }}"><img src="{{ url_for('static', filename='images/logout_.png')}}" class="mx-auto h-14"></a></li>
+                <li><a href="{{ scoreboard_endpoint }}"><img src="{{ url_for('static', filename='images/scoreboard_.png')}}" class="mx-auto h-14"></a></li>
+                <li><a href="{{ logout_endpoint }}"><img src="{{ url_for('static', filename='images/logout_.png')}}" class="mx-auto h-14"></a></li>
+            </ul>
+        </nav>
+
+        <main class="relative py-4 bg-gray-800">
+            <div class="flex-1 p-8 text-white">
+                <button
+                        id="open-drawer-btn"
+                        class="absolute left-0 top-1/2 -translate-y-1/2 bg-gray-700 hover:bg-gray-600 text-white py-2 px-4 rounded-lg shadow-lg z-50"
+                        onclick="openDrawer()"
+                >
+                    Open Drawer
+                </button>
+
+                <div id="drawer" class="fixed top-0 left-0 h-full w-128 bg-gray-900 text-white shadow-lg transform -translate-x-full transition-transform duration-300">
+                    <button
+                            id="close-drawer-btn"
+                            class="absolute top-4 right-4 bg-gray-700 hover:bg-gray-600 text-white py-2 px-4 rounded-lg"
+                            onclick="closeDrawer()"
+                    >
+                        Close
+                    </button>
+                    <div class="question" id="question"></div>
+                    <ul class="choices">
+                        <li>
+                            <label id="OptionA">
+                                <input type="radio" name="options" value="A"> A)
+                            </label>
+                        </li>
+                        <li>
+                            <label id="OptionB">
+                                <input type="radio" name="options" value="B"> B)
+                            </label>
+                        </li>
+                        <li>
+                            <label id="OptionC">
+                                <input type="radio" name="options" value="C"> C)
+                            </label>
+                        </li>
+                        <li>
+                            <label id="OptionD">
+                                <input type="radio" name="options" value="D"> D)
+                            </label>
+                        </li>
+                    </ul>
+                    <button type="button" onclick="checkAnswer()">Submit</button>
+                </div>
+
+                {% block content %}
+                {% endblock %}
+            </div>
+        </main>
+
+        <footer class="mt-auto bg-gray-800 text-white p-4 text-center">
+            <p>Made with ❤️ by <a href="https://www.splunk.com" target="_blank" class="text-blue-400 hover:text-blue-500">Splunk</a></p>
         </footer>
     </body>
 </html>

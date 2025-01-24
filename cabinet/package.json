@@ -1,0 +1,17 @@
+{
+  "name": "cabinet",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "tailwind-watch": "tailwindcss -i ./src/static/css/input.css -o ./src/static/css/output.css --watch",
+    "tailwind-build": "tailwindcss -i ./src/static/css/input.css -o ./src/static/css/output.css"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "",
+  "dependencies": {
+    "@tailwindcss/cli": "^4.0.0",
+    "tailwindcss": "^4.0.0"
+  }
+}
