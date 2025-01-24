@@ -2,6 +2,7 @@ from fastapi import APIRouter
 from fastapi.responses import JSONResponse
 
 from src.questions import _Questions
+from src.coursecontent import _CourseContent
 
 router = APIRouter()
 
@@ -17,6 +18,7 @@ async def get_question(module: str) -> JSONResponse:
     return JSONResponse(content=q.random_question_for_module(module))
 
 
-@router.get("/walkthrough/{module}/{stage}")
-async def get_walkthrough(module: str, stage: str) -> JSONResponse:
-    return JSONResponse(content={"module": module, "stage": stage})
+@router.get("/walkthrough/{module}/{level}")
+async def get_walkthrough(module: str, level: int) -> JSONResponse:
+    c = _CourseContent()
+    return JSONResponse(c.fetchcontent(module, level))
