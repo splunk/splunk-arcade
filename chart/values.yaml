@@ -47,6 +47,10 @@ splunk-otel-collector:
     realm: us1
     accessToken: REPLACE_ME
     profilingEnabled: true
+  extraAttributes:
+    - key_regex: (.*)
+      from: pod
+      tag_name: "$$1"
 
 scoreboard:
   image: splunk-arcade/scoreboard:latest

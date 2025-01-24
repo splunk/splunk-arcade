@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>The Splunk Arcade!</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+        <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico')}}">
+
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/output.css')}}">
+
+        <script src="http://code.jquery.com/jquery-latest.js"></script>
+
+        <script>
+            function submitForm(titleKey, descriptionKey, uriKey) {
+                const form = document.getElementById('gameForm');
+                // Create hidden inputs dynamically based on card clicked
+                const title = document.createElement('input');
+                title.type = 'hidden';
+                title.name = 'title';
+                title.value = titleKey;
+
+                const description = document.createElement('input');
+                description.type = 'hidden';
+                description.name = 'description';
+                description.value = descriptionKey;
+
+                const uri = document.createElement('input');
+                uri.type = 'hidden';
+                uri.name = 'uri';
+                uri.value = uriKey;
+
+                // Append inputs to form
+                form.appendChild(title);
+                form.appendChild(description);
+                form.appendChild(uri);
+
+                // Submit form
+                form.submit();
+            }
+        </script>
+    </head>
+    <body class="min-h-screen flex flex-col bg-gray-800 bg-cover bg-center" style="background-image: url('{{ url_for('static', filename='images/arcade_bg_.png') }}');">
+        <header>
+            <img src="{{ url_for('static', filename='images/arcade__.png')}}" class="mx-auto h-52">
+        </header>
+
+        <nav class=" text-white">
+            <ul class="flex justify-center space-x-2">
+                <li><a href="{{ scoreboard_endpoint }}"><img src="{{ url_for('static', filename='images/scoreboard_.png')}}" class="mx-auto h-14"></a></li>
+                <li><a href="{{ logout_endpoint }}"><img src="{{ url_for('static', filename='images/logout_.png')}}" class="mx-auto h-14"></a></li>
+            </ul>
+        </nav>
+
+        <main class="py-2">
+            <form id="gameForm" action="{{url_for('routes.game')}}" method="POST">
+                <div class="flex justify-center space-x-6 overflow-x-auto px-6">
+                    <div class="min-w-[300px] opacity-90 bg-gray-800 p-8 rounded-lg shadow-lg hover:shadow-2xl hover:shadow-cyan-500/50 p-4 flex flex-col items-center cursor-pointer" onclick="submitForm('imvaders', 'Fight the Space IMvaders!', 'imvader.html')">
+                        <h3 class="font-bold text-white text-lg mb-2 text-center">Space IMvaders</h3>
+                        <p class="text-gray-400 text-center mb-4">Fight the Space IMvaders!<br>Ya know, for Infrastructure Monitoring.</p>
+                        <img src="{{ url_for('static', filename='images/invaders_logo.png') }}" class="w-32 h-32 object-cover rounded-full">
+                    </div>
+
+                    <div class="min-w-[300px] opacity-90 bg-gray-800 p-8 rounded-lg shadow-lg hover:shadow-2xl hover:shadow-cyan-500/50 p-4 flex flex-col items-center cursor-pointer" onclick="submitForm('logger', 'Leap for your logs!', 'logger.html')">
+                        <h3 class="font-bold text-white text-lg mb-2 text-center">Logger</h3>
+                        <p class="text-gray-400 text-center mb-4">Leap for your logs!<br>Keep them logs hoppin'!.</p>
+                        <img src="{{ url_for('static', filename='images/frogger_logo.png') }}" class="w-32 h-32 object-cover rounded-full">
+                    </div>
+
+                    <div class="min-w-[300px] opacity-90 bg-gray-800 p-8 rounded-lg shadow-lg hover:shadow-2xl hover:shadow-cyan-500/50 p-4 flex flex-col items-center">
+                        <h3 class="font-bold text-white text-lg mb-2 text-center">?!</h3>
+                        <p class="text-gray-400 text-center mb-4">What could go here?<br><br></p>
+                        <img src="{{ url_for('static', filename='images/tbd_logo.png') }}" class="w-32 h-32 object-cover rounded-full">
+                    </div>
+                </div>
+            </form>
+        </main>
+
+
+        <footer class="mt-auto bg-gray-800 opacity-90 text-white p-4 text-center">
+            <p>Made with ❤️ by <a href="https://www.splunk.com" target="_blank" class="text-blue-400 hover:text-blue-500">Splunk</a></p>
+        </footer>
+    </body>
+</html>

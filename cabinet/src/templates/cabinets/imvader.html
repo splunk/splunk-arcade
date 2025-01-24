@@ -4,41 +4,34 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Space Imvaders</title>
-    <style>
-      canvas {
-        display: block;
-        margin: 0 auto;
-      }
-      gameInfo {
-        text-align: center;
-        font-family: Arial, sans-serif;
-
-      }
-    </style>
+    <script
+            src="https://cdn.signalfx.com/o11y-gdi-rum/v0.19.1/splunk-otel-web.js"
+            crossorigin="anonymous"
+    ></script>
   </head>
   <body>
-    <div id="gameInfo">
-      <h2>Trace Invaders</h2>
-      <p>
-        Score: <span id="score">0</span> | Lives: <span id="lives">3</span> |
-        Level: <span id="level">1</span>
-      </p>
-
-    </div>
     <canvas id="gameCanvas" width="800" height="600"></canvas>
-    <script
-      src="https://cdn.signalfx.com/o11y-gdi-rum/v0.19.1/splunk-otel-web.js"
-      crossorigin="anonymous"
-    ></script>
-    <script src="{{ url_for('static', filename='assets/js/app.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='assets/js/vendor.min.js') }}"></script>
     <script>
+      function updateGameMetadata(data) {
+        const metadataElement = document.getElementById("game-metadata");
+
+        if (!metadataElement) {
+          console.error("Metadata element not found");
+          return;
+        }
+
+        metadataElement.innerHTML = "";
+
+        Object.entries(data).forEach(([key, value]) => {
+          const item = document.createElement("span");
+          item.className = "mr-4";
+          item.innerHTML = `<strong>${key}:</strong> ${value}`;
+          metadataElement.appendChild(item);
+        });
+      }
+
       const canvas = document.getElementById("gameCanvas");
       const ctx = canvas.getContext("2d");
-      const scoreElement = document.getElementById("score");
-      const livesElement = document.getElementById("lives");
-      const levelElement = document.getElementById("level");
-
 
       // Game state
       let intervalID;
@@ -53,13 +46,20 @@
       let username = "player"+Math.floor(Math.random() * 100)
       let gameDuration = 0;
 
-      SplunkRum.init({
-        realm: "us1",
-        rumAccessToken: "z1-tm3Dq9bkbmmszH_Pi9g",
-        applicationName: "imvaders",
-        version: version,
-        deploymentEnvironment: "dev",
-      });
+      updateGameMetadata({
+        Score: score,
+        Lives: lives,
+        Level: level,
+      })
+
+      // TODO! :)
+      // SplunkRum.init({
+      //   realm: "us1",
+      //   rumAccessToken: "FOO",
+      //   applicationName: "imvaders",
+      //   version: version,
+      //   deploymentEnvironment: "gamify",
+      // });
 
       // Player
       const player = {
@@ -259,9 +259,14 @@
               enemies.splice(enemyIndex, 1);
               bullets.splice(index, 1);
               score += 10;
-              scoreElement.textContent = score;
               explosionSound.currentTime = 0;
               explosionSound.play();
+
+              updateGameMetadata({
+                Score: score,
+                Lives: lives,
+                Level: level,
+              })
 
               if (enemies.length === 0) {
                 levelUp();
@@ -285,9 +290,15 @@
           ) {
             enemyBullets.splice(index, 1);
             lives--;
-            livesElement.textContent = lives;
             playerHitSound.currentTime = 0;
             playerHitSound.play();
+
+            updateGameMetadata({
+              Score: score,
+              Lives: lives,
+              Level: level,
+            })
+
             if (lives <= 0) {
               gameOver = true;
               postState();
@@ -310,7 +321,6 @@
 
       function levelUp() {
         level++;
-        levelElement.textContent = level;
         enemySpeed += 0.5;
         initEnemies();
         levelUpSound.currentTime = 0;
@@ -416,9 +426,6 @@
         bullets.length = 0;
         enemyBullets.length = 0;
         initEnemies();
-        scoreElement.textContent = score;
-        livesElement.textContent = lives;
-        levelElement.textContent = level;
       }
 
       // Key states

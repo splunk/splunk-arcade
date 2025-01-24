@@ -68,18 +68,3 @@ class Workshop(db.Model):
     id: so.Mapped[int] = so.mapped_column(primary_key=True)
     title: so.Mapped[str] = so.mapped_column(sa.String(140))
     description: so.Mapped[str] = so.mapped_column(sa.String(140))
-
-
-class Games(db.Model):
-    id: so.Mapped[int] = so.mapped_column(primary_key=True)
-    title: so.Mapped[str] = so.mapped_column(sa.String(140))
-    description: so.Mapped[str] = so.mapped_column(sa.String(140))
-    gameurl: so.Mapped[str] = so.mapped_column(sa.String(140), nullable=True)
-    gamejson = (
-        {"title": "Logger", "description": "Hop to the log safely", "uri": "loggergame.html"},
-        {
-            "title": "imvader",
-            "description": "Destroy UFOs while being shot at",
-            "uri": "imvader.html",
-        },
-    )
