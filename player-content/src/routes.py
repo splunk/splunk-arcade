@@ -1,8 +1,8 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from fastapi.responses import JSONResponse
 
 from src.questions import _Questions
-from src.coursecontent import _CourseContent
+from src.walkthroughs import _Walkthroughs
 
 router = APIRouter()
 
@@ -19,6 +19,10 @@ async def get_question(module: str) -> JSONResponse:
 
 
 @router.get("/walkthrough/{module}/{level}")
-async def get_walkthrough(module: str, level: int) -> JSONResponse:
-    c = _CourseContent()
-    return JSONResponse(c.fetchcontent(module, level))
+async def get_walkthrough(module: str, stage: int) -> JSONResponse:
+    w = _Walkthroughs()
+
+    try:
+        return JSONResponse(w.get_module_stage(module=module, stage=stage))
+    except IndexError:
+        raise HTTPException(status_code=422, detail=f"stage {stage} not present for module {module}")
