@@ -54,9 +54,9 @@
         </nav>
 
         <main class="py-2">
-            <form id="gameForm" action="{{url_for('routes.playgame')}}" method="POST">
+            <form id="gameForm" action="{{url_for('routes.game')}}" method="POST">
                 <div class="flex justify-center space-x-6 overflow-x-auto px-6">
-                    <div class="min-w-[300px] opacity-90 bg-gray-800 p-8 rounded-lg shadow-lg hover:shadow-2xl hover:shadow-cyan-500/50 p-4 flex flex-col items-center cursor-pointer" onclick="submitForm('imvader', 'Fight the Space IMvaders!', 'imvader.html')">
+                    <div class="min-w-[300px] opacity-90 bg-gray-800 p-8 rounded-lg shadow-lg hover:shadow-2xl hover:shadow-cyan-500/50 p-4 flex flex-col items-center cursor-pointer" onclick="submitForm('imvaders', 'Fight the Space IMvaders!', 'imvader.html')">
                         <h3 class="font-bold text-white text-lg mb-2 text-center">Space IMvaders</h3>
                         <p class="text-gray-400 text-center mb-4">Fight the Space IMvaders!<br>Ya know, for Infrastructure Monitoring.</p>
                         <img src="{{ url_for('static', filename='images/invaders_logo.png') }}" class="w-32 h-32 object-cover rounded-full">
@@ -78,7 +78,7 @@
         </main>
 
 
-        <footer class="mt-auto bg-gray-800 text-white p-4 text-center">
+        <footer class="mt-auto bg-gray-800 opacity-90 text-white p-4 text-center">
             <p>Made with ❤️ by <a href="https://www.splunk.com" target="_blank" class="text-blue-400 hover:text-blue-500">Splunk</a></p>
         </footer>
     </body>

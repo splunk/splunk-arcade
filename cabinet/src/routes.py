@@ -65,14 +65,14 @@ def home():
     return render_template("home.html")
 
 
-@routes.route("/playgame", methods=["GET", "POST"])
+@routes.route("/game", methods=["GET", "POST"])
 @login_required
-def playgame():
+def game():
     if not current_user.is_authenticated:
         return redirect(url_for("routes.login"))
 
     return render_template(
-        "playgame.html",
+        "game.html",
         playgame=True,
         gamelist=True,
         data={
