@@ -1,3 +1,5 @@
+import hashlib
+
 from flask import Blueprint, jsonify, request
 from opentelemetry import trace
 
@@ -12,13 +14,26 @@ def alive():
     return jsonify(success=True)
 
 
-@routes.route("/v2/", methods=["GET"])
-def get_scoreboard():
+@routes.route("/get_game_scores/", methods=["GET"])
+def get_game_scores():
     redis = get_redis_conn()
 
     scoreboard = []
 
     for key in redis.scan_iter(match="scores:*"):
+        score_entry = redis.hgetall(key)
+        scoreboard.append(score_entry)
+
+    return jsonify(scoreboard)
+
+
+@routes.route("/get_quiz_scores/", methods=["GET"])
+def get_quiz_scores():
+    redis = get_redis_conn()
+
+    scoreboard = []
+
+    for key in redis.scan_iter(match="quiz:*"):
         score_entry = redis.hgetall(key)
         scoreboard.append(score_entry)
 
@@ -48,13 +63,26 @@ def record_game_score():
         scoreboard_update[k] = x
 
     redis.hmset(
-        f"scores:{scoreboard_update["player_name"]}:{scoreboard_update["title"]}:{scoreboard_update["game_session_id"]}",
+        f"scores:{scoreboard_update["player_name"]}:"
+        + f"{scoreboard_update["title"]}:"
+        + f"{scoreboard_update["game_session_id"]}",
         scoreboard_update,
     )
 
     ArcadeMetrics.scoreboard_metric_processor(attr=scoreboard_update)
 
     return {}
+
+
+def get_question_hash(question: str) -> str:
+    # Create a SHA-256 hash object
+    sha256_hash = hashlib.sha256()
+
+    # Update the hash object with the bytes of the input string
+    sha256_hash.update(question.encode("utf-8"))
+
+    # Return the hexadecimal representation of the hash
+    return sha256_hash.hexdigest()
 
 
 @routes.route("/record_quiz_score/", methods=["POST"])
@@ -73,7 +101,10 @@ def record_quiz_score():
         quiz_update[k] = x
 
     redis.hmset(
-        f"quiz:{quiz_update["player_name"]}:{quiz_update["title"]}:{quiz_update["game_session_id"]}",
+        f"quiz:{quiz_update["player_name"]}:"
+        + f"{quiz_update["title"]}:"
+        + f"{quiz_update["game_session_id"]}:"
+        + f"{get_question_hash(question=quiz_update["question"])}",
         quiz_update,
     )
 
