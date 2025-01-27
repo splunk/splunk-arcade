@@ -25,8 +25,8 @@ def get_scoreboard():
     return jsonify(scoreboard)
 
 
-@routes.route("/v2/update/", methods=["POST"])
-def update_scoreboard():
+@routes.route("/record_game_score/", methods=["POST"])
+def record_game_score():
     redis = get_redis_conn()
 
     content = request.get_json()
@@ -47,8 +47,34 @@ def update_scoreboard():
             x = v
         scoreboard_update[k] = x
 
-    redis.hmset(f"scores:{scoreboard_update["game_session_id"]}", scoreboard_update)
+    redis.hmset(
+        f"scores:{scoreboard_update["player_name"]}:{scoreboard_update["title"]}:{scoreboard_update["game_session_id"]}",
+        scoreboard_update,
+    )
 
     ArcadeMetrics.scoreboard_metric_processor(attr=scoreboard_update)
 
-    return "Scoreboard updated successfully!"
+    return {}
+
+
+@routes.route("/record_quiz_score/", methods=["POST"])
+def record_quiz_score():
+    redis = get_redis_conn()
+
+    content = request.get_json()
+
+    quiz_update = {}
+
+    for k, v in content.items():
+        if isinstance(v, bool) or isinstance(v, list):
+            x = str(v)
+        else:
+            x = v
+        quiz_update[k] = x
+
+    redis.hmset(
+        f"quiz:{quiz_update["player_name"]}:{quiz_update["title"]}:{quiz_update["game_session_id"]}",
+        quiz_update,
+    )
+
+    return {}

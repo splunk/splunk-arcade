@@ -19,6 +19,6 @@ class _Walkthroughs:
         _module = module.lower()
 
         if _module not in self.content:
-           raise Exception(f"module '{module}' is not in walkthroughs bank")
+            raise Exception(f"module '{module}' is not in walkthroughs bank")
 
         return self.content[_module][stage]

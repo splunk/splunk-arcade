@@ -92,18 +92,20 @@ def game():
     )
 
 
-@routes.route("/v2/update_score/", methods=["POST"])
-def update_score():
+@routes.route("/record_game_score/", methods=["POST"])
+def record_game_score():
     content = request.get_json(force=True)
 
     current_span = trace.get_current_span()
     for k, v in content.items():
         current_span.set_attribute(k, v)
 
-    requests.post(
-        f"http://{SCOREBOARD_HOST}/v2/update/",
+    ret = requests.post(
+        f"http://{SCOREBOARD_HOST}/record_game_score/",
         json=content,
     )
+
+    print(f"record game score status {ret.status_code}")
 
     return {}
 
@@ -115,11 +117,17 @@ def get_question(module: str):
     return content.json()
 
 
-@routes.route("/answer/<string:module>", methods=["POST"])
-def record_answer(module: str):
+@routes.route("/answer", methods=["POST"])
+def record_answer():
     content = request.get_json(force=True)
 
     # TODO ship content to scoreboard to record/save in redis
+    ret = requests.post(
+        f"http://{SCOREBOARD_HOST}/record_quiz_score/",
+        json=content,
+    )
+
+    print(f"record quiz score status {ret.status_code}")
 
     return {}
 
