@@ -174,7 +174,10 @@ def wait_arcade():
     return render_template("wait-arcade.html", title="Waiting", user=session)
 
 
-def calculate_quiz_answer_score(attempts, time_taken):
+def calculate_quiz_answer_score(
+    attempts: int,
+    time_taken: float,
+) -> float:
     attempt_score = {1: 1.0, 2: 0.75, 3: 0.5, 4: 0.25}.get(attempts, 0)
 
     time_score = max(0, min(1, 1 - (time_taken / 3600)))
@@ -182,6 +185,21 @@ def calculate_quiz_answer_score(attempts, time_taken):
     total_score = (attempt_score + time_score) / 2
 
     return round(total_score * 100)
+
+
+def calculate_blended_score(
+    game_score: int,
+    quiz_score: int,
+    max_game_score: int,
+):
+    game_weight = 0.6
+    quiz_weight = 0.4
+
+    normalized_game_score = game_score / max_game_score if max_game_score > 0 else 0
+
+    overall_score = (normalized_game_score * game_weight) + (quiz_score * quiz_weight)
+
+    return round(overall_score)
 
 
 @routes.route("/scoreboard")
@@ -244,17 +262,45 @@ def scoreboard():
             )
         )
 
+    max_game_score = max(_high_scores_quiz.values(), key=lambda k: k["current_score"])[
+        "current_score"
+    ]
+
     _high_scores_blended = {}
-    # TODO
+    for player_name in _high_scores_cumulative.keys():
+        _high_scores_blended[player_name] = {
+            "player_name": player_name,
+            "current_score": calculate_blended_score(
+                game_score=_high_scores_cumulative[player_name]["current_score"],
+                quiz_score=_high_scores_quiz.get(player_name, {}).get("current_score", 0),
+                max_game_score=max_game_score,
+            ),
+        }
 
     return render_template(
         "scoreboard.html",
         title="Scoreboard",
         user=session,
-        high_scores_per_game_session=[data for data in _high_scores_per_game_session.values()],
-        high_scores_cumulative=[data for data in _high_scores_cumulative.values()],
-        high_scores_quiz=[data for data in _high_scores_quiz.values()],
-        high_scores_blended=[data for data in _high_scores_blended.values()],
+        high_scores_per_game_session=sorted(
+            [data for data in _high_scores_per_game_session.values()],
+            key=lambda x: x["current_score"],
+            reverse=True,
+        )[:10],
+        high_scores_cumulative=sorted(
+            [data for data in _high_scores_cumulative.values()],
+            key=lambda x: x["current_score"],
+            reverse=True,
+        )[:10],
+        high_scores_quiz=sorted(
+            [data for data in _high_scores_quiz.values()],
+            key=lambda x: x["current_score"],
+            reverse=True,
+        )[:10],
+        high_scores_blended=sorted(
+            [data for data in _high_scores_blended.values()],
+            key=lambda x: x["current_score"],
+            reverse=True,
+        )[:10],
     )
 
 
