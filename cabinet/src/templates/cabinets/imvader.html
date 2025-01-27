@@ -155,10 +155,9 @@
           version: version,
         };
 
-        const arcadeEndpoint = "{{ arcade_endpoint }}";
         $.ajax({
           type: "POST",
-          url: arcadeEndpoint,
+          url: '{{ url_for("routes.update_score") }}',
           data: JSON.stringify(dict),
           contentType: "application/json",
         });
