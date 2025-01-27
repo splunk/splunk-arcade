@@ -62,7 +62,11 @@ def home():
     if not current_user.is_authenticated:
         return redirect(url_for("routes.login"))
 
-    return render_template("home.html")
+    return render_template(
+        "home.html",
+        scoreboard_endpoint=f"http://{ARCADE_HOST}/scoreboard",
+        logout_endpoint=f"http://{ARCADE_HOST}/logout",
+    )
 
 
 @routes.route("/game", methods=["GET", "POST"])
@@ -83,8 +87,8 @@ def game():
         user_username=current_user.username,
         user_uuid=current_user.uuid,
         gamesession=uuid.uuid4(),
-        arcade_endpoint=f"http://{ARCADE_HOST}/player/{PLAYER_NAME}/v2/update_score/",
-        quizendpoint=f"http://{ARCADE_HOST}/player/{PLAYER_NAME}/question/imvaders",
+        scoreboard_endpoint=f"http://{ARCADE_HOST}/scoreboard",
+        logout_endpoint=f"http://{ARCADE_HOST}/logout",
     )
 
 
