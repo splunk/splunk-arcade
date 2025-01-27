@@ -25,4 +25,6 @@ async def get_walkthrough(module: str, stage: int) -> JSONResponse:
     try:
         return JSONResponse(content=w.get_module_stage(module=module, stage=stage))
     except IndexError:
-        raise HTTPException(status_code=422, detail=f"stage {stage} not present for module {module}")
+        raise HTTPException(
+            status_code=422, detail=f"stage {stage} not present for module {module}"
+        )

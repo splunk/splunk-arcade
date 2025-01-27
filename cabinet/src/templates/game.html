@@ -87,8 +87,11 @@
 
                         $.ajax({
                             type: 'POST',
-                            url: '{{ url_for("routes.record_answer", module=data.title) }}',
+                            url: '{{ url_for("routes.record_answer") }}',
                             data: JSON.stringify({
+                                game_session_id: "{{ gamesession }}",
+                                player_name: "{{ user_username }}",
+                                title: "{{ data.title }}",
                                 question: document.getElementById("quiz-question").textContent,
                                 attempts: attemptsCount,
                                 time_taken: timeTaken

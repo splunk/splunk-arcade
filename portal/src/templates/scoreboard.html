@@ -12,26 +12,28 @@
 </head>
 
 <body>
-<section class="h-screen bg-gray-900 flex">
-    <div class="w-1/2 h-full flex flex-col">
-        <!-- Table -->
-        <div class="flex-1 overflow-x-auto">
+<section class="bg-gray-900 h-screen w-full grid grid-rows-3 grid-cols-2 gap-1 p-1">
+    <div class="w-full h-full bg-gray-800 text-white shadow-lg rounded-lg p-4">
+        <div class="text-center text-gray-300 mb-4">
+            <h3 class="text-xl font-bold">High Scores (Per Session)</h3>
+        </div>
+        <div class="overflow-y-auto max-h-64">
             <table class="min-w-full bg-gray-800 text-white shadow-lg rounded-lg table-fixed">
                 <thead>
                 <tr class="bg-gray-700 text-gray-300">
+                    <th class="px-4 py-2 text-left w-1/4">Player</th>
                     <th class="px-4 py-2 text-left w-1/4">Game</th>
                     <th class="px-4 py-2 text-left w-1/4">Version</th>
-                    <th class="px-4 py-2 text-left w-1/4">Player</th>
                     <th class="px-4 py-2 text-left w-1/4">Score</th>
                 </tr>
                 </thead>
                 <tbody>
-                {% if score_data %}
-                {% for score_entry in score_data %}
+                {% if high_scores_per_game_session %}
+                {% for score_entry in high_scores_per_game_session %}
                 <tr class="hover:bg-gray-600">
+                    <td class="px-4 py-2 text-left w-1/4">{{ score_entry["player_name"] }}</td>
                     <td class="px-4 py-2 text-left w-1/4">{{ score_entry["title"] }}</td>
                     <td class="px-4 py-2 text-left w-1/4">{{ score_entry["version"] }}</td>
-                    <td class="px-4 py-2 text-left w-1/4">{{ score_entry["player_name"] }}</td>
                     <td class="px-4 py-2 text-left w-1/4">{{ score_entry["current_score"] }}</td>
                 </tr>
                 {% endfor %}
@@ -45,16 +47,115 @@
                 </tbody>
             </table>
         </div>
-
-        <div class="text-center text-gray-400 p-4">
-            Made with ❤️ by <a href="https://splunk.com" class="text-blue-400 hover:text-blue-500">Splunk</a>
+    </div>
+    <div class="w-full h-full bg-gray-800 text-white shadow-lg rounded-lg p-4">
+        <div class="flex-1 overflow-x-auto">
+            <div class="text-center text-gray-300 mb-4">
+                <h3 class="text-xl font-bold">High Scores (Cumulative)</h3>
+            </div>
+            <div class="overflow-y-auto max-h-64">
+                <table class="min-w-full bg-gray-800 text-white shadow-lg rounded-lg table-fixed">
+                    <thead>
+                    <tr class="bg-gray-700 text-gray-300">
+                        <th class="px-4 py-2 text-left w-1/4">Player</th>
+                        <th class="px-4 py-2 text-left w-1/4">Game</th>
+                        <th class="px-4 py-2 text-left w-1/4">Score</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% if high_scores_cumulative %}
+                    {% for score_entry in high_scores_cumulative %}
+                    <tr class="hover:bg-gray-600">
+                        <td class="px-4 py-2 text-left w-1/4">{{ score_entry["player_name"] }}</td>
+                        <td class="px-4 py-2 text-left w-1/4">{{ score_entry["title"] }}</td>
+                        <td class="px-4 py-2 text-left w-1/4">{{ score_entry["current_score"] }}</td>
+                    </tr>
+                    {% endfor %}
+                    {% else %}
+                    <tr>
+                        <td colspan="4" class="px-4 py-4 text-center text-gray-500">
+                            No scores available, get to playing!
+                        </td>
+                    </tr>
+                    {% endif %}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
-    <div
-            class="w-1/2 h-full bg-cover bg-center"
-            style="background-image: url('{{ url_for('static', filename='images/arcade_bg.png') }}');">
+    <div class="w-full h-full bg-gray-800 text-white shadow-lg rounded-lg p-4">
+        <div class="flex-1 overflow-x-auto">
+            <div class="text-center text-gray-300 mb-4">
+                <h3 class="text-xl font-bold">Quiz High Scores</h3>
+            </div>
+            <div class="overflow-y-auto max-h-64">
+                <table class="min-w-full bg-gray-800 text-white shadow-lg rounded-lg table-fixed">
+                    <thead>
+                    <tr class="bg-gray-700 text-gray-300">
+                        <th class="px-4 py-2 text-left w-1/4">Player</th>
+                        <th class="px-4 py-2 text-left w-1/4">Score</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% if high_scores_quiz %}
+                    {% for score_entry in high_scores_quiz %}
+                    <tr class="hover:bg-gray-600">
+                        <td class="px-4 py-2 text-left w-1/4">{{ score_entry["player_name"] }}</td>
+                        <td class="px-4 py-2 text-left w-1/4">{{ score_entry["current_score"] }}</td>
+                    </tr>
+                    {% endfor %}
+                    {% else %}
+                    <tr>
+                        <td colspan="4" class="px-4 py-4 text-center text-gray-500">
+                            No scores available, get to playing!
+                        </td>
+                    </tr>
+                    {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="row-span-2 w-full h-full bg-gray-600 text-white shadow-lg rounded-lg p-4"
+         style="background-image: url('{{ url_for('static', filename='images/giphy.webp') }}'); background-size: cover; background-position: center;">
+
+    </div>
+    <div class="w-full h-full bg-gray-800 text-white shadow-lg rounded-lg p-4">
+        <div class="flex-1 overflow-x-auto">
+            <div class="text-center text-gray-300 mb-4">
+                <h3 class="text-xl font-bold">Blended (Game+Quiz) High Scores</h3>
+            </div>
+            <div class="overflow-y-auto max-h-64">
+                <table class="min-w-full bg-gray-800 text-white shadow-lg rounded-lg table-fixed">
+                    <thead>
+                    <tr class="bg-gray-700 text-gray-300">
+                        <th class="px-4 py-2 text-left w-1/4">Player</th>
+                        <th class="px-4 py-2 text-left w-1/4">Score</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% if high_scores_blended %}
+                    {% for score_entry in high_scores_blended %}
+                    <tr class="hover:bg-gray-600">
+                        <td class="px-4 py-2 text-left w-1/4">{{ score_entry["player_name"] }}</td>
+                        <td class="px-4 py-2 text-left w-1/4">{{ score_entry["current_score"] }}</td>
+                    </tr>
+                    {% endfor %}
+                    {% else %}
+                    <tr>
+                        <td colspan="4" class="px-4 py-4 text-center text-gray-500">
+                            No scores available, get to playing!
+                        </td>
+                    </tr>
+                    {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 </section>
 </body>
+
 
 </html>
