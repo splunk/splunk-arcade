@@ -232,9 +232,8 @@
 
       function postState() {
         dict = {
-          version: 1,
-          title: "logger",
           game_session_id: "{{ gamesession }}",
+          title: "logger",
           player_name: "{{ user_username }}",
           player_id: "{{ user_uuid }}",
           active: true,
@@ -245,10 +244,9 @@
           version: "v1.0"
         };
 
-        const arcadeEndpoint = "{{ arcade_endpoint }}";
         $.ajax({
           type: "POST",
-          url: arcadeEndpoint,
+          url: '{{ url_for("routes.update_score") }}',
           data: JSON.stringify(dict),
           contentType: "application/json",
         });
