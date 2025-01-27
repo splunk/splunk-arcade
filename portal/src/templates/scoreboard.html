@@ -2,12 +2,13 @@
 <html lang="en" data-topbar-color="brand">
 <head>
     <meta charset="utf-8" />
-    <title>Waiting for the fun to start...</title>
+    <title>Splunk Arcade Scoreboard</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta http-equiv="Refresh" content="3">
 
-    <link rel="shortcut icon" href="{{ url_for('static',filename='images/favicon.ico')}}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/output.css')}}">
 </head>
 
 <body>
@@ -24,7 +25,8 @@
                     <th class="px-4 py-2 text-left w-1/4">Score</th>
                 </tr>
                 </thead>
-                <tbody class="overflow-y-auto">
+                <tbody>
+                {% if score_data %}
                 {% for score_entry in score_data %}
                 <tr class="hover:bg-gray-600">
                     <td class="px-4 py-2 text-left w-1/4">{{ score_entry["title"] }}</td>
@@ -33,12 +35,17 @@
                     <td class="px-4 py-2 text-left w-1/4">{{ score_entry["current_score"] }}</td>
                 </tr>
                 {% endfor %}
+                {% else %}
+                <tr>
+                    <td colspan="4" class="px-4 py-4 text-center text-gray-500">
+                        No scores available, get to playing!
+                    </td>
+                </tr>
+                {% endif %}
                 </tbody>
             </table>
-
         </div>
 
-        <!-- Footer -->
         <div class="text-center text-gray-400 p-4">
             Made with ❤️ by <a href="https://splunk.com" class="text-blue-400 hover:text-blue-500">Splunk</a>
         </div>
@@ -49,4 +56,5 @@
     </div>
 </section>
 </body>
+
 </html>
