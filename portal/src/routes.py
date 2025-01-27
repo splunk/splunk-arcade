@@ -244,6 +244,9 @@ def scoreboard():
             )
         )
 
+    _high_scores_blended = {}
+    # TODO
+
     return render_template(
         "scoreboard.html",
         title="Scoreboard",
@@ -251,6 +254,7 @@ def scoreboard():
         high_scores_per_game_session=[data for data in _high_scores_per_game_session.values()],
         high_scores_cumulative=[data for data in _high_scores_cumulative.values()],
         high_scores_quiz=[data for data in _high_scores_quiz.values()],
+        high_scores_blended=[data for data in _high_scores_blended.values()],
     )
 
 
