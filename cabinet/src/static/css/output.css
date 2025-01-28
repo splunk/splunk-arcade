@@ -834,6 +834,9 @@
   .text-blue-600 {
     color: var(--color-blue-600);
   }
+  .text-cyan-400 {
+    color: var(--color-cyan-400);
+  }
   .text-gray-400 {
     color: var(--color-gray-400);
   }
@@ -932,6 +935,13 @@
     &:hover {
       @media (hover: hover) {
         color: var(--color-blue-800);
+      }
+    }
+  }
+  .hover\:text-cyan-500 {
+    &:hover {
+      @media (hover: hover) {
+        color: var(--color-cyan-500);
       }
     }
   }

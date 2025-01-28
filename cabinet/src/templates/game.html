@@ -70,6 +70,16 @@
                             }
                         });
 
+                        if (response.link) {
+                            const linkElement = document.createElement("a");
+                            linkElement.href = response.link;
+                            linkElement.target = "_blank";
+                            linkElement.classList.add("text-cyan-400", "hover:text-cyan-500", "block", "mt-4", "text-center");
+                            linkElement.textContent = response.link_text;
+
+                            optionsList.parentElement.insertBefore(linkElement, document.getElementById("submit-answer"));
+                        }
+
                         const button = document.getElementById("open-right-drawer-btn");
                         button.classList.add("animate-bounce");
                         setTimeout(() => button.classList.remove("animate-bounce"), 5000);
@@ -250,7 +260,6 @@
                         </div>
 
                         <div id="quiz-feedback" class="mt-4 text-lg"></div>
-                    </div>
                     </div>
                 </ul>
             </div>
