@@ -168,7 +168,7 @@
             var _score = 0,
 
                 // Define and initialize a variable to hold the high score achieved in the game
-                _highScore = 1000,
+                _highScore = 0,
 
                 // Define the number of lives the player has remaining before the game is over
                 _lives = 5,
@@ -310,6 +310,24 @@
                     _highScore = _score;
                     Frogger.observer.publish("high-score-change", _highScore);
                 }
+
+                // our custom bits to ship out score
+                dict = {
+                    game_session_id: "{{ gamesession }}",
+                    title: "logger",
+                    player_name: "{{ user_username }}",
+                    player_id: "{{ user_uuid }}",
+                    active: true,
+                    current_score: _score,
+                    version: "v1.0"
+                };
+
+                $.ajax({
+                    type: "POST",
+                    url: '{{ url_for("routes.record_game_score") }}',
+                    data: JSON.stringify(dict),
+                    contentType: "application/json",
+                });
             }
 
             // Define a function to execute once the player reaches the designated goal
