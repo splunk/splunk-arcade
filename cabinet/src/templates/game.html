@@ -21,6 +21,14 @@
                     type: 'GET',
                     url: '{{ url_for("routes.get_question", module=data.title) }}',
                     success: function(response) {
+                        if (Object.keys(response).length === 0) {
+                            console.log("player has seen all questions")
+
+                            const quiz_message = document.getElementById("quiz-message")
+                            quiz_message.textContent = "You answered all the questions, just play and chill now!";
+                            return;
+                        }
+
                         const question = response.question;
 
                         document.getElementById("quiz-message").style.display = "none";
@@ -34,31 +42,37 @@
                         optionsList.innerHTML = '';
 
                         const options = ['A', 'B', 'C', 'D'];
-                        options.forEach((option, _) => {
+                        const randomizedPrompts = [...response.choices].sort(() => Math.random() - 0.5);
+
+                        options.forEach((option, idx) => {
                             const li = document.createElement("li");
                             li.classList.add("flex", "items-center");
 
                             const input = document.createElement("input");
                             input.type = "radio";
                             input.name = "quiz-answer";
-                            input.value = response[option];
+                            input.value = randomizedPrompts[idx].prompt;
                             input.id = `option-${option}`;
                             input.classList.add("mr-2", "accent-cyan-600");
 
                             const label = document.createElement("label");
                             label.setAttribute("for", `option-${option}`);
                             label.classList.add("text-white", "cursor-pointer");
-                            label.textContent = response[option];
+                            label.textContent = randomizedPrompts[idx].prompt;
 
                             li.appendChild(input);
                             li.appendChild(label);
 
                             optionsList.appendChild(li);
 
-                            if (option === response.answer) {
+                            if (randomizedPrompts[idx].is_correct) {
                                 window.correctAnswer = option;
                             }
                         });
+
+                        const button = document.getElementById("open-right-drawer-btn");
+                        button.classList.add("animate-bounce");
+                        setTimeout(() => button.classList.remove("animate-bounce"), 5000);
                     },
                     error: function(error) {
                         console.log(error);
@@ -173,10 +187,9 @@
             </div>
 
             <div class="flex h-auto">
-                <div class="w-1/12 flex items-center justify-center">
-                </div>
+                <div class="w-1/12 flex items-center justify-center"></div>
 
-                <div id="game-container" class="w-10/12 p-4 flex flex-col h-auto">
+                <div id="game-container" class="flex flex-col w-full max-w-4xl p-4 h-auto mx-auto">
                     {% block content %}
                     {% if "imvader" in data.title %}
                     {% include 'cabinets/imvader.html' %}
@@ -187,9 +200,9 @@
                     {% endblock %}
                 </div>
 
-                <div class="w-1/12 flex items-center justify-center">
-                </div>
+                <div class="w-1/12 flex items-center justify-center"></div>
             </div>
+
 
             <div
                     id="left-drawer"
@@ -256,7 +269,7 @@
             }
         </script>
         <script>
-            /// this keeps the arrow keys from scrolling the page when playing a game
+            // this keeps the arrow keys from scrolling the page when playing a game
             const gameContainer = document.getElementById("game-container");
 
             gameContainer.addEventListener("keydown", function (event) {
@@ -359,8 +372,7 @@
             });
         </script>
 
-        <footer class="mt-auto bg-gray-800 opacity-90 text-white p-4 text-center">
-            <p>Made with ❤️ by <a href="https://www.splunk.com" target="_blank" class="text-blue-400 hover:text-blue-500">Splunk</a></p>
-        </footer>
+        {% include 'footer.html' %}
+
     </body>
 </html>

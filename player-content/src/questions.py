@@ -15,10 +15,16 @@ class _Questions:
         self.f = open("questions.json", mode="r")
         self.content = json.load(self.f)
 
-    def random_question_for_module(self, module: str) -> dict:
+    def random_question_for_module(self, module: str, seen_questions: [str]) -> dict:
         _module = module.lower()
 
         if _module not in self.content:
             raise Exception(f"module '{module}' is not in questions bank")
 
-        return self.content[_module][randint(0, len(self.content[_module]) - 1)]
+        if len(seen_questions) == len(self.content[_module]):
+            return {}
+
+        while True:
+            maybe_question = self.content[_module][randint(0, len(self.content[_module]) - 1)]
+            if maybe_question not in seen_questions:
+                return maybe_question

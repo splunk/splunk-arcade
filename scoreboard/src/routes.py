@@ -75,13 +75,9 @@ def record_game_score():
 
 
 def get_question_hash(question: str) -> str:
-    # Create a SHA-256 hash object
     sha256_hash = hashlib.sha256()
-
-    # Update the hash object with the bytes of the input string
     sha256_hash.update(question.encode("utf-8"))
 
-    # Return the hexadecimal representation of the hash
     return sha256_hash.hexdigest()
 
 
@@ -107,5 +103,35 @@ def record_quiz_score():
         + f"{get_question_hash(question=quiz_update["question"])}",
         quiz_update,
     )
+
+    return {}
+
+
+@routes.route("/player_seen_questions/<string:module>", methods=["GET"])
+def get_player_seen_questions(module: str):
+    player_name = request.headers.get("Player-Name")
+    if not player_name:
+        raise Exception("No Player Name provided")
+
+    redis = get_redis_conn()
+
+    seen_questions = []
+
+    for key in redis.scan_iter(match=f"quiz:{player_name}:{module}:*"):
+        seen_questions.append(redis.hget(key, "question"))
+
+    return jsonify(seen_questions)
+
+
+@routes.route("/reset_player_quiz_scores", methods=["POST"])
+def reset_player_quiz_scores():
+    player_name = request.headers.get("Player-Name")
+    if not player_name:
+        raise Exception("No Player Name provided")
+
+    redis = get_redis_conn()
+
+    for key in redis.scan_iter(f"quiz:{player_name}:*:*"):
+        redis.delete(key)
 
     return {}

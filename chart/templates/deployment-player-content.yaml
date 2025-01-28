@@ -75,6 +75,8 @@ spec:
                 fieldRef:
                   apiVersion: v1
                   fieldPath: status.hostIP
+            - name: SCOREBOARD_HOST
+              value: "{{ $.Values.appName }}-scoreboard"
           ports:
             - name: http
               containerPort: 5000
