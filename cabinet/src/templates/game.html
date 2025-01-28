@@ -21,6 +21,14 @@
                     type: 'GET',
                     url: '{{ url_for("routes.get_question", module=data.title) }}',
                     success: function(response) {
+                        if (Object.keys(response).length === 0) {
+                            console.log("player has seen all questions")
+
+                            const quiz_message = document.getElementById("quiz-message")
+                            quiz_message.textContent = "You answered all the questions, just play and chill now!";
+                            return;
+                        }
+
                         const question = response.question;
 
                         document.getElementById("quiz-message").style.display = "none";

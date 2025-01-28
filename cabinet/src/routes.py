@@ -112,7 +112,12 @@ def record_game_score():
 
 @routes.route("/question/<string:module>", methods=["GET"])
 def get_question(module: str):
-    content = requests.get(f"http://{PLAYER_CONTENT_HOST}/quiz/question/{module}")
+    content = requests.get(
+        f"http://{PLAYER_CONTENT_HOST}/quiz/question/{module}",
+        headers={
+            "Player-Name": PLAYER_NAME,
+        },
+    )
 
     return content.json()
 
