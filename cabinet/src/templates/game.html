@@ -187,10 +187,9 @@
             </div>
 
             <div class="flex h-auto">
-                <div class="w-1/12 flex items-center justify-center">
-                </div>
+                <div class="w-1/12 flex items-center justify-center"></div>
 
-                <div id="game-container" class="w-10/12 p-4 flex flex-col h-auto">
+                <div id="game-container" class="flex flex-col w-full max-w-4xl p-4 h-auto mx-auto">
                     {% block content %}
                     {% if "imvader" in data.title %}
                     {% include 'cabinets/imvader.html' %}
@@ -201,9 +200,9 @@
                     {% endblock %}
                 </div>
 
-                <div class="w-1/12 flex items-center justify-center">
-                </div>
+                <div class="w-1/12 flex items-center justify-center"></div>
             </div>
+
 
             <div
                     id="left-drawer"

@@ -593,6 +593,12 @@
   .h-full {
     height: 100%;
   }
+  .max-h-\[600px\] {
+    max-height: 600px;
+  }
+  .max-h-\[800px\] {
+    max-height: 800px;
+  }
   .min-h-screen {
     min-height: 100vh;
   }
@@ -611,14 +617,35 @@
   .w-64 {
     width: calc(var(--spacing) * 64);
   }
+  .w-auto {
+    width: auto;
+  }
   .w-full {
     width: 100%;
+  }
+  .max-w-4xl {
+    max-width: var(--container-4xl);
+  }
+  .max-w-\[100px\] {
+    max-width: 100px;
+  }
+  .max-w-\[600px\] {
+    max-width: 600px;
+  }
+  .max-w-full {
+    max-width: 100%;
+  }
+  .max-w-screen-lg {
+    max-width: var(--breakpoint-lg);
   }
   .min-w-\[300px\] {
     min-width: 300px;
   }
   .flex-1 {
     flex: 1;
+  }
+  .flex-grow-0 {
+    flex-grow: 0;
   }
   .-translate-x-1\/2 {
     --tw-translate-x: calc(calc(1/2 * 100%) * -1);
@@ -680,6 +707,9 @@
       margin-inline-start: calc(calc(var(--spacing) * 6) * var(--tw-space-x-reverse));
       margin-inline-end: calc(calc(var(--spacing) * 6) * calc(1 - var(--tw-space-x-reverse)));
     }
+  }
+  .overflow-auto {
+    overflow: auto;
   }
   .overflow-x-auto {
     overflow-x: auto;
