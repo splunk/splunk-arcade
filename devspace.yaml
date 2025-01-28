@@ -265,3 +265,11 @@ profiles:
               command: ./start-dev.sh
             ports:
               - port: "8080:5000"
+
+pipelines:
+  # override the default purge pipeline so we can nuke registry too
+  purge:
+    run: |-
+      stop_dev --all
+      purge_deployments --all
+      kubectl delete deployments -n ${DEVSPACE_NAMESPACE} registry
