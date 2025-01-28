@@ -1,0 +1,47 @@
+<footer class="mt-auto bg-gray-800 opacity-90 text-white p-4 text-center relative">
+    <p>Made with ❤️ by <a href="https://www.splunk.com" target="_blank" class="text-blue-400 hover:text-blue-500">Splunk</a></p>
+
+    <button id="resetButton" class="absolute right-4 bottom-4 bg-red-500 text-white px-2 py-1 text-sm rounded hover:bg-red-600">
+        Reset Quiz Data
+    </button>
+</footer>
+
+<div id="popupDialog" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+    <div class="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full">
+        <h2 class="text-lg font-semibold mb-4">Are you sure?</h2>
+        <p class="mb-4">This action will reset your quiz data.</p>
+        <div class="flex justify-end">
+            <button id="cancelButton" class="bg-gray-300 text-gray-800 px-4 py-2 rounded mr-2 hover:bg-gray-400">Cancel</button>
+            <button id="confirmButton" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Confirm</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const resetButton = document.getElementById('resetButton');
+    const popupDialog = document.getElementById('popupDialog');
+    const cancelButton = document.getElementById('cancelButton');
+    const confirmButton = document.getElementById('confirmButton');
+
+    resetButton.addEventListener('click', () => {
+        popupDialog.classList.remove('hidden');
+    });
+
+    cancelButton.addEventListener('click', () => {
+        popupDialog.classList.add('hidden');
+    });
+
+    confirmButton.addEventListener('click', () => {
+        $.ajax({
+            type: 'POST',
+            url: '{{ url_for("routes.reset_quiz_scores") }}',
+            success: function(_) {
+                alert("Quiz score data has been reset!");
+            },
+            error: function(error) {
+                console.log(error);
+            }
+        });
+        popupDialog.classList.add('hidden');
+    });
+</script>

@@ -135,6 +135,18 @@ def record_answer():
 
     return {}
 
+@routes.route("/reset_quiz_scores", methods=["POST"])
+def reset_quiz_scores():
+    ret = requests.post(
+        f"http://{SCOREBOARD_HOST}/reset_player_quiz_scores",
+        headers={
+            "Player-Name": PLAYER_NAME,
+        }
+    )
+    breakpoint()
+    print(f"reset quiz score status {ret.status_code}")
+
+    return {}
 
 @routes.route("/walkthrough/<string:module>/<string:stage>", methods=["GET"])
 def get_walkthrough(module: str, stage: str):

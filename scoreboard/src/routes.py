@@ -121,3 +121,17 @@ def get_player_seen_questions(module: str):
         seen_questions.append(redis.hget(key, "question"))
 
     return jsonify(seen_questions)
+
+
+@routes.route("/reset_player_quiz_scores", methods=["POST"])
+def reset_player_quiz_scores():
+    player_name = request.headers.get("Player-Name")
+    if not player_name:
+        raise Exception("No Player Name provided")
+
+    redis = get_redis_conn()
+
+    for key in redis.scan_iter(f"quiz:{player_name}:*:*"):
+        redis.delete(key)
+
+    return {}
