@@ -153,16 +153,16 @@ profiles:
         path: deployments.splunk-arcade.helm.values.arcadeHost
         value: www.splunkarcade.com
       - op: add
-        path: deployments.splunk-arcade.helm.values.scoreboard
+        path: deployments.splunk-arcade.helm.values.scoreboard.replicaCount
         value: 3
       - op: add
-        path: deployments.splunk-arcade.helm.values.portal
+        path: deployments.splunk-arcade.helm.values.portal.replicaCount
         value: 3
       - op: add
-        path: deployments.splunk-arcade.helm.values.playerRouter
+        path: deployments.splunk-arcade.helm.values.playerRouter.replicaCount
         value: 5
       - op: add
-        path: deployments.splunk-arcade.helm.values.playerContent
+        path: deployments.splunk-arcade.helm.values.playerContent.replicaCount
         value: 3
 
   - name: dev-cabinet
