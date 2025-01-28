@@ -42,6 +42,8 @@
                         optionsList.innerHTML = '';
 
                         const options = ['A', 'B', 'C', 'D'];
+                        const randomizedPrompts = [...response.choices].sort(() => Math.random() - 0.5);
+
                         options.forEach((option, idx) => {
                             const li = document.createElement("li");
                             li.classList.add("flex", "items-center");
@@ -49,21 +51,21 @@
                             const input = document.createElement("input");
                             input.type = "radio";
                             input.name = "quiz-answer";
-                            input.value = response.choices[idx].prompt;
+                            input.value = randomizedPrompts[idx].prompt;
                             input.id = `option-${option}`;
                             input.classList.add("mr-2", "accent-cyan-600");
 
                             const label = document.createElement("label");
                             label.setAttribute("for", `option-${option}`);
                             label.classList.add("text-white", "cursor-pointer");
-                            label.textContent = response.choices[idx].prompt;
+                            label.textContent = randomizedPrompts[idx].prompt;
 
                             li.appendChild(input);
                             li.appendChild(label);
 
                             optionsList.appendChild(li);
 
-                            if (response.choices[idx].is_correct) {
+                            if (randomizedPrompts[idx].is_correct) {
                                 window.correctAnswer = option;
                             }
                         });
