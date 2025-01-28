@@ -12,6 +12,10 @@
   <body>
     <canvas id="gameCanvas" width="800" height="600"></canvas>
     <script>
+      if (typeof window.soundVolume === "undefined") {
+        window.soundVolume = 0.1;
+      }
+
       function updateGameMetadata(data) {
         const metadataElement = document.getElementById("game-metadata");
 
@@ -137,6 +141,18 @@
       const levelUpSound = new Audio(
         "https://assets.mixkit.co/active_storage/sfx/220/220-preview.mp3"
       );
+
+      shootSound.volume = window.soundVolume;
+      explosionSound.volume = window.soundVolume;
+      playerHitSound.volume = window.soundVolume;
+      levelUpSound.volume = window.soundVolume;
+
+      window.addEventListener("volumeChange", (e) => {
+        shootSound.volume = e.detail.volume;
+        explosionSound.volume = e.detail.volume;
+        playerHitSound.volume = e.detail.volume;
+        levelUpSound.volume = e.detail.volume;
+      });
 
       function postState() {
         if(!gameOver) gameDuration+=2;
@@ -368,11 +384,13 @@
                   canvas.width / 2,
                   canvas.height / 2 + 50
           );
-          ctx.fillText(
-                  "Press C to Continue",
-                  canvas.width / 2,
-                  canvas.height / 2 + 100
-          );
+
+          const text = "Press C to Continue\nBut first, answer a quiz question!";
+          const lines = text.split("\n");
+          lines.forEach((line, i) => {
+            ctx.fillText(line, canvas.width / 2, canvas.height / 2 + 100 + i * 20);
+          });
+
           if (keys["KeyC"]) {
             levelUpPause = false;
           }
