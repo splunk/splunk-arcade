@@ -262,9 +262,13 @@ def scoreboard():
             )
         )
 
-    max_game_score = max(_high_scores_quiz.values(), key=lambda k: k["current_score"])[
-        "current_score"
-    ]
+    _high_scores = _high_scores_quiz.values()
+    max_game_score = 0
+
+    if _high_scores:
+        max_game_score = max(_high_scores_quiz.values(), key=lambda k: k["current_score"])[
+            "current_score"
+        ]
 
     _high_scores_blended = {}
     for player_name in _high_scores_cumulative.keys():
