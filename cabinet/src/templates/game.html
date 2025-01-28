@@ -59,6 +59,10 @@
                                 window.correctAnswer = option;
                             }
                         });
+
+                        const button = document.getElementById("open-right-drawer-btn");
+                        button.classList.add("animate-bounce");
+                        setTimeout(() => button.classList.remove("animate-bounce"), 5000);
                     },
                     error: function(error) {
                         console.log(error);
@@ -256,7 +260,7 @@
             }
         </script>
         <script>
-            /// this keeps the arrow keys from scrolling the page when playing a game
+            // this keeps the arrow keys from scrolling the page when playing a game
             const gameContainer = document.getElementById("game-container");
 
             gameContainer.addEventListener("keydown", function (event) {

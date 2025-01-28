@@ -121,7 +121,6 @@ def get_question(module: str):
 def record_answer():
     content = request.get_json(force=True)
 
-    # TODO ship content to scoreboard to record/save in redis
     ret = requests.post(
         f"http://{SCOREBOARD_HOST}/record_quiz_score/",
         json=content,
