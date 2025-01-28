@@ -2,168 +2,425 @@
   "imvaders": [
     {
       "question": "What does the player score metric tell us about the game’s performance or player behavior?",
-      "A": "It shows the number of projectiles fired.",
-      "B": "It indicates how well players are performing in the game.",
-      "C": "It measures the game's difficulty level.",
-      "D": "It tracks how fast players are moving.",
-      "answer": "B"
+      "choices": [
+        {
+          "prompt": "It indicates how well players are performing in the game.",
+          "is_correct": true
+        },
+        {
+          "prompt": "It shows the number of projectiles fired.",
+          "is_correct": false
+        },
+        {
+          "prompt": "It measures the game's difficulty level.",
+          "is_correct": false
+        },
+        {
+          "prompt": "It tracks how fast players are moving.",
+          "is_correct": false
+        }
+      ]
     },
     {
       "question": "If the projectile count is unusually high but scores are low, what might that indicate?",
-      "A": " Players are winning too easily.",
-      "B": "The game is running too fast.",
-      "C": "Players might be missing the alien targets frequently.",
-      "D": "The game is experiencing a bug in score calculation.",
-      "answer": "C"
+      "choices": [
+        {
+          "prompt": "Players might be missing the alien targets frequently.",
+          "is_correct": true
+        },
+        {
+          "prompt": "Players are winning too easily.",
+          "is_correct": false
+        },
+        {
+          "prompt": "The game is running too fast.",
+          "is_correct": false
+        },
+        {
+          "prompt": "The game is experiencing a bug in score calculation.",
+          "is_correct": false
+        }
+      ]
     },
     {
       "question": "Are player score and projectile count sufficient to evaluate player performance?",
-      "A": "Yes, these metrics cover everything important.",
-      "B": "No, additional metrics like player health (lives remaining) might be useful.",
-      "C": "No, these metrics are irrelevant to game performance.",
-      "D": "Yes, these are the only metrics needed.",
-      "answer": "B"
+      "choices": [
+        {
+          "prompt": "No, additional metrics like player health (lives remaining) might be useful.",
+          "is_correct": true
+        },
+        {
+          "prompt": "Yes, these metrics cover everything important.",
+          "is_correct": false
+        },
+        {
+          "prompt": "No, these metrics are irrelevant to game performance.",
+          "is_correct": false
+        },
+        {
+          "prompt": "Yes, these are the only metrics needed.",
+          "is_correct": false
+        }
+      ]
     },
     {
       "question": "What kind of dashboard would help track player scores and projectile counts over time?",
-      "A": "A static chart showing the game’s design.",
-      "B": "A real-time graph plotting scores and projectile counts.",
-      "C": "A pie chart comparing player abilities.",
-      "D": "A spreadsheet listing player names.",
-      "answer": "B"
+      "choices": [
+        {
+          "prompt": "A real-time graph plotting scores and projectile counts.",
+          "is_correct": true
+        },
+        {
+          "prompt": "A static chart showing the game’s design.",
+          "is_correct": false
+        },
+        {
+          "prompt": "A pie chart comparing player abilities.",
+          "is_correct": false
+        },
+        {
+          "prompt": "A spreadsheet listing player names.",
+          "is_correct": false
+        }
+      ]
     },
     {
       "question": "How could you correlate player score trends with projectile counts?",
-      "A": "By looking at them independently.",
-      "B": "By analyzing how projectile counts increase as scores change.",
-      "C": "By ignoring projectile counts and focusing on scores.",
-      "D": "By tracking only the highest score achieved.",
-      "answer": "B"
+      "choices": [
+        {
+          "prompt": "By analyzing how projectile counts increase as scores change.",
+          "is_correct": true
+        },
+        {
+          "prompt": "By looking at them independently.",
+          "is_correct": false
+        },
+        {
+          "prompt": "By ignoring projectile counts and focusing on scores.",
+          "is_correct": false
+        },
+        {
+          "prompt": "By tracking only the highest score achieved.",
+          "is_correct": false
+        }
+      ]
     },
     {
       "question": "What thresholds would you set for player score or projectile count to trigger an alert for potential issues?",
-      "A": "Random values for experimentation.",
-      "B": "Values based on typical player behavior during normal gameplay.",
-      "C": "Extremely high values that are impossible to reach.",
-      "D": "Values that change randomly with no baseline.",
-      "answer": "B"
+      "choices": [
+        {
+          "prompt": "Values based on typical player behavior during normal gameplay.",
+          "is_correct": true
+        },
+        {
+          "prompt": "Random values for experimentation.",
+          "is_correct": false
+        },
+        {
+          "prompt": "Extremely high values that are impossible to reach.",
+          "is_correct": false
+        },
+        {
+          "prompt": "Values that change randomly with no baseline.",
+          "is_correct": false
+        }
+      ]
     },
-     {
+    {
       "question": "If the average player score drops significantly, how would you use Splunk Observability to find the root cause?",
-      "A": "Ignore the drop; it’s likely a fluke.",
-      "B": "Check metrics like version, projectile count, kubernetes pod restarts, and system performance.",
-      "C": "Restart the game and observe if the scores improve.",
-      "D": "Call Tech Support.",
-      "answer": "B"
+      "choices": [
+        {
+          "prompt": "Check metrics like version, projectile count, kubernetes pod restarts, and system performance.",
+          "is_correct": true
+        },
+        {
+          "prompt": "Ignore the drop; it’s likely a fluke.",
+          "is_correct": false
+        },
+        {
+          "prompt": "Restart the game and observe if the scores improve.",
+          "is_correct": false
+        },
+        {
+          "prompt": "Call Tech Support.",
+          "is_correct": false
+        }
+      ]
     },
-     {
+    {
       "question": "What might it mean if projectile counts are high but player scores aren’t increasing?",
-      "A": "Players are not engaged in the game.",
-      "B": "Players are using a lot of projectiles without hitting the alien targets.",
-      "C": "The game’s scoring system is rewarding players randomly.",
-      "D": "AI has Likely infiltrated the Game.",
-      "answer": "B"
+      "choices": [
+        {
+          "prompt": "Players are using a lot of projectiles without hitting the alien targets.",
+          "is_correct": true
+        },
+        {
+          "prompt": "Players are not engaged in the game.",
+          "is_correct": false
+        },
+        {
+          "prompt": "The game’s scoring system is rewarding players randomly.",
+          "is_correct": false
+        },
+        {
+          "prompt": "AI has Likely infiltrated the Game.",
+          "is_correct": false
+        }
+      ]
     },
-     {
+    {
       "question": "What insights about player behavior can you gain by analyzing trends in projectile usage and scores?",
-      "A": "How often players use cheats.",
-      "B": "Whether players are engaged and improving over time.",
-      "C": "The color preferences of most players.",
-      "D": "The technical specs of players’ devices.",
-      "answer": "B"
-    },{
+      "choices": [
+        {
+          "prompt": "Whether players are engaged and improving over time.",
+          "is_correct": true
+        },
+        {
+          "prompt": "How often players use cheats.",
+          "is_correct": false
+        },
+        {
+          "prompt": "The color preferences of most players.",
+          "is_correct": false
+        },
+        {
+          "prompt": "The technical specs of players’ devices.",
+          "is_correct": false
+        }
+      ]
+    },
+    {
       "question": "What Splunk Observability tool(s) can be used to form a hypothesis on why some players are advancing in levels significantly faster than others?",
-      "A": "Profiling",
-      "B": "Breakdown tool",
-      "C": "Tag Spotlight",
-      "D": "DB Analyzer",
-      "answer": "B"
+      "choices": [
+        {
+          "prompt": "Breakdown tool",
+          "is_correct": true
+        },
+        {
+          "prompt": "Profiling",
+          "is_correct": false
+        },
+        {
+          "prompt": "Tag Spotlight",
+          "is_correct": false
+        },
+        {
+          "prompt": "DB Analyzer",
+          "is_correct": false
+        }
+      ]
     }
   ],
   "logger": [
     {
       "question": "What type of information should be included in logs to understand player actions in the game?",
-      "A": "The color of the player’s frog.",
-      "B": "Player actions like movements, collisions, and level completion.",
-      "C": "The background music being played.",
-      "D": "The  player’s name",
-      "answer": "B"
+      "choices": [
+        {
+          "prompt": "Player actions like movements, collisions, and level completion.",
+          "is_correct": true
+        },
+        {
+          "prompt": "The color of the player’s frog.",
+          "is_correct": false
+        },
+        {
+          "prompt": "The background music being played.",
+          "is_correct": false
+        },
+        {
+          "prompt": "The  player’s name",
+          "is_correct": false
+        }
+      ]
     },
     {
       "question": "If logs show frequent \"failure\" events, what might this indicate?",
-      "A": "Players are not trying to win the game.",
-      "B": "The game is too easy.",
-      "C": "The difficulty level of the game might be too high.",
-      "D": "Players are finishing levels too quickly.",
-      "answer": "C"
+      "choices": [
+        {
+          "prompt": "The difficulty level of the game might be too high.",
+          "is_correct": true
+        },
+        {
+          "prompt": "Players are not trying to win the game.",
+          "is_correct": false
+        },
+        {
+          "prompt": "The game is too easy.",
+          "is_correct": false
+        },
+        {
+          "prompt": "Players are finishing levels too quickly.",
+          "is_correct": false
+        }
+      ]
     },
     {
       "question": "How could you use logs to detect when a player encounters a bug?",
-      "A": "Search for entries showing unhandled errors or unexpected game states.",
-      "B": "Wait for players to report issues.",
-      "C": "Look for a decrease in player scores.",
-      "D": "Look for repeated logs.",
-      "answer": "A"
+      "choices": [
+        {
+          "prompt": "Search for entries showing unhandled errors or unexpected game states.",
+          "is_correct": true
+        },
+        {
+          "prompt": "Wait for players to report issues.",
+          "is_correct": false
+        },
+        {
+          "prompt": "Look for a decrease in player scores.",
+          "is_correct": false
+        },
+        {
+          "prompt": "Look for repeated logs.",
+          "is_correct": false
+        }
+      ]
     },
     {
       "question": "Why might logging the position of obstacles during gameplay be useful?",
-      "A": "To display them on the game's leaderboard.",
-      "B": "To debug issues like overlapping or missing obstacles.",
-      "C": "To let players know where obstacles are.",
-      "D": "To increase the score of skilled players.",
-      "answer": "B"
+      "choices": [
+        {
+          "prompt": "To debug issues like overlapping or missing obstacles.",
+          "is_correct": true
+        },
+        {
+          "prompt": "To display them on the game's leaderboard.",
+          "is_correct": false
+        },
+        {
+          "prompt": "To let players know where obstacles are.",
+          "is_correct": false
+        },
+        {
+          "prompt": "To increase the score of skilled players.",
+          "is_correct": false
+        }
+      ]
     },
     {
       "question": "What additional context in logs would help analyze why players fail to complete a level?",
-      "A": "Time of day when the player is active.",
-      "B": "Events showing player actions before failure, such as movements and collisions.",
-      "C": "The player’s favorite color.",
-      "D": "The score of the top-performing player.",
-      "answer": "B"
+      "choices": [
+        {
+          "prompt": "Events showing player actions before failure, such as movements and collisions.",
+          "is_correct": true
+        },
+        {
+          "prompt": "Time of day when the player is active.",
+          "is_correct": false
+        },
+        {
+          "prompt": "The player’s favorite color.",
+          "is_correct": false
+        },
+        {
+          "prompt": "The score of the top-performing player.",
+          "is_correct": false
+        }
+      ]
     },
     {
       "question": "If logs show a pattern of players stopping at the same point in the game, what should you investigate?",
-      "A": "Whether the graphics in that area are appealing.",
-      "B": "A possible bug, poor game design, or unclear instructions at that point.",
-      "C": "The players’ choice of avatar.",
-      "D": "Whether players like the background music at that point.",
-      "answer": "B"
+      "choices": [
+        {
+          "prompt": "A possible bug, poor game design, or unclear instructions at that point.",
+          "is_correct": true
+        },
+        {
+          "prompt": "Whether the graphics in that area are appealing.",
+          "is_correct": false
+        },
+        {
+          "prompt": "The players’ choice of avatar.",
+          "is_correct": false
+        },
+        {
+          "prompt": "Whether players like the background music at that point.",
+          "is_correct": false
+        }
+      ]
     },
     {
-      "question": "If logs show a pattern of players stopping at the same point in the game, what should you investigate?",
-      "A": "Whether the graphics in that area are appealing.",
-      "B": "A possible bug, poor game design, or unclear instructions at that point.",
-      "C": "The players’ choice of avatar.",
-      "D": "Whether players like the background music at that point.",
-      "answer": "B"
-    },{
       "question": "How could you use logs to determine the impact of introducing a new obstacle type?",
-      "A": "Check for logs showing increased collisions or player frustration events.",
-      "B": "Search for players mentioning it in chat.\n",
-      "C": "Wait for players to quit the game.",
-      "D": "Compare the size of logs before and after the change.",
-      "answer": "A"
-    },{
+      "choices": [
+        {
+          "prompt": "Check for logs showing increased collisions or player frustration events.",
+          "is_correct": true
+        },
+        {
+          "prompt": "Search for players mentioning it in chat.",
+          "is_correct": false
+        },
+        {
+          "prompt": "Wait for players to quit the game.",
+          "is_correct": false
+        },
+        {
+          "prompt": "Compare the size of logs before and after the change.",
+          "is_correct": false
+        }
+      ]
+    },
+    {
       "question": "What would be the best way to monitor if the game servers are handling player actions correctly?",
-      "A": "Log events showing all incoming player inputs and server responses.",
-      "B": "Track only the fastest players.",
-      "C": "Focus only on collision events.",
-      "D": "Check the leaderboard scores periodically.",
-      "answer": "A"
-    },{
+      "choices": [
+        {
+          "prompt": "Log events showing all incoming player inputs and server responses.",
+          "is_correct": true
+        },
+        {
+          "prompt": "Track only the fastest players.",
+          "is_correct": false
+        },
+        {
+          "prompt": "Focus only on collision events.",
+          "is_correct": false
+        },
+        {
+          "prompt": "Check the leaderboard scores periodically.",
+          "is_correct": false
+        }
+      ]
+    },
+    {
       "question": "How can analyzing logs help balance the difficulty of the game?",
-      "A": "By identifying the time of day most players are online.",
-      "B": "By observing trends like frequent level failures or successes across players.",
-      "C": "By looking at the average score of players.",
-      "D": "By changing the visuals of the game randomly.",
-      "answer": "B"
-    },{
+      "choices": [
+        {
+          "prompt": "By observing trends like frequent level failures or successes across players.",
+          "is_correct": true
+        },
+        {
+          "prompt": "By identifying the time of day most players are online.",
+          "is_correct": false
+        },
+        {
+          "prompt": "By looking at the average score of players.",
+          "is_correct": false
+        },
+        {
+          "prompt": "By changing the visuals of the game randomly.",
+          "is_correct": false
+        }
+      ]
+    },
+    {
       "question": "What is the value of having structured logs in a Frogger game?",
-      "A": "Logs can be visually appealing.",
-      "B": "Structured logs make it easier to search, filter, and analyze key events.",
-      "C": "Logs can replace the need for metrics entirely.",
-      "D": "Structured logs reduce the number of events recorded.",
-      "answer": "B"
+      "choices": [
+        {
+          "prompt": "Structured logs make it easier to search, filter, and analyze key events.",
+          "is_correct": true
+        },
+        {
+          "prompt": "Logs can be visually appealing.",
+          "is_correct": false
+        },
+        {
+          "prompt": "Logs can replace the need for metrics entirely.",
+          "is_correct": false
+        },
+        {
+          "prompt": "Structured logs reduce the number of events recorded.",
+          "is_correct": false
+        }
+      ]
     }
   ]
 }

@@ -42,28 +42,28 @@
                         optionsList.innerHTML = '';
 
                         const options = ['A', 'B', 'C', 'D'];
-                        options.forEach((option, _) => {
+                        options.forEach((option, idx) => {
                             const li = document.createElement("li");
                             li.classList.add("flex", "items-center");
 
                             const input = document.createElement("input");
                             input.type = "radio";
                             input.name = "quiz-answer";
-                            input.value = response[option];
+                            input.value = response.choices[idx].prompt;
                             input.id = `option-${option}`;
                             input.classList.add("mr-2", "accent-cyan-600");
 
                             const label = document.createElement("label");
                             label.setAttribute("for", `option-${option}`);
                             label.classList.add("text-white", "cursor-pointer");
-                            label.textContent = response[option];
+                            label.textContent = response.choices[idx].prompt;
 
                             li.appendChild(input);
                             li.appendChild(label);
 
                             optionsList.appendChild(li);
 
-                            if (option === response.answer) {
+                            if (response.choices[idx].is_correct) {
                                 window.correctAnswer = option;
                             }
                         });
