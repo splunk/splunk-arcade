@@ -152,6 +152,18 @@ profiles:
       - op: add
         path: deployments.splunk-arcade.helm.values.arcadeHost
         value: www.splunkarcade.com
+      - op: add
+        path: deployments.splunk-arcade.helm.values.scoreboard
+        value: 3
+      - op: add
+        path: deployments.splunk-arcade.helm.values.portal
+        value: 3
+      - op: add
+        path: deployments.splunk-arcade.helm.values.playerRouter
+        value: 5
+      - op: add
+        path: deployments.splunk-arcade.helm.values.playerContent
+        value: 3
 
   - name: dev-cabinet
     patches:
