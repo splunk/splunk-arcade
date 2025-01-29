@@ -16,24 +16,6 @@
         window.soundVolume = 0.1;
       }
 
-      function updateGameMetadata(data) {
-        const metadataElement = document.getElementById("game-metadata");
-
-        if (!metadataElement) {
-          console.error("Metadata element not found");
-          return;
-        }
-
-        metadataElement.innerHTML = "";
-
-        Object.entries(data).forEach(([key, value]) => {
-          const item = document.createElement("span");
-          item.className = "mr-4";
-          item.innerHTML = `<strong>${key}:</strong> ${value}`;
-          metadataElement.appendChild(item);
-        });
-      }
-
       const canvas = document.getElementById("gameCanvas");
       const ctx = canvas.getContext("2d");
 
@@ -51,7 +33,7 @@
       let username = "player"+Math.floor(Math.random() * 100)
       let gameDuration = 0;
 
-      updateGameMetadata({
+      drawScore({
         Score: score,
         Lives: lives,
         Level: level,
@@ -271,7 +253,7 @@
               explosionSound.currentTime = 0;
               explosionSound.play();
 
-              updateGameMetadata({
+              drawScore({
                 Score: score,
                 Lives: lives,
                 Level: level,
@@ -302,7 +284,7 @@
             playerHitSound.currentTime = 0;
             playerHitSound.play();
 
-            updateGameMetadata({
+            drawScore({
               Score: score,
               Lives: lives,
               Level: level,
@@ -314,6 +296,16 @@
             }
           }
         });
+      }
+
+      function drawScore(data) {
+        const text = `score: ${data.Score} | lives: ${data.Lives} | level: ${data.Level}`;
+        const startX = canvas.width / 2;
+        const startY = 15;
+        ctx.fillStyle = 'white';
+        ctx.font = '14px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText(text, startX, startY);
       }
 
       function drawBullets() {
@@ -439,6 +431,13 @@
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
         drawMuteButton();
+        drawScore(
+                {
+                  Score: score,
+                  Lives: lives,
+                  Level: level,
+                }
+        );
 
         // Update and draw stars
         updateStars();
