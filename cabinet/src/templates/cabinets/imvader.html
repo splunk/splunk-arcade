@@ -16,24 +16,6 @@
         window.soundVolume = 0.1;
       }
 
-      function updateGameMetadata(data) {
-        const metadataElement = document.getElementById("game-metadata");
-
-        if (!metadataElement) {
-          console.error("Metadata element not found");
-          return;
-        }
-
-        metadataElement.innerHTML = "";
-
-        Object.entries(data).forEach(([key, value]) => {
-          const item = document.createElement("span");
-          item.className = "mr-4";
-          item.innerHTML = `<strong>${key}:</strong> ${value}`;
-          metadataElement.appendChild(item);
-        });
-      }
-
       const canvas = document.getElementById("gameCanvas");
       const ctx = canvas.getContext("2d");
 
@@ -51,7 +33,7 @@
       let username = "player"+Math.floor(Math.random() * 100)
       let gameDuration = 0;
 
-      updateGameMetadata({
+      drawScore({
         Score: score,
         Lives: lives,
         Level: level,
@@ -142,17 +124,10 @@
         "https://assets.mixkit.co/active_storage/sfx/220/220-preview.mp3"
       );
 
-      shootSound.volume = window.soundVolume;
-      explosionSound.volume = window.soundVolume;
-      playerHitSound.volume = window.soundVolume;
-      levelUpSound.volume = window.soundVolume;
-
-      window.addEventListener("volumeChange", (e) => {
-        shootSound.volume = e.detail.volume;
-        explosionSound.volume = e.detail.volume;
-        playerHitSound.volume = e.detail.volume;
-        levelUpSound.volume = e.detail.volume;
-      });
+      shootSound.volume = 0.1;
+      explosionSound.volume = 0.1;
+      playerHitSound.volume = 0.1;
+      levelUpSound.volume = 0.1;
 
       function postState() {
         if(!gameOver) gameDuration+=2;
@@ -195,7 +170,6 @@
         }
       }
 
-      unlockQuizQuestion();
       initEnemies();
 
       // Stars
@@ -279,7 +253,7 @@
               explosionSound.currentTime = 0;
               explosionSound.play();
 
-              updateGameMetadata({
+              drawScore({
                 Score: score,
                 Lives: lives,
                 Level: level,
@@ -310,7 +284,7 @@
             playerHitSound.currentTime = 0;
             playerHitSound.play();
 
-            updateGameMetadata({
+            drawScore({
               Score: score,
               Lives: lives,
               Level: level,
@@ -322,6 +296,16 @@
             }
           }
         });
+      }
+
+      function drawScore(data) {
+        const text = `score: ${data.Score} | lives: ${data.Lives} | level: ${data.Level}`;
+        const startX = canvas.width / 2;
+        const startY = 15;
+        ctx.fillStyle = 'white';
+        ctx.font = '14px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText(text, startX, startY);
       }
 
       function drawBullets() {
@@ -345,6 +329,45 @@
         levelUpPause = true;
         unlockQuizQuestion();
       }
+
+      let isMuted = false;
+
+      // Define button position and size
+      const muteButtonWidth = 75;
+      const muteButtonHeight = 30;
+      const muteButtonX = 10;
+      const muteButtonY = canvas.height - 40;
+
+      function drawMuteButton() {
+        ctx.clearRect(muteButtonX, muteButtonY, muteButtonWidth, muteButtonHeight);
+
+        ctx.fillStyle = '#333';
+        ctx.fillRect(muteButtonX, muteButtonY, muteButtonWidth, muteButtonHeight);
+
+        ctx.fillStyle = 'white';
+        ctx.font = '14px Arial';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+
+        const buttonText = isMuted ? 'unmute (m)' : 'mute (m)';
+        ctx.fillText(buttonText, muteButtonX + muteButtonWidth / 2, muteButtonY + muteButtonHeight / 2);
+      }
+
+      function muteOrUnmute() {
+        isMuted = !isMuted;
+
+        let setVolume = 0;
+        if (!isMuted) {
+          setVolume = 0.1;
+        }
+
+        shootSound.volume = setVolume;
+        explosionSound.volume = setVolume;
+        playerHitSound.volume = setVolume;
+        levelUpSound.volume = setVolume;
+      }
+
+      drawMuteButton();
 
       function gameLoop() {
         if (gameOver) {
@@ -406,6 +429,15 @@
         // Clear the canvas
         ctx.fillStyle = "black";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        drawMuteButton();
+        drawScore(
+                {
+                  Score: score,
+                  Lives: lives,
+                  Level: level,
+                }
+        );
 
         // Update and draw stars
         updateStars();
@@ -485,6 +517,9 @@
           if (bullets.length < 1) {
             shoot();
           }
+        } else if (e.code === "KeyM") {
+          muteOrUnmute();
+          drawMuteButton();
         }
       });
       document.addEventListener("keyup", (e) => {

@@ -438,5 +438,28 @@
         }
       ]
     }
+  ],
+  "bughunt": [
+    {
+      "question": "What is the meaning of life?",
+      "choices": [
+        {
+          "prompt": "Potato.",
+          "is_correct": true
+        },
+        {
+          "prompt": "Acquisition of wealth.",
+          "is_correct": false
+        },
+        {
+          "prompt": "Acquisition of power.",
+          "is_correct": false
+        },
+        {
+          "prompt": "Acquisition of mayonnaise",
+          "is_correct": false
+        }
+      ]
+    }
   ]
 }

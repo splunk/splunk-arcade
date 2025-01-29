@@ -1,11 +1,4 @@
 <footer class="mt-auto bg-gray-800 opacity-90 text-white p-4 text-center flex items-center relative">
-    <button
-            id="muteButton"
-            class="absolute left-4 bottom-4 bg-gray-600 text-white px-2 py-1 text-sm rounded hover:bg-gray-700"
-    >
-        Mute
-    </button>
-
     <p class="flex-grow text-center">
         Made with ❤️ by <a href="https://www.splunk.com" target="_blank" class="text-blue-400 hover:text-blue-500">Splunk</a>
     </p>
@@ -25,28 +18,6 @@
         </div>
     </div>
 </div>
-
-<script>
-    window.soundVolume = 0.1;
-
-    window.dispatchVolumeChange = function () {
-        const event = new CustomEvent("volumeChange", { detail: { volume: window.soundVolume } });
-        window.dispatchEvent(event);
-    };
-
-    const muteButton = document.getElementById("muteButton");
-    muteButton.addEventListener("click", () => {
-        if (window.soundVolume === 0.1) {
-            window.soundVolume = 0;
-            muteButton.textContent = "Unmute";
-        } else {
-            window.soundVolume = 0.1;
-            muteButton.textContent = "Mute";
-        }
-
-        window.dispatchVolumeChange();
-    });
-</script>
 
 <script>
     const resetButton = document.getElementById('resetButton');

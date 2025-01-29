@@ -12,6 +12,15 @@
 
         <script src="http://code.jquery.com/jquery-latest.js"></script>
 
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+            .press-start-2p-regular {
+                font-family: "Press Start 2P", serif;
+                font-weight: 400;
+                font-style: normal;
+            }
+        </style>
+
         <script>
             function submitForm(titleKey, descriptionKey, uriKey) {
                 const form = document.getElementById('gameForm');
@@ -43,13 +52,13 @@
     </head>
     <body class="min-h-screen flex flex-col bg-gray-800 bg-cover bg-center" style="background-image: url('{{ url_for('static', filename='images/arcade_bg_.png') }}');">
         <header>
-            <img src="{{ url_for('static', filename='images/arcade__.png')}}" class="mx-auto h-52">
+            <img src="{{ url_for('static', filename='images/arcade__.png')}}" class="mx-auto h-32">
         </header>
 
-        <nav class=" text-white">
-            <ul class="flex justify-center space-x-2">
-                <li><a href="{{ scoreboard_endpoint }}"><img src="{{ url_for('static', filename='images/scoreboard_.png')}}" class="mx-auto h-14"></a></li>
-                <li><a href="{{ logout_endpoint }}"><img src="{{ url_for('static', filename='images/logout_.png')}}" class="mx-auto h-14"></a></li>
+        <nav class="bg-gray-800 text-white py-2 shadow-md opacity-90">
+            <ul class="flex justify-center space-x-8">
+                <li><a href="{{ scoreboard_endpoint }}" class="text-2xl tracking-wide press-start-2p-regular">Scoreboard</a></li>
+                <li><a href="{{ logout_endpoint }}" class="text-2xl tracking-wide press-start-2p-regular">Logout</a></li>
             </ul>
         </nav>
 
@@ -83,7 +92,7 @@
             </form>
         </main>
 
-        {% include 'footer.html' %}
-
     </body>
+
+    {% include 'footer.html' %}
 </html>
