@@ -13,6 +13,10 @@ vars:
     source: env
     default: true
 
+  SPLUNK_ARCADE_OBSERVABILITY_ENV:
+    source: env
+    default: gameify
+
   SPLUNK_ARCADE_OBSERVABILITY_REALM:
     source: env
     default: us1
@@ -113,6 +117,7 @@ deployments:
         name: ./chart/
       values:
         splunk-otel-collector:
+          environment: ${SPLUNK_ARCADE_OBSERVABILITY_ENV}
           splunkObservability:
             realm: ${SPLUNK_ARCADE_OBSERVABILITY_REALM}
             accessToken: ${SPLUNK_ARCADE_OBSERVABILITY_ACCESS_TOKEN}
