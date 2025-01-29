@@ -89,7 +89,7 @@ spec:
             - name: OTEL_SERVICE_NAME
               value: "splunk-arcade-portal"
             - name: OTEL_ENVIRONMENT
-              value: "{{ index .Values "splunk-otel-collector" "environment" }}"
+              value: "{{ index $.Values "splunk-otel-collector" "environment" }}"
             - name: OTEL_RESOURCE_ATTRIBUTES
               value: "service.name=$(OTEL_SERVICE_NAME),service.namespace=splunk-arcade,deployment.environment=$(OTEL_ENVIRONMENT)"
             - name: PLAYER_IMAGE
