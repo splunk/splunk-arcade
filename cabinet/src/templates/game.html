@@ -169,7 +169,7 @@
 
         </script>
     </head>
-    <body class="min-h-screen flex flex-col bg-gray-800 bg-cover bg-center" style="background-image: url('{{ url_for('static', filename='images/arcade_bg_.png') }}');">
+    <body class="min-h-screen flex flex-col bg-gray-800 bg-cover bg-center py-2" style="background-image: url('{{ url_for('static', filename='images/arcade_bg_.png') }}');">
         <header>
             <img src="{{ url_for('static', filename='images/arcade__.png')}}" class="mx-auto h-32">
         </header>
@@ -181,21 +181,21 @@
                 <li><a href="{{ logout_endpoint }}" class="text-2xl tracking-wide press-start-2p-regular">Logout</a></li>
             </ul>
 
-            <button
+            <a
                     id="open-left-drawer-btn"
-                    class="bg-gray-700 hover:bg-gray-600 text-white py-2 px-4 rounded-lg shadow-lg absolute left-4 top-1/2 transform -translate-y-1/2"
                     onclick="toggleDrawer('left')"
+                    class="text-sm tracking-wide press-start-2p-regular cursor-pointer absolute left-4 top-1/2 transform -translate-y-1/2"
             >
                 Toggle Content
-            </button>
+            </a>
 
-            <button
+            <a
                     id="open-right-drawer-btn"
-                    class="bg-gray-700 hover:bg-gray-600 text-white py-2 px-4 rounded-lg shadow-lg absolute right-4 top-1/2 transform -translate-y-1/2"
                     onclick="toggleDrawer('right')"
+                    class="text-sm tracking-wide press-start-2p-regular cursor-pointer absolute right-4 top-1/2 transform -translate-y-1/2"
             >
                 Toggle Quiz
-            </button>
+            </a>
         </nav>
 
         <main class="relative opacity-90 bg-gray-800 flex flex-col">
