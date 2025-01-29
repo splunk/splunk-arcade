@@ -169,46 +169,40 @@
 
         </script>
     </head>
-    <body class="flex flex-col bg-gray-800 bg-cover bg-center" style="background-image: url('{{ url_for('static', filename='images/arcade_bg.png') }}');">
+    <body class="min-h-screen flex flex-col bg-gray-800 bg-cover bg-center" style="background-image: url('{{ url_for('static', filename='images/arcade_bg_.png') }}');">
         <header>
-            <img src="{{ url_for('static', filename='images/arcade__.png')}}" class="mx-auto h-52">
+            <img src="{{ url_for('static', filename='images/arcade__.png')}}" class="mx-auto h-32">
         </header>
 
-        <nav class="bg-gray-800 text-white py-2 shadow-md opacity-90">
+        <nav class="bg-gray-800 text-white shadow-md py-2 opacity-90 relative">
             <ul class="flex justify-center space-x-8">
                 <li><a href="{{ url_for('routes.home') }}" class="text-2xl tracking-wide press-start-2p-regular">Home</a></li>
                 <li><a href="{{ scoreboard_endpoint }}" class="text-2xl tracking-wide press-start-2p-regular">Scoreboard</a></li>
                 <li><a href="{{ logout_endpoint }}" class="text-2xl tracking-wide press-start-2p-regular">Logout</a></li>
             </ul>
+
+            <button
+                    id="open-left-drawer-btn"
+                    class="bg-gray-700 hover:bg-gray-600 text-white py-2 px-4 rounded-lg shadow-lg absolute left-4 top-1/2 transform -translate-y-1/2"
+                    onclick="toggleDrawer('left')"
+            >
+                Toggle Content
+            </button>
+
+            <button
+                    id="open-right-drawer-btn"
+                    class="bg-gray-700 hover:bg-gray-600 text-white py-2 px-4 rounded-lg shadow-lg absolute right-4 top-1/2 transform -translate-y-1/2"
+                    onclick="toggleDrawer('right')"
+            >
+                Toggle Quiz
+            </button>
         </nav>
 
-        <main class="relative py-4 opacity-90 bg-gray-800 p-8 flex flex-col">
-            <div class="flex items-center justify-between bg-gray-800 text-white px-4 py-2">
-                <button
-                        id="open-left-drawer-btn"
-                        class="bg-gray-700 hover:bg-gray-600 text-white py-2 px-4 rounded-lg shadow-lg"
-                        onclick="toggleDrawer('left')"
-                >
-                    Toggle Content
-                </button>
-
-                <div class="flex-1 text-center text-sm leading-tight">
-                    <span id="game-metadata"></span>
-                </div>
-
-                <button
-                        id="open-right-drawer-btn"
-                        class="bg-gray-700 hover:bg-gray-600 text-white py-2 px-4 rounded-lg shadow-lg"
-                        onclick="toggleDrawer('right')"
-                >
-                    Toggle Quiz
-                </button>
-            </div>
-
+        <main class="relative opacity-90 bg-gray-800 flex flex-col">
             <div class="flex h-auto">
                 <div class="w-1/12 flex items-center justify-center"></div>
 
-                <div id="game-container" class="flex flex-col w-full max-w-4xl p-4 h-auto mx-auto min-h-[600px]">
+                <div id="game-container" class="flex flex-col w-full max-w-4xl py-2 h-auto mx-auto min-h-[600px]">
                     {% block content %}
                     {% if "imvader" in data.title %}
                     {% include 'cabinets/imvader.html' %}
@@ -223,11 +217,9 @@
                 <div class="w-1/12 flex items-center justify-center"></div>
             </div>
 
-
             <div
                     id="left-drawer"
-                    class="absolute left-0 w-64 bg-gray-800 text-white shadow-lg transform -translate-x-full transition-transform duration-300 z-50 h-full"
-                    style="top: 4rem;"
+                    class="absolute left-0 w-64 bg-gray-800 text-white shadow-lg transform -translate-x-full transition-transform duration-300 z-50 h-full overflow-y-auto"
             >
                 <ul class="p-4 space-y-2">
                     <div class="walkthrough" id="walkthrough"></div>
@@ -251,8 +243,7 @@
 
             <div
                     id="right-drawer"
-                    class="absolute right-0 w-64 bg-gray-800 text-white shadow-lg transform translate-x-full transition-transform duration-300 z-50 h-full"
-                    style="top: 4rem;"
+                    class="absolute right-0 w-64 bg-gray-800 text-white shadow-lg transform translate-x-full transition-transform duration-300 z-50 h-full overflow-y-auto"
             >
                 <ul class="p-4">
                     <div class="quiz">
@@ -273,7 +264,9 @@
                     </div>
                 </ul>
             </div>
+
         </main>
+
 
         <script>
             function toggleDrawer(side) {
@@ -391,7 +384,9 @@
             });
         </script>
 
-        {% include 'footer.html' %}
+
 
     </body>
+
+    {% include 'footer.html' %}
 </html>

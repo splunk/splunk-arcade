@@ -52,7 +52,7 @@
     </head>
     <body class="min-h-screen flex flex-col bg-gray-800 bg-cover bg-center" style="background-image: url('{{ url_for('static', filename='images/arcade_bg_.png') }}');">
         <header>
-            <img src="{{ url_for('static', filename='images/arcade__.png')}}" class="mx-auto h-52">
+            <img src="{{ url_for('static', filename='images/arcade__.png')}}" class="mx-auto h-32">
         </header>
 
         <nav class="bg-gray-800 text-white py-2 shadow-md opacity-90">
@@ -92,7 +92,7 @@
             </form>
         </main>
 
-        {% include 'footer.html' %}
-
     </body>
+
+    {% include 'footer.html' %}
 </html>
