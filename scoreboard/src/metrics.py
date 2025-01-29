@@ -15,7 +15,7 @@ class ArcadeMetrics:
         unit="1",
         description="The Game Level",
     )
-    imvaders_score_metric = meter.create_counter(
+    imvaders_score_metric = meter.create_gauge(
         name="arcade.imvaders.score",
         unit="1",
         description="The number of projectiles fired",
@@ -46,16 +46,10 @@ class ArcadeMetrics:
         )
         for key in drop:
             attr.pop(key, None)
-        ArcadeMetrics.imvaders_projectile_metric.add(
-            final_sb_metric_dict.get("projectiles"), attributes=attr
-        )
-        ArcadeMetrics.imvaders_duration_metric.add(
-            final_sb_metric_dict.get("duration"), attributes=attr
-        )
+        ArcadeMetrics.imvaders_projectile_metric.add(final_sb_metric_dict.get("projectiles"), attributes=attr)
+        ArcadeMetrics.imvaders_duration_metric.add(final_sb_metric_dict.get("duration"), attributes=attr)
         ArcadeMetrics.imvaders_level_metric.add(final_sb_metric_dict.get("level"), attributes=attr)
-        ArcadeMetrics.imvaders_score_metric.add(
-            final_sb_metric_dict.get("current_score"), attributes=attr
-        )
+        ArcadeMetrics.imvaders_score_metric.set(final_sb_metric_dict.get("current_score"), attributes=attr)
         return final_sb_metric_dict
 
     @staticmethod
