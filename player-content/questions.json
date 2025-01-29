@@ -2,8 +2,8 @@
   "imvaders": [
     {
       "question": "What does the player score metric tell us about the game’s performance or player behavior?",
-      "link": "http://www.google.com",
-      "link_text": "lmgtf",
+      "link": "https://app.us1.signalfx.com/#/chart/v2/GiePtQJA0AE?groupId=GieD6s3AwAA&configId=GieJakLA4AY&sources%5B%5D=player_name:{{ user_username }}",
+      "link_text": "Click here to investigate:",
       "choices": [
         {
           "prompt": "It indicates how well players are performing in the game.",
@@ -25,6 +25,8 @@
     },
     {
       "question": "If the projectile count is unusually high but scores are low, what might that indicate?",
+      "link": "https://app.us1.signalfx.com/#/chart/v2/GieMpoYAwAM?groupId=GieD6s3AwAA&configId=GieJakLA4AY&sources%5B%5D=player_name:{{ user_username }}",
+      "link_text": "Click here to investigate:",
       "choices": [
         {
           "prompt": "Players might be missing the alien targets frequently.",
@@ -46,6 +48,8 @@
     },
     {
       "question": "Are player score and projectile count sufficient to evaluate player performance?",
+      "link": "https://app.us1.signalfx.com/#/chart/v2/GieMfAjAwAE?groupId=GieD6s3AwAA&configId=GieKF2eA0AY&startTime=-180d&endTime=Now&sources%5B%5D=player_name:{{ user_username }}",
+      "link_text": "Click here to investigate:",
       "choices": [
         {
           "prompt": "No, additional metrics like player health (lives remaining) might be useful.",
@@ -67,6 +71,8 @@
     },
     {
       "question": "What kind of dashboard would help track player scores and projectile counts over time?",
+      "link": "https://app.us1.signalfx.com/#/chart/v2/GieMpoYAwAM?groupId=GieD6s3AwAA&configId=GieJakLA4AY&sources%5B%5D=player_name:{{ user_username }}",
+      "link_text": "Click here to investigate:",
       "choices": [
         {
           "prompt": "A real-time graph plotting scores and projectile counts.",
@@ -88,6 +94,8 @@
     },
     {
       "question": "How could you correlate player score trends with projectile counts?",
+      "link": "https://app.us1.signalfx.com/#/chart/v2/GiePhHHA0Bk?groupId=GieD6s3AwAA&configId=GieJakLA4AY&sources%5B%5D=player_name:{{ user_username }}",
+      "link_text": "Click here to investigate:",
       "choices": [
         {
           "prompt": "By analyzing how projectile counts increase as scores change.",
@@ -109,6 +117,8 @@
     },
     {
       "question": "What thresholds would you set for player score or projectile count to trigger an alert for potential issues?",
+      "link": "https://app.us1.signalfx.com/#/detector/v2/GieRP-3A0AA/edit?startTime=-12h&endTime=Now",
+      "link_text": "Click here to investigate:",
       "choices": [
         {
           "prompt": "Values based on typical player behavior during normal gameplay.",
@@ -151,6 +161,8 @@
     },
     {
       "question": "What might it mean if projectile counts are high but player scores aren’t increasing?",
+      "link": "https://app.us1.signalfx.com/#/chart/v2/GiePhHHA0Bk?groupId=GieD6s3AwAA&configId=GieJakLA4AY&sources%5B%5D=player_name:{{ user_username }}",
+      "link_text": "Click here to investigate:",
       "choices": [
         {
           "prompt": "Players are using a lot of projectiles without hitting the alien targets.",
@@ -193,6 +205,8 @@
     },
     {
       "question": "What Splunk Observability tool(s) can be used to form a hypothesis on why some players are advancing in levels significantly faster than others?",
+      "link": "https://app.us1.signalfx.com/#/chart/v2/GiePhHHA0Bk?groupId=GieD6s3AwAA&configId=GieJakLA4AY&sources%5B%5D=player_name:{{ user_username }}",
+      "link_text": "Click here to investigate in APM:",
       "choices": [
         {
           "prompt": "Breakdown tool",
