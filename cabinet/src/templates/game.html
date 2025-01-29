@@ -199,13 +199,14 @@
             <div class="flex h-auto">
                 <div class="w-1/12 flex items-center justify-center"></div>
 
-                <div id="game-container" class="flex flex-col w-full max-w-4xl p-4 h-auto mx-auto">
+                <div id="game-container" class="flex flex-col w-full max-w-4xl p-4 h-auto mx-auto min-h-[600px]">
                     {% block content %}
                     {% if "imvader" in data.title %}
                     {% include 'cabinets/imvader.html' %}
-                    {% endif %}
-                    {% if "logger" in data.title %}
+                    {% elif "logger" in data.title %}
                     {% include 'cabinets/logger.html' %}
+                    {% elif "bughunt" in data.title %}
+                    {% include 'cabinets/bughunt.html' %}
                     {% endif %}
                     {% endblock %}
                 </div>

@@ -55,7 +55,7 @@
 
         <main class="py-2">
             <form id="gameForm" action="{{url_for('routes.game')}}" method="POST">
-                <div class="flex justify-center space-x-6 overflow-x-auto px-6">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 overflow-x-auto px-6">
                     <div class="min-w-[300px] opacity-90 bg-gray-800 p-8 rounded-lg shadow-lg hover:shadow-2xl hover:shadow-cyan-500/50 p-4 flex flex-col items-center cursor-pointer" onclick="submitForm('imvaders', 'Fight the Space IMvaders!', 'imvader.html')">
                         <h3 class="font-bold text-white text-lg mb-2 text-center">Space IMvaders</h3>
                         <p class="text-gray-400 text-center mb-4">Fight the Space IMvaders!<br>Ya know, for Infrastructure Monitoring.</p>
@@ -66,6 +66,12 @@
                         <h3 class="font-bold text-white text-lg mb-2 text-center">Logger</h3>
                         <p class="text-gray-400 text-center mb-4">Leap for your logs!<br>Keep them logs hoppin'!.</p>
                         <img src="{{ url_for('static', filename='images/frogger_logo.png') }}" class="w-32 h-32 object-cover rounded-full">
+                    </div>
+
+                    <div class="min-w-[300px] opacity-90 bg-gray-800 p-8 rounded-lg shadow-lg hover:shadow-2xl hover:shadow-cyan-500/50 p-4 flex flex-col items-center cursor-pointer" onclick="submitForm('bughunt', 'Hunt some bugs!', 'bughunt.html')">
+                        <h3 class="font-bold text-white text-lg mb-2 text-center">BugHunt</h3>
+                        <p class="text-gray-400 text-center mb-4">Are you ready to hunt some bugs?<br><br></p>
+                        <img src="{{ url_for('static', filename='images/duckhunt_logo.png') }}" class="w-28 h-28">
                     </div>
 
                     <div class="min-w-[300px] opacity-90 bg-gray-800 p-8 rounded-lg shadow-lg hover:shadow-2xl hover:shadow-cyan-500/50 p-4 flex flex-col items-center">
