@@ -81,8 +81,10 @@ spec:
               value: http://$(NODE_IP):4317
             - name: OTEL_SERVICE_NAME
               value: "splunk-arcade-scoreboard"
+            - name: OTEL_ENVIRONMENT
+              value: "{{ index .Values "splunk-otel-collector" "environment" }}"
             - name: OTEL_RESOURCE_ATTRIBUTES
-              value: "service.name=$(OTEL_SERVICE_NAME),service.namespace=splunk-arcade,deployment.environment=gameify"
+              value: "service.name=$(OTEL_SERVICE_NAME),service.namespace=splunk-arcade,deployment.environment=$(OTEL_ENVIRONMENT)"
           ports:
             - name: http
               containerPort: 5000
