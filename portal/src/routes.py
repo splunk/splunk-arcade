@@ -14,6 +14,7 @@ from flask import (
     render_template,
     session,
     url_for,
+    request
 )
 from flask_login import current_user, login_required, login_user, logout_user
 from opentelemetry import trace
@@ -322,3 +323,18 @@ def otel_health():
         return jsonify(data)
     else:
         return "Opentelemetry Collector Offline"
+
+@routes.route('/webhook', methods=['POST'])
+#todo:Implement WEBHOOK here to receive 011y Alerts
+def webhook_data():
+    if request.is_json:
+        data = request.get_json()
+        # Process the data (e.g., store it in a database, perform calculations)
+        name = data.get('name')
+        age = data.get('age')
+        print(jsonify(data))
+        for k,v in data.items():
+            print(k,v)
+        return jsonify(data)
+    else:
+        return jsonify({'error': 'Invalid JSON data'}), 400
