@@ -69,7 +69,10 @@ def record_game_score():
         scoreboard_update,
     )
 
-    ArcadeMetrics.scoreboard_metric_processor(attr=scoreboard_update)
+    try:
+        ArcadeMetrics.scoreboard_metric_processor(attr=scoreboard_update)
+    except Exception as e:
+        print(f"ignoring metrics exception: {e}")
 
     return {}
 
