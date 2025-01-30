@@ -1,6 +1,6 @@
 import hashlib
 
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, abort
 from opentelemetry import trace
 
 from src.cache import get_redis_conn
@@ -75,6 +75,9 @@ def record_game_score():
         print(f"ignoring metrics exception: {e}")
 
     return {}
+@routes.route("/blackhole_sun/", methods=["POST"])
+def blackhole_sun():
+    return jsonify(abort(404, description="Invaders Score Posting Error: This type of logic is going to really slow us down."))
 
 
 def get_question_hash(question: str) -> str:
