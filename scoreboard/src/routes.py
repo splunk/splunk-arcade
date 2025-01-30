@@ -4,7 +4,7 @@ from flask import Blueprint, jsonify, request
 from opentelemetry import trace
 
 from src.cache import get_redis_conn
-from src.metrics import ArcadeMetrics
+from src.metrics import metric_factory
 
 routes = Blueprint("routes", __name__)
 
@@ -70,7 +70,7 @@ def record_game_score():
     )
 
     try:
-        ArcadeMetrics.scoreboard_metric_processor(attr=scoreboard_update)
+        metric_factory(name=scoreboard_update["title"]).process(game_data=scoreboard_update)
     except Exception as e:
         print(f"ignoring metrics exception: {e}")
 

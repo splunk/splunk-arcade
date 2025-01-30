@@ -1,125 +1,126 @@
+from abc import ABC, abstractmethod
+from typing import Any, Optional
 from opentelemetry import metrics
 
 
-class ArcadeMetrics:
-    meter = metrics.get_meter(__name__)
+class Metrics(ABC):
+    def __init__(self, name: str) -> None:
+        self.name = name
+        self.meter = metrics.get_meter(self.name)
 
-    imvaders_projectile_metric = meter.create_counter(
-        name="arcade.imvaders.projectiles.count",
-        unit="1",
-        description="The number of projectiles fired",
-    )
-
-    imvaders_level_metric = meter.create_counter(
-        name="arcade.imvaders.level",
-        unit="1",
-        description="The Game Level",
-    )
-    imvaders_score_metric = meter.create_gauge(
-        name="arcade.imvaders.score",
-        unit="1",
-        description="The number of projectiles fired",
-    )
-    imvaders_duration_metric = meter.create_counter(
-        name="arcade.imvaders.game.duration",
-        unit="1",
-        description="The Game Duration",
-    )
-
-    @staticmethod
-    def scoreboard_metric_processor(attr):
-        final_sb_metric_dict = {}
-        final_sb_metric_dict["projectiles"] = attr.get("projectiles")
-        final_sb_metric_dict["level"] = attr.get("level")
-        final_sb_metric_dict["current_score"] = attr.get("current_score")
-        final_sb_metric_dict["duration"] = attr.get("duration")
-
-        ### Drop Ephemeral Dimensions ###
-        drop = (
-            "duration",
-            "position",
-            "lives_remaining",
-            "level",
-            "active",
-            "projectiles",
-            "current_score",
+        # score is common for all games
+        self.score_gauge = self.meter.create_gauge(
+            name=f"arcade.{self.name}.score",
+            description=f"score for the game `{self.name}`",
         )
-        for key in drop:
-            attr.pop(key, None)
-        ArcadeMetrics.imvaders_projectile_metric.add(final_sb_metric_dict.get("projectiles"), attributes=attr)
-        ArcadeMetrics.imvaders_duration_metric.add(final_sb_metric_dict.get("duration"), attributes=attr)
-        ArcadeMetrics.imvaders_level_metric.add(final_sb_metric_dict.get("level"), attributes=attr)
-        ArcadeMetrics.imvaders_score_metric.set(final_sb_metric_dict.get("current_score"), attributes=attr)
-        return final_sb_metric_dict
 
-    @staticmethod
-    def ship_imvader_proj_count(attr):
-        value = attr.get("projectiles")
-        drop = (
-            "duration",
-            "position",
-            "lives_remaining",
-            "level",
-            "active",
-            "projectiles",
-            "current_score",
+    @abstractmethod
+    def process(self, game_data: dict[str, Any]) -> None:
+        raise NotImplementedError()
+
+
+class ImvadersMetrics(Metrics):
+    _instance: Optional["ImvadersMetrics"] = None
+
+    def __new__(cls) -> "ImvadersMetrics":
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+
+        return cls._instance
+
+    def __init__(self) -> None:
+        if hasattr(self, "initialized"):
+            return
+
+        super().__init__(name="imvaders")
+
+        self.projectile_counter = self.meter.create_counter(
+            name=f"arcade.{self.name}.projectiles",
+            description=f"projectiles fired for the game `{self.name}`",
         )
-        for key in drop:
-            attr.pop(key, None)
 
-        if value:
-            return ArcadeMetrics.imvaders_projectile_metric.add(value, attributes=attr)
-
-    @staticmethod
-    def ship_imvader_duration(attr):
-        value = attr.get("duration")
-        drop = (
-            "duration",
-            "position",
-            "lives_remaining",
-            "level",
-            "active",
-            "projectiles",
-            "current_score",
+        self.level_counter = self.meter.create_counter(
+            name=f"arcade.{self.name}.level",
+            description=f"level counter for the game `{self.name}`",
         )
-        for key in drop:
-            attr.pop(key, None)
 
-        if value:
-            return ArcadeMetrics.imvaders_duration_metric.add(int(value), attributes=attr)
-
-    @staticmethod
-    def ship_imvader_level(attr):
-        value = attr.get("level")
-        drop = (
-            "duration",
-            "position",
-            "lives_remaining",
-            "level",
-            "active",
-            "projectiles",
-            "current_score",
+        self.duration_counter = self.meter.create_counter(
+            name=f"arcade.{self.name}.duration",
+            description=f"duration of play time for the game `{self.name}`",
         )
-        for key in drop:
-            attr.pop(key, None)
 
-        if value:
-            return ArcadeMetrics.imvaders_level_metric.add(int(value), attributes=attr)
+        self.initialized = True
 
-    @staticmethod
-    def ship_imvader_score(attr):
-        value = attr.get("current_score")
-        drop = (
-            "duration",
-            "position",
-            "lives_remaining",
-            "level",
-            "active",
-            "projectiles",
-            "current_score",
-        )
-        for key in drop:
-            attr.pop(key, None)
+    def process(self, game_data: dict[str, Any]) -> None:
+        attributes = {
+            "score": game_data.get("current_score", 0),
+            "projectiles":game_data.get("projectiles", 0),
+            "level": game_data.get("level", 0),
+            "duration": game_data.get("duration", 0),
+        }
 
-        if value:
-            return ArcadeMetrics.imvaders_score_metric.add(int(value), attributes=attr)
+        self.score_gauge.set(amount=attributes["score"], attributes=attributes)
+        self.projectile_counter.add(amount=attributes["projectiles"], attributes=attributes)
+        self.level_counter.add(amount=attributes["level"], attributes=attributes)
+        self.duration_counter.add(amount=attributes["duration"], attributes=attributes)
+
+
+class LoggerMetrics(Metrics):
+    _instance: Optional["LoggerMetrics"] = None
+
+    def __new__(cls) -> "LoggerMetrics":
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+
+        return cls._instance
+
+    def __init__(self) -> None:
+        if hasattr(self, "initialized"):
+            return
+
+        super().__init__(name="logger")
+
+        self.initialized = True
+
+    def process(self, game_data: dict[str, Any]) -> None:
+        attributes = {
+            "score": game_data.get("current_score", 0),
+        }
+
+        self.score_gauge.set(amount=attributes["score"], attributes=attributes)
+
+
+class BughuntMetrics(Metrics):
+    _instance: Optional["BughuntMetrics"] = None
+
+    def __new__(cls) -> "BughuntMetrics":
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+
+        return cls._instance
+
+    def __init__(self) -> None:
+        if hasattr(self, "initialized"):
+            return
+
+        super().__init__(name="bughunt")
+
+        self.initialized = True
+
+    def process(self, game_data: dict[str, Any]) -> None:
+        attributes = {
+            "score": game_data.get("current_score", 0),
+        }
+
+        self.score_gauge.set(amount=attributes["score"], attributes=attributes)
+
+
+def metric_factory(name: str) -> Metrics:
+    if name == "imvaders":
+        return ImvadersMetrics()
+    elif name == "logger":
+        return LoggerMetrics()
+    elif name == "bughunt":
+        return BughuntMetrics()
+
+    raise Exception(f"unknown metric name: {name}")
