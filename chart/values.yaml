@@ -20,6 +20,10 @@ postgresql:
     password: "password"
     database: "myapp"
 
+tls:
+  enabled: false
+  secret_name: splunk-arcade-tls
+
 splunk-otel-collector:
   clusterName: gamify
   environment: gamify

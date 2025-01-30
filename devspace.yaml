@@ -158,6 +158,10 @@ profiles:
         path: deployments.splunk-arcade.helm.values.arcadeHost
         value: www.splunkarcade.com
       - op: add
+        path: deployments.splunk-arcade.helm.values.tls
+        value:
+          enabled: true
+      - op: add
         path: deployments.splunk-arcade.helm.values.scoreboard.replicaCount
         value: 3
       - op: add
