@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import Any, Optional
+
 from opentelemetry import metrics
 
 
@@ -54,7 +55,7 @@ class ImvadersMetrics(Metrics):
     def process(self, game_data: dict[str, Any]) -> None:
         attributes = {
             "score": game_data.get("current_score", 0),
-            "projectiles":game_data.get("projectiles", 0),
+            "projectiles": game_data.get("projectiles", 0),
             "level": game_data.get("level", 0),
             "duration": game_data.get("duration", 0),
         }

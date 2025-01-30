@@ -49,6 +49,59 @@
                 form.submit();
             }
         </script>
+
+        <script>
+            async function checkGameStatus() {
+                try {
+                    let response = await fetch("{{url_for('routes.get_progression')}}");
+                    let data = await response.json();
+
+                    document.querySelectorAll("[data-game]").forEach(card => {
+                        let gameId = card.dataset.game;
+                        let img = card.querySelector("img");
+                        let banner = card.querySelector(".locked-banner");
+
+                        card.classList.add("relative");
+
+                        if (data[gameId] === "locked" && gameId !== "other") {
+                            card.classList.add("cursor-not-allowed");
+                            card.onclick = null;
+                            card.setAttribute("title", "Answer questions to unlock games");
+
+                            if (!banner) {
+                                banner = document.createElement("div");
+                                banner.className = "locked-banner absolute bg-red-700 text-white text-sm font-bold text-center py-1 opacity-90";
+                                banner.innerText = "LOCKED - Answer questions to unlock!";
+                                banner.style.width = "110%";
+                                banner.style.left = "50%";
+                                banner.style.top = "50%";
+                                banner.style.transform = "translate(-50%, -50%) rotate(-30deg)";
+                                banner.style.whiteSpace = "nowrap";
+                                banner.style.padding = "4px 10px";
+                                banner.style.borderRadius = "14px";
+                                card.appendChild(banner);
+                            }
+                        } else {
+                            card.classList.remove("cursor-not-allowed");
+                            card.onclick = () => submitForm(gameId);
+                            card.removeAttribute("title");
+                            img.style.filter = "";
+
+                            if (banner) {
+                                banner.remove();
+                            }
+                        }
+                    });
+                } catch (error) {
+                    console.error("Error fetching game status:", error);
+                }
+            }
+
+            // make sure we update right away, then every 5s
+            checkGameStatus();
+            setInterval(checkGameStatus, 5000);
+            document.addEventListener("DOMContentLoaded", checkGameStatus);
+        </script>
     </head>
     <body class="min-h-screen flex flex-col bg-gray-800 bg-cover bg-center" style="background-image: url('{{ url_for('static', filename='images/arcade_bg_.png') }}');">
         <header>
@@ -65,25 +118,25 @@
         <main class="py-2">
             <form id="gameForm" action="{{url_for('routes.game')}}" method="POST">
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 overflow-x-auto px-6">
-                    <div class="min-w-[300px] opacity-90 bg-gray-800 p-8 rounded-lg shadow-lg hover:shadow-2xl hover:shadow-cyan-500/50 p-4 flex flex-col items-center cursor-pointer" onclick="submitForm('imvaders', 'Fight the Space IMvaders!', 'imvader.html')">
+                    <div data-game="imvaders" class="min-w-[300px] opacity-90 bg-gray-800 p-8 rounded-lg shadow-lg hover:shadow-2xl hover:shadow-cyan-500/50 p-4 flex flex-col items-center cursor-pointer" onclick="submitForm('imvaders', 'Fight the Space IMvaders!', 'imvader.html')">
                         <h3 class="font-bold text-white text-lg mb-2 text-center">Space IMvaders</h3>
                         <p class="text-gray-400 text-center mb-4">Fight the Space IMvaders!<br>Ya know, for Infrastructure Monitoring.</p>
                         <img src="{{ url_for('static', filename='images/invaders_logo.png') }}" class="w-32 h-32 object-cover rounded-full">
                     </div>
 
-                    <div class="min-w-[300px] opacity-90 bg-gray-800 p-8 rounded-lg shadow-lg hover:shadow-2xl hover:shadow-cyan-500/50 p-4 flex flex-col items-center cursor-pointer" onclick="submitForm('logger', 'Leap for your logs!', 'logger.html')">
+                    <div data-game="logger" class="min-w-[300px] opacity-90 bg-gray-800 p-8 rounded-lg shadow-lg hover:shadow-2xl hover:shadow-cyan-500/50 p-4 flex flex-col items-center cursor-pointer" onclick="submitForm('logger', 'Leap for your logs!', 'logger.html')">
                         <h3 class="font-bold text-white text-lg mb-2 text-center">Logger</h3>
                         <p class="text-gray-400 text-center mb-4">Leap for your logs!<br>Keep them logs hoppin'!.</p>
                         <img src="{{ url_for('static', filename='images/frogger_logo.png') }}" class="w-32 h-32 object-cover rounded-full">
                     </div>
 
-                    <div class="min-w-[300px] opacity-90 bg-gray-800 p-8 rounded-lg shadow-lg hover:shadow-2xl hover:shadow-cyan-500/50 p-4 flex flex-col items-center cursor-pointer" onclick="submitForm('bughunt', 'Hunt some bugs!', 'bughunt.html')">
+                    <div data-game="bughunt" class="min-w-[300px] opacity-90 bg-gray-800 p-8 rounded-lg shadow-lg hover:shadow-2xl hover:shadow-cyan-500/50 p-4 flex flex-col items-center cursor-pointer" onclick="submitForm('bughunt', 'Hunt some bugs!', 'bughunt.html')">
                         <h3 class="font-bold text-white text-lg mb-2 text-center">BugHunt</h3>
                         <p class="text-gray-400 text-center mb-4">Are you ready to hunt some bugs?<br><br></p>
                         <img src="{{ url_for('static', filename='images/duckhunt_logo.png') }}" class="w-28 h-28">
                     </div>
 
-                    <div class="min-w-[300px] opacity-90 bg-gray-800 p-8 rounded-lg shadow-lg hover:shadow-2xl hover:shadow-cyan-500/50 p-4 flex flex-col items-center">
+                    <div data-game="other" class="min-w-[300px] opacity-90 bg-gray-800 p-8 rounded-lg shadow-lg hover:shadow-2xl hover:shadow-cyan-500/50 p-4 flex flex-col items-center">
                         <h3 class="font-bold text-white text-lg mb-2 text-center">?!</h3>
                         <p class="text-gray-400 text-center mb-4">What could go here?<br><br></p>
                         <img src="{{ url_for('static', filename='images/tbd_logo.png') }}" class="w-32 h-32 object-cover rounded-full">
