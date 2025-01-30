@@ -1,7 +1,8 @@
 import os
 from typing import Annotated
+
 import requests
-from fastapi import APIRouter, HTTPException, Header
+from fastapi import APIRouter, Header, HTTPException
 from fastapi.responses import JSONResponse
 
 from src.questions import _Questions
@@ -18,7 +19,9 @@ def alive():
 
 
 @router.get("/quiz/question/{module}")
-async def get_question(module: str, player_name: Annotated[str | None, Header()] = None) -> JSONResponse:
+async def get_question(
+    module: str, player_name: Annotated[str | None, Header()] = None
+) -> JSONResponse:
     seen_questions_resp = requests.get(
         f"http://{SCOREBOARD_HOST}/player_seen_questions/{module}",
         headers={"Player-Name": player_name},

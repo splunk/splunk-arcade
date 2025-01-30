@@ -1,5 +1,4 @@
 import json
-from random import randint
 
 
 class _Walkthroughs:

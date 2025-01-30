@@ -1,6 +1,7 @@
 import hashlib
+import random
 
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, abort, jsonify, request
 from opentelemetry import trace
 
 from src.cache import get_redis_conn
@@ -138,3 +139,17 @@ def reset_player_quiz_scores():
         redis.delete(key)
 
     return {}
+
+
+@routes.route("/blackhole_sun", methods=["POST"])
+def blackhole_sun():
+    errors = [
+        (400, "Bad Request: Cosmic interference detected."),
+        (403, "Forbidden: You lack the necessary gravitation."),
+        (404, "Not Found: The sun has vanished into the void."),
+        (500, "Internal Server Error: Singularity collapse imminent."),
+        (503, "Service Unavailable: Black hole undergoing maintenance."),
+    ]
+    code, message = random.choice(errors)
+
+    return jsonify(abort(code, description=message))
