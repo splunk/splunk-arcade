@@ -15,7 +15,7 @@ class _Questions:
         self.f = open("questions.json", mode="r")
         self.content = json.load(self.f)
 
-    def random_question_for_module(self, module: str, seen_questions: [str]) -> dict:
+    def random_question_for_module(self, module: str, seen_questions: [str], player_name: str) -> dict:
         _module = module.lower()
 
         if _module not in self.content:
@@ -27,4 +27,6 @@ class _Questions:
         while True:
             maybe_question = self.content[_module][randint(0, len(self.content[_module]) - 1)]
             if maybe_question not in seen_questions:
+                maybe_question["link"] = maybe_question["link"].replace("__PLAYER_NAME__", player_name)
+
                 return maybe_question
