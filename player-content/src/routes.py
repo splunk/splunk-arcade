@@ -30,6 +30,7 @@ async def get_question(module: str, player_name: Annotated[str | None, Header()]
         content=q.random_question_for_module(
             module=module,
             seen_questions=seen_questions,
+            player_name=player_name,
         )
     )
 
