@@ -27,6 +27,6 @@ class _Questions:
         while True:
             maybe_question = self.content[_module][randint(0, len(self.content[_module]) - 1)]
             if maybe_question not in seen_questions:
-                maybe_question["question"].replace("__PLAYER_NAME__", player_name)
+                maybe_question["link"] = maybe_question["link"].replace("__PLAYER_NAME__", player_name)
 
                 return maybe_question
