@@ -99,11 +99,17 @@ def record_game_score():
     current_span = trace.get_current_span()
     for k, v in content.items():
         current_span.set_attribute(k, v)
-
-    ret = requests.post(
-        f"http://{SCOREBOARD_HOST}/record_game_score/",
-        json=content,
-    )
+    ###Check to see if they are playing the slow IMVADERS Version.  If SLOW Add a request attemo to a KNOWN Blackhole route on the scoreboard
+    if content["title"] == "imvaders" and content["version"] == "0.75":
+        try:
+            ret = requests.post(f"http://{SCOREBOARD_HOST}/blackhole_sun/",json=content,)
+        except:
+            ret = requests.post(f"http://{SCOREBOARD_HOST}/record_game_score/",json=content,)
+    else:
+        ret = requests.post(
+            f"http://{SCOREBOARD_HOST}/record_game_score/",
+            json=content,
+        )
 
     print(f"record game score status {ret.status_code}")
 
