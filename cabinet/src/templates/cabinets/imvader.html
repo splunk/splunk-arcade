@@ -510,11 +510,11 @@
         keys[e.code] = true;
         if (e.code === "Space") {
           if (version < 1) {
-            //BUG:
-            shoot();
-            return;
-          }
-          if (bullets.length < 1) {
+            // when on version <1 we only allow shooting one bullet at a time! :)
+            if (bullets.length < 1) {
+              shoot();
+            }
+          } else {
             shoot();
           }
         } else if (e.code === "KeyM") {

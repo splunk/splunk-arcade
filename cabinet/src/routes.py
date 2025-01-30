@@ -19,6 +19,10 @@ SCOREBOARD_HOST = os.getenv("SCOREBOARD_HOST")
 PLAYER_CONTENT_HOST = os.getenv("PLAYER_CONTENT_HOST")
 
 
+IMVADERS_SLOW_VERSION = 0.75
+UNPROCESSABLE_ENTITY = 422
+
+
 @login.user_loader
 def load_user(id):
     return db.session.get(User, int(id))
@@ -99,17 +103,23 @@ def record_game_score():
     current_span = trace.get_current_span()
     for k, v in content.items():
         current_span.set_attribute(k, v)
-    ###Check to see if they are playing the slow IMVADERS Version.  If SLOW Add a request attemo to a KNOWN Blackhole route on the scoreboard
-    if content["title"] == "imvaders" and content["version"] == "0.75":
+
+    # if imvaders is on "slow" version (<1), trigger some failed http reqs
+    if content["title"] == "imvaders" and content["version"] == IMVADERS_SLOW_VERSION:
         try:
-            ret = requests.post(f"http://{SCOREBOARD_HOST}/blackhole_sun/",json=content,)
-        except:
-            ret = requests.post(f"http://{SCOREBOARD_HOST}/record_game_score/",json=content,)
-    else:
-        ret = requests.post(
-            f"http://{SCOREBOARD_HOST}/record_game_score/",
-            json=content,
-        )
+            ret = requests.post(
+                f"http://{SCOREBOARD_HOST}/blackhole_sun",
+                json=content,
+            )
+            print(ret.status_code, ret.text)
+        except Exception as exc:
+            _ = exc
+            pass
+
+    ret = requests.post(
+        f"http://{SCOREBOARD_HOST}/record_game_score/",
+        json=content,
+    )
 
     print(f"record game score status {ret.status_code}")
 
@@ -141,24 +151,26 @@ def record_answer():
 
     return {}
 
+
 @routes.route("/reset_quiz_scores", methods=["POST"])
 def reset_quiz_scores():
     ret = requests.post(
         f"http://{SCOREBOARD_HOST}/reset_player_quiz_scores",
         headers={
             "Player-Name": PLAYER_NAME,
-        }
+        },
     )
-    breakpoint()
+
     print(f"reset quiz score status {ret.status_code}")
 
     return {}
+
 
 @routes.route("/walkthrough/<string:module>/<string:stage>", methods=["GET"])
 def get_walkthrough(module: str, stage: str):
     content = requests.get(f"http://{PLAYER_CONTENT_HOST}/walkthrough/{module}/{stage}")
 
-    if content.status_code == 422:
+    if content.status_code == UNPROCESSABLE_ENTITY:
         # signal to the front end that they ran out of content
         return {}
 

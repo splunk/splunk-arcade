@@ -204,7 +204,7 @@ def calculate_blended_score(
 
 @routes.route("/scoreboard")
 @login_required
-def scoreboard():
+def scoreboard():  # noqa C901
     if not current_user.is_authenticated:
         return redirect(url_for("routes.login"))
 
