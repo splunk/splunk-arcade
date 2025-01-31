@@ -33,6 +33,15 @@
                 margin: 0 auto;
             }
 
+            .canvas-stack {
+                position: relative;
+                width: 480px;
+                height: 640px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
             .canvas {
                 position: absolute;
                 top: 0;
@@ -53,8 +62,10 @@
     </head>
     <body class="canvas-container">
         <div class="game-wrapper">
+            <div class="canvas-stack">
             <canvas id="background-canvas" class="canvas" width="960" height="1280"></canvas>
             <canvas id="canvas" class="canvas" width="960" height="1280"></canvas>
+                </div>
             <script>
                 function runLogger() {
                     let pauseLoop = false;
