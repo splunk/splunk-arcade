@@ -18,7 +18,6 @@ ARCADE_HOST = os.getenv("ARCADE_HOST")
 SCOREBOARD_HOST = os.getenv("SCOREBOARD_HOST")
 PLAYER_CONTENT_HOST = os.getenv("PLAYER_CONTENT_HOST")
 
-
 IMVADERS_SLOW_VERSION = 0.75
 UNPROCESSABLE_ENTITY = 422
 
@@ -175,3 +174,27 @@ def get_walkthrough(module: str, stage: str):
         return {}
 
     return content.json()
+
+
+@routes.route("/progression", methods=["GET"])
+def get_progression():
+    ret = requests.get(
+        f"http://{SCOREBOARD_HOST}/player_progression",
+        headers={
+            "Player-Name": PLAYER_NAME,
+        },
+    )
+
+    return ret.json()
+
+
+@routes.route("/imvaders_version", methods=["GET"])
+def get_imvaders_version():
+    ret = requests.get(
+        f"http://{SCOREBOARD_HOST}/player_progression",
+        headers={
+            "Player-Name": PLAYER_NAME,
+        },
+    )
+
+    return {"version": ret.json()["game_versions"].get("imvaders", 0.75)}

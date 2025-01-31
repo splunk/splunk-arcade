@@ -33,6 +33,15 @@
                 margin: 0 auto;
             }
 
+            .canvas-stack {
+                position: relative;
+                width: 480px;
+                height: 640px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
             .canvas {
                 position: absolute;
                 top: 0;
@@ -53,8 +62,10 @@
     </head>
     <body class="canvas-container">
         <div class="game-wrapper">
+            <div class="canvas-stack">
             <canvas id="background-canvas" class="canvas" width="960" height="1280"></canvas>
             <canvas id="canvas" class="canvas" width="960" height="1280"></canvas>
+                </div>
             <script>
                 function runLogger() {
                     let pauseLoop = false;
@@ -999,6 +1010,27 @@
                             // Write the text center aligned within the <canvas> and at the 9th row position
                             // from the top of the game board
                             Frogger.drawingSurface.fillText("YOU WIN!", Frogger.drawingSurfaceWidth / 2, _gameBoard.rows[9]);
+
+                            pauseLoop = true;
+                            unlockQuizQuestion();
+
+                            const text = "YOU WIN!\nPress C to Play Again\nBut first...\nAnswer a quiz question!";
+
+                            const lines = text.split("\n");
+                            lines.forEach((line, i) => {
+                                Frogger.drawingSurface.fillText(line, Frogger.drawingSurfaceWidth / 2, _gameBoard.rows[9+i]);
+                            });
+
+                            function handleContinue(event) {
+                                if (event.code === "KeyC") {
+                                    pauseLoop = false;
+                                    endLoop = true;
+                                    document.removeEventListener("keydown", handleContinue);
+                                    runLogger();
+                                }
+                            }
+
+                            document.addEventListener("keydown", handleContinue);
                         }
 
                         // Define a function to render the "TIME" label in the bottom-right corner of the

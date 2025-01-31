@@ -9,6 +9,9 @@ from src.metrics import metric_factory
 
 routes = Blueprint("routes", __name__)
 
+NUM_IMVADERS_QUESTIONS_TO_UNLOCK_VERSION_1_75 = 1
+NUM_QUESTIONS_TO_UNLOCK_NEXT = 2
+
 
 @routes.route("/alive", methods=["GET"])
 def alive():
@@ -125,6 +128,45 @@ def get_player_seen_questions(module: str):
         seen_questions.append(redis.hget(key, "question"))
 
     return jsonify(seen_questions)
+
+
+@routes.route("/player_progression", methods=["GET"])
+def get_player_progression():
+    player_name = request.headers.get("Player-Name")
+    if not player_name:
+        raise Exception("No Player Name provided")
+
+    redis = get_redis_conn()
+
+    progression = {
+        "level_state": {
+            "imvaders": "unlocked",
+            "logger": "locked",
+            "bughunt": "locked",
+        },
+        "game_versions": {
+            "imvaders": "",
+        },
+    }
+
+    modules = [
+        "imvaders",
+        "logger",
+        "bughunt",
+    ]
+
+    for index, module in enumerate(modules[:-1]):
+        question_keys = redis.scan_iter(match=f"quiz:{player_name}:{module}:*")
+
+        question_count = sum(1 for _ in question_keys)
+
+        if question_count >= NUM_QUESTIONS_TO_UNLOCK_NEXT:
+            progression["level_state"][modules[index + 1]] = "unlocked"
+
+        if module == "imvaders" and question_count >= NUM_IMVADERS_QUESTIONS_TO_UNLOCK_VERSION_1_75:
+            progression["game_versions"]["imvaders"] = 1.75
+
+    return jsonify(progression)
 
 
 @routes.route("/reset_player_quiz_scores", methods=["POST"])

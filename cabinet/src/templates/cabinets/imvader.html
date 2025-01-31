@@ -29,9 +29,26 @@
       let enemyDirection = 1;
       let enemyDropDistance = 30;
       let enemySpeed = 1;
-      let version = Math.floor(Math.random() * 2) + 0.75;
+      let version = 0.75;
       let username = "player"+Math.floor(Math.random() * 100)
       let gameDuration = 0;
+
+
+
+      function getVersion() {
+        $.ajax({
+          type: 'GET',
+          url: '{{ url_for("routes.get_imvaders_version") }}',
+          success: function(response) {
+            version = response.version;
+          },
+          error: function(error) {
+            console.log('Error determining imvaders version:', error);
+          }
+        });
+      }
+
+      getVersion();
 
       drawScore({
         Score: score,
@@ -292,6 +309,8 @@
 
             if (lives <= 0) {
               gameOver = true;
+              // unlock a question so they can advance to not slow version w/out having to win
+              unlockQuizQuestion();
               postState();
             }
           }
@@ -386,11 +405,12 @@
             canvas.width / 2,
             canvas.height / 2 + 50
           );
-          ctx.fillText(
-            "Press R to Restart",
-            canvas.width / 2,
-            canvas.height / 2 + 100
-          );
+
+          const text = "Press R to Restart\nBut first, answer a quiz question!";
+          const lines = text.split("\n");
+          lines.forEach((line, i) => {
+            ctx.fillText(line, canvas.width / 2, canvas.height / 2 + 100 + i * 20);
+          });
 
           if (keys["KeyR"]) {
             restartGame();
@@ -473,6 +493,9 @@
           // Check for game over conditions
           if (enemy.y + enemy.height >= player.y) {
             gameOver = true;
+
+            // unlock a question so they can advance to not slow version w/out having to win
+            unlockQuizQuestion();
             postState();
           }
         });
@@ -500,6 +523,7 @@
         bullets.length = 0;
         enemyBullets.length = 0;
         initEnemies();
+        getVersion();
       }
 
       // Key states

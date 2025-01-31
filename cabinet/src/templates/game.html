@@ -81,13 +81,10 @@
                         });
 
                         if (response.link) {
-                            const linkElement = document.createElement("a");
+                            const linkElement = document.getElementById("quiz-link");
                             linkElement.href = response.link;
                             linkElement.target = "_blank";
-                            linkElement.classList.add("text-cyan-400", "hover:text-cyan-500", "block", "mt-4", "text-center");
                             linkElement.textContent = response.link_text;
-
-                            optionsList.parentElement.insertBefore(linkElement, document.getElementById("submit-answer"));
                         }
 
                         const button = document.getElementById("open-right-drawer-btn");
@@ -141,6 +138,7 @@
 
                         document.getElementById("quiz-options").style.display = "none";
                         document.getElementById("quiz-message").style.display = "block";
+                        document.getElementById("quiz-link").style.display = "none";
 
                         startTime = null;
                         attemptsCount = 0;
@@ -199,7 +197,7 @@
             </a>
         </nav>
 
-        <main class="relative opacity-90 bg-gray-800 flex flex-col">
+        <main class="relative opacity-90 bg-gray-800 flex flex-col flex-grow flex-1 justify-center items-center">
             <div class="flex h-auto">
                 <div class="w-1/12 flex items-center justify-center"></div>
 
@@ -256,6 +254,7 @@
                             <ul id="quiz-answer-options" class="space-y-2">
                                 <!-- populated from quiz fetch func -->
                             </ul>
+                            <a id="quiz-link" class="text-cyan-400 hover:text-cyan-500 block mt-4 text-center"></a>
                             <button id="submit-answer" class="w-full bg-cyan-600 hover:bg-cyan-700 text-white py-2 px-4 rounded-lg mt-4" onclick="checkQuestionAnswer()">
                                 Submit Answer
                             </button>
