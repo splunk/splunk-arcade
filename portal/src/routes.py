@@ -1,9 +1,10 @@
+import json
 import os
 import uuid
+from concurrent.futures import ThreadPoolExecutor
 from datetime import UTC, datetime
+from typing import Any
 from urllib.parse import urlsplit
-from src.detector import Detector
-import logging
 
 import requests
 import sqlalchemy as sa
@@ -14,9 +15,9 @@ from flask import (
     make_response,
     redirect,
     render_template,
+    request,
     session,
     url_for,
-    request
 )
 from flask_login import current_user, login_required, login_user, logout_user
 from opentelemetry import trace
@@ -327,34 +328,45 @@ def otel_health():
         return "Opentelemetry Collector Offline"
 
 
+def _handle_splunk_webhook_content(payload: dict[str, Any]) -> None:
+    # message looks pretty in the ui, but when packaged quotiebois get replaced and python gets a
+    # sad, so replace stuff to make python has a happy
+    payload_question_content = payload.get("messageBody", "").replace('\\"', '"').replace("'", '"')
+
+    if not payload_question_content:
+        print("failed to get question content...")
+        return
+
+    question_title = payload.get("detector")
+    if not question_title:
+        print("failed to get question title...")
+        return
+
+    player_name = payload.get("dimensions", {}).get("player_name")
+    if not player_name:
+        print("failed to get player name for question...",)
+        return
+
+    question_data = json.loads(payload_question_content)
+
+    question = {
+        "question": question_data["Question"],
+        "link": "",
+        "link_text": "",
+        "choices": [
+            {"prompt": opt, "is_correct": True if opt == question_data["Answer"] else False}
+            for opt in question_data["Options"]
+        ],
+    }
+
+    print("PREPARED QUESTION FOR PLAYER ", player_name, question)
 
 
-@routes.route('/splunk-webhook', methods=['POST'])
+@routes.route("/splunk-webhook", methods=["POST"])
 def splunk_webhook():
-    try:
-        # Ensure the request method is POST
-        if request.method != 'POST':
-            return jsonify({"status": "error", "message": "Method Not Allowed"}), 405
+    # we want to quickly return 200s always to the webhook sender, so handle this message
+    # in the background then ship back 200 so we dont get spammed too hard :)
+    executor = ThreadPoolExecutor(max_workers=1)
+    executor.submit(_handle_splunk_webhook_content, request.get_json())
 
-        # Parse incoming JSON payload
-
-        data = request.get_json()
-        if not data:
-            raise ValueError("Invalid JSON payload")
-
-        logging.info("Received data: %s", data)
-        #print("Received data: %s", data)
-
-        # Process data (Add custom processing logic here)
-        receiver = Detector(data)
-        print(receiver.post_question_notification())
-
-        return receiver.post_question_notification(), 200
-
-    except ValueError as ve:
-        logging.error("ValueError: %s", str(ve))
-        return jsonify({"status": "error", "message": str(ve)}), 200
-
-    except Exception as e:
-        logging.exception("Unexpected error occurred")
-        return jsonify({"status": "error", "message": "Internal server error"}), 500
+    return jsonify(success=True)
