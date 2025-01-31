@@ -2,6 +2,7 @@ import os
 import uuid
 from datetime import UTC, datetime
 from urllib.parse import urlsplit
+from src.detector import Detector
 
 import requests
 import sqlalchemy as sa
@@ -325,16 +326,13 @@ def otel_health():
         return "Opentelemetry Collector Offline"
 
 @routes.route('/webhook', methods=['POST'])
-#todo:Implement WEBHOOK here to receive 011y Alerts
-def webhook_data():
+def olly_webhook():
     if request.is_json:
         data = request.get_json()
-        # Process the data (e.g., store it in a database, perform calculations)
-        name = data.get('name')
-        age = data.get('age')
+        receiver = Detector(data)
+
         print(jsonify(data))
-        for k,v in data.items():
-            print(k,v)
-        return jsonify(data)
+
+        return receiver.post_question_notification()
     else:
         return jsonify({'error': 'Invalid JSON data'}), 400
