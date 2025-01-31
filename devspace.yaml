@@ -154,6 +154,13 @@ dev:
 profiles:
   - name: prod
     patches:
+      # persistence for prod in case registry dies for whatever reason
+      - op: add
+        path: localRegistry.persistence
+        value:
+          enabled: true
+          size: 10Gi
+      # prod host + tls ofc
       - op: add
         path: deployments.splunk-arcade.helm.values.arcadeHost
         value: www.splunkarcade.com
