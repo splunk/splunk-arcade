@@ -3,6 +3,7 @@ import uuid
 from datetime import UTC, datetime
 from urllib.parse import urlsplit
 from src.detector import Detector
+import logging
 
 import requests
 import sqlalchemy as sa
@@ -325,14 +326,35 @@ def otel_health():
     else:
         return "Opentelemetry Collector Offline"
 
-@routes.route('/webhook', methods=['POST'])
-def olly_webhook():
-    if request.is_json:
+
+
+
+@routes.route('/splunk-webhook', methods=['POST'])
+def splunk_webhook():
+    try:
+        # Ensure the request method is POST
+        if request.method != 'POST':
+            return jsonify({"status": "error", "message": "Method Not Allowed"}), 405
+
+        # Parse incoming JSON payload
+
         data = request.get_json()
+        if not data:
+            raise ValueError("Invalid JSON payload")
+
+        logging.info("Received data: %s", data)
+        #print("Received data: %s", data)
+
+        # Process data (Add custom processing logic here)
         receiver = Detector(data)
+        print(receiver.post_question_notification())
 
-        print(jsonify(data))
+        return receiver.post_question_notification(), 200
 
-        return receiver.post_question_notification()
-    else:
-        return jsonify({'error': 'Invalid JSON data'}), 400
+    except ValueError as ve:
+        logging.error("ValueError: %s", str(ve))
+        return jsonify({"status": "error", "message": str(ve)}), 200
+
+    except Exception as e:
+        logging.exception("Unexpected error occurred")
+        return jsonify({"status": "error", "message": "Internal server error"}), 500
