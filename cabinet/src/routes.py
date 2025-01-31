@@ -186,3 +186,15 @@ def get_progression():
     )
 
     return ret.json()
+
+
+@routes.route("/imvaders_version", methods=["GET"])
+def get_imvaders_version():
+    ret = requests.get(
+        f"http://{SCOREBOARD_HOST}/player_progression",
+        headers={
+            "Player-Name": PLAYER_NAME,
+        },
+    )
+
+    return {"version": ret.json()["game_versions"].get("imvaders", 0.75)}

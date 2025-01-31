@@ -54,7 +54,8 @@
             async function checkGameStatus() {
                 try {
                     let response = await fetch("{{url_for('routes.get_progression')}}");
-                    let data = await response.json();
+                    let data = await response.json()
+                    data = data["level_state"];
 
                     document.querySelectorAll("[data-game]").forEach(card => {
                         let gameId = card.dataset.game;

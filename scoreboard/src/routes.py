@@ -9,6 +9,7 @@ from src.metrics import metric_factory
 
 routes = Blueprint("routes", __name__)
 
+NUM_IMVADERS_QUESTIONS_TO_UNLOCK_VERSION_1_75 = 1
 NUM_QUESTIONS_TO_UNLOCK_NEXT = 2
 
 
@@ -138,9 +139,14 @@ def get_player_progression():
     redis = get_redis_conn()
 
     progression = {
-        "imvaders": "unlocked",
-        "logger": "locked",
-        "bughunt": "locked",
+        "level_state": {
+            "imvaders": "unlocked",
+            "logger": "locked",
+            "bughunt": "locked",
+        },
+        "game_versions": {
+            "imvaders": "",
+        },
     }
 
     modules = [
@@ -155,7 +161,10 @@ def get_player_progression():
         question_count = sum(1 for _ in question_keys)
 
         if question_count >= NUM_QUESTIONS_TO_UNLOCK_NEXT:
-            progression[modules[index + 1]] = "unlocked"
+            progression["level_state"][modules[index + 1]] = "unlocked"
+
+        if module == "imvaders" and question_count >= NUM_IMVADERS_QUESTIONS_TO_UNLOCK_VERSION_1_75:
+            progression["game_versions"]["imvaders"] = 1.75
 
     return jsonify(progression)
 
