@@ -54,6 +54,9 @@ class ImvadersMetrics(Metrics):
 
     def process(self, game_data: dict[str, Any]) -> None:
         attributes = {
+            "title": self.name,
+            "version": game_data.get("version", "unknown"),
+            "player_name": game_data.get("player_name", "unknown"),
             "score": game_data.get("current_score", 0),
             "projectiles": game_data.get("projectiles", 0),
             "level": game_data.get("level", 0),
