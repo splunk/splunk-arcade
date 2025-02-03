@@ -146,7 +146,7 @@ func doRequestWithRetry(client *http.Client, req *http.Request) (*http.Response,
 
 		log.Printf("attempt %d failed: %s, retrying in %ds...", i+1, err, retryDelay)
 
-		time.Sleep(retryDelay)
+		time.Sleep(retryDelay * time.Second)
 	}
 
 	return nil, fmt.Errorf("all retries failed: %w", err)
