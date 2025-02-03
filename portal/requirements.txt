@@ -8,7 +8,7 @@ Flask>=3.1.0,<4.0.0
 psycopg2-binary>=2.9.10,<3.0.0
 redis>=5.2.1,<6.0.0
 requests>=2.32.3,<3.0.0
-splunk-opentelemetry[all]>=1.21.0,<2.0.0
+splunk-opentelemetry[all]==1.21.0
 SQLAlchemy>=2.0.36,<3.0.0
 waitress>=3.0.2,<4.0.0
 kubernetes==31.0.0
