@@ -1,5 +1,6 @@
 import os
 import uuid
+from datetime import datetime
 
 import requests
 from flask import Blueprint, jsonify, redirect, render_template, request, url_for
@@ -199,6 +200,16 @@ def get_imvaders_version():
 
     return {"version": ret.json()["game_versions"].get("imvaders", 0.75)}
 
+
 @routes.route("/are_you_not_entertained", methods=["GET", "POST"])
 def are_you_not_entertained():
     return render_template("doom.html")
+
+
+@routes.route("/log", methods=["POST"])
+def log():
+    content = request.get_json(force=True)
+
+    print(f"{content.get("title", "unknown title")} | {datetime.now()} | {content.get("message", "unknown message")}")
+
+    return {}

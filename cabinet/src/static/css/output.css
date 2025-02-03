@@ -838,6 +838,9 @@
   .bg-pink-600 {
     background-color: var(--color-pink-600);
   }
+  .bg-red-200 {
+    background-color: var(--color-red-200);
+  }
   .bg-red-500 {
     background-color: var(--color-red-500);
   }
@@ -960,9 +963,6 @@
   }
   .opacity-0 {
     opacity: 0%;
-  }
-  .opacity-50 {
-    opacity: 50%;
   }
   .opacity-90 {
     opacity: 90%;

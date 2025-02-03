@@ -67,6 +67,14 @@
             <canvas id="canvas" class="canvas" width="960" height="1280"></canvas>
                 </div>
             <script>
+                const defaultShortLogWidth = 190;
+                const defaultMediumLogWidth = 254;
+                const defaultLongLogWidth = 392;
+
+                let curShortLogWidth = defaultShortLogWidth;
+                let curMediumLogWidth = defaultMediumLogWidth;
+                let curLongLogWidth = defaultLongLogWidth;
+
                 function runLogger() {
                     let pauseLoop = false;
                     let endLoop = false;
@@ -346,9 +354,29 @@
 
                         // Define a function to execute once the player reaches the designated goal
                         function playerAtGoal() {
-
                             // When the player reaches the goal, increase their score by 1000 points
                             increaseScore(1000);
+
+                            // TODO (cm) probably need to log this back on flask land
+                            dict = {
+                                game_session_id: "{{ gamesession }}",
+                                title: "logger",
+                                player_name: "{{ user_username }}",
+                                player_id: "{{ user_uuid }}",
+                                version: "v1.0",
+                                message: "shrinkify them logs",
+                            };
+
+                            $.ajax({
+                                type: "POST",
+                                url: '{{ url_for("routes.log") }}',
+                                data: JSON.stringify(dict),
+                                contentType: "application/json",
+                            });
+
+                            curShortLogWidth -= 25;
+                            curMediumLogWidth -= 45;
+                            curLongLogWidth -= 65;
 
                             // Increment the value indicating the total number of times the player's character
                             // has reached the goal
@@ -966,6 +994,10 @@
                         // Define a function to render the text "GAME OVER" to the <canvas>. This will only be
                         // called when the game is over
                         function renderGameOver() {
+                            // reset log sizes
+                            curShortLogWidth = defaultShortLogWidth;
+                            curMediumLogWidth = defaultMediumLogWidth;
+                            curLongLogWidth = defaultLongLogWidth;
 
                             // Use the Arcade Classic font as previously defined, and write the text centered
                             // around the given drawing position in white
@@ -1000,6 +1032,11 @@
                         // Define a function to render the text "YOU WIN!" to the <canvas> which will be called
                         // when the player has won the game by reaching the home base position five times
                         function renderGameWon() {
+                            // ensure logs default size
+                            curShortLogWidth = defaultShortLogWidth;
+                            curMediumLogWidth = defaultMediumLogWidth;
+                            curLongLogWidth = defaultLongLogWidth;
+
 
                             // Use the Arcade Classic font as previously defined, and write the text centered
                             // around the given drawing position in yellow (hex value #FF0)
@@ -1361,7 +1398,7 @@
                         ShortLog.prototype.constructor = ShortLog;
                         ShortLog.prototype.spriteLeft = 0;
                         ShortLog.prototype.spriteTop = 160;
-                        ShortLog.prototype.width = 190;
+                        ShortLog.prototype.width = curShortLogWidth;
 
                         // Define a medium log obstacle
                         function MediumLog(left) {
@@ -1374,7 +1411,7 @@
                         MediumLog.prototype.constructor = MediumLog;
                         MediumLog.prototype.spriteLeft = 0;
                         MediumLog.prototype.spriteTop = 240;
-                        MediumLog.prototype.width = 254;
+                        MediumLog.prototype.width = curMediumLogWidth;
 
                         // Define a long log obstacle
                         function LongLog(left) {
@@ -1387,7 +1424,7 @@
                         LongLog.prototype.constructor = LongLog;
                         LongLog.prototype.spriteLeft = 240;
                         LongLog.prototype.spriteTop = 160;
-                        LongLog.prototype.width = 392;
+                        LongLog.prototype.width = curLongLogWidth;
 
                         // Define a turtle obstacle. There are two types of turtle obstacle on the game board,
                         // one representing a group of two turtles and one representing a group of three
@@ -1943,6 +1980,14 @@
                                 // Loop through each of the obstacles within this row
                                 for (; index < length; index++) {
                                     obstaclesItem = this.obstacles[index];
+
+                                    if (obstaclesItem.constructor.name === "ShortLog") {
+                                        obstaclesItem.width = curShortLogWidth;
+                                    } else if (obstaclesItem.constructor.name === "MediumLog") {
+                                        obstaclesItem.width = curMediumLogWidth;
+                                    } else if (obstaclesItem.constructor.name === "LongLog") {
+                                        obstaclesItem.width = curLongLogWidth;
+                                    }
 
                                     // Update the left position, in pixels, of this obstacle based on its
                                     // current position along with the direction and speed of movement

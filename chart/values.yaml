@@ -47,6 +47,11 @@ splunk-otel-collector:
                   - /Users/*
   gateway:
     enabled: false
+  splunkPlatform:
+    endpoint: https://127.0.0.1:8088/services/collector
+    token: REPLACE_ME
+    metricsIndex: k8s=metrics
+    index: main
   splunkObservability:
     realm: us1
     accessToken: REPLACE_ME
