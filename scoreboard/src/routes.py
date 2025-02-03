@@ -143,6 +143,7 @@ def get_player_progression():
             "imvaders": "unlocked",
             "logger": "locked",
             "bughunt": "locked",
+            "doom": "locked"
         },
         "game_versions": {
             "imvaders": "",
@@ -165,6 +166,9 @@ def get_player_progression():
 
         if module == "imvaders" and question_count >= NUM_IMVADERS_QUESTIONS_TO_UNLOCK_VERSION_1_75:
             progression["game_versions"]["imvaders"] = 1.75
+
+    if progression["level_state"]["logger"] == "unlocked" and progression["level_state"]["bughunt"] == "unlocked":
+        progression["game_versions"]["doom"] = "unlocked"
 
     return jsonify(progression)
 
