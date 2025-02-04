@@ -198,7 +198,7 @@ def get_imvaders_version():
         },
     )
 
-    return {"version": ret.json()["game_versions"].get("imvaders", 0.75)}
+    return {"version": ret.json()["game_versions"].get("imvaders") or 0.75}
 
 
 @routes.route("/are_you_not_entertained", methods=["GET", "POST"])
