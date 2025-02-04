@@ -210,6 +210,10 @@ def are_you_not_entertained():
 def log():
     content = request.get_json(force=True)
 
-    print(f"{content.get("title", "unknown title")} | {datetime.now()} | {content.get("message", "unknown message")}")
+    print(
+        f"{content.get("title", "unknown title")} |"
+        f"{datetime.now()} |"
+        f"{content.get("message", "unknown message")}"
+    )
 
     return {}
