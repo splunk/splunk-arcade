@@ -95,7 +95,7 @@ spec:
             - name: OTEL_ENVIRONMENT
               value: "{{ index $.Values "splunk-otel-collector" "environment" }}"
             - name: OTEL_RESOURCE_ATTRIBUTES
-              value: "service.name=$(OTEL_SERVICE_NAME),service.namespace={{ .Release.Namespace }},deployment.environment=$(OTEL_ENVIRONMENT)"
+              value: "service.name=$(OTEL_SERVICE_NAME),service.namespace={{ $.Release.Namespace }},deployment.environment=$(OTEL_ENVIRONMENT)"
             - name: PLAYER_NAME
               value: {{ $playerName }}
             - name: ARCADE_HOST
