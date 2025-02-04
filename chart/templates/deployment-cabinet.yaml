@@ -87,15 +87,15 @@ spec:
             - name: SECRET_KEY
               value: "SECRET_KEY"
             - name: DATABASE_URL
-              value: "postgresql://postgres:password@splunk-arcade-postgresql/myapp"
+              value: "postgresql://postgres:password@{{ $.Values.appName }}-postgresql/myapp"
             - name: REDIS_HOST
-              value: "splunk-arcade-redis-master"
+              value: "{{ $.Values.appName }}-redis-master"
             - name: OTEL_SERVICE_NAME
               value: "{{ $.Values.appName }}-cabinet-player-{{ $playerName }}"
             - name: OTEL_ENVIRONMENT
               value: "{{ index $.Values "splunk-otel-collector" "environment" }}"
             - name: OTEL_RESOURCE_ATTRIBUTES
-              value: "service.name=$(OTEL_SERVICE_NAME),service.namespace=splunk-arcade,deployment.environment=$(OTEL_ENVIRONMENT)"
+              value: "service.name=$(OTEL_SERVICE_NAME),service.namespace={{ .Release.Namespace }},deployment.environment=$(OTEL_ENVIRONMENT)"
             - name: PLAYER_NAME
               value: {{ $playerName }}
             - name: ARCADE_HOST

@@ -81,17 +81,17 @@ spec:
             - name: SECRET_KEY
               value: "SECRET_KEY"
             - name: DATABASE_URL
-              value: "postgresql://postgres:password@splunk-arcade-postgresql/myapp"
+              value: "postgresql://postgres:password@{{ $.Values.appName }}-postgresql/myapp"
             - name: REDIS_HOST
-              value: "splunk-arcade-redis-master"
+              value: "{{ $.Values.appName }}-redis-master"
             - name: SCOREBOARD_HOST
               value: "{{ $.Values.appName }}-scoreboard"
             - name: OTEL_SERVICE_NAME
-              value: "splunk-arcade-portal"
+              value: "{{ $.Values.appName }}-portal"
             - name: OTEL_ENVIRONMENT
               value: "{{ index $.Values "splunk-otel-collector" "environment" }}"
             - name: OTEL_RESOURCE_ATTRIBUTES
-              value: "service.name=$(OTEL_SERVICE_NAME),service.namespace=splunk-arcade,deployment.environment=$(OTEL_ENVIRONMENT)"
+              value: "service.name=$(OTEL_SERVICE_NAME),service.namespace={{ .Release.Namespace }},deployment.environment=$(OTEL_ENVIRONMENT)"
             - name: PLAYER_IMAGE
               value: "{{ $.Values.cabinet.image }}"
             - name: PLAYER_IMAGE_PULL_POLICY
