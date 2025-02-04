@@ -2,6 +2,9 @@
 appName: splunk-arcade
 arcadeHost: splunk-arcade.home
 
+# when unset openai integration is simply disabled
+openaiApiKey: ""
+
 ingress-nginx:
   enabled: true
   namespaceOverride: ingress-nginx
