@@ -123,7 +123,7 @@ def player_deployment_create(player_id: str) -> None:
                                 ),
                                 client.V1EnvVar(
                                     name="OTEL_RESOURCE_ATTRIBUTES",
-                                    value="service.name=$(OTEL_SERVICE_NAME),service.namespace=splunk-arcade,deployment.environment=gameify",
+                                    value=f"service.name=$(OTEL_SERVICE_NAME),service.namespace={APP_NAME},deployment.environment=gameify",
                                 ),
                                 client.V1EnvVar(
                                     name="ARCADE_HOST",

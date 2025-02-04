@@ -1,12 +1,8 @@
-import json
 import os
 import uuid
 from concurrent.futures import ThreadPoolExecutor
 from datetime import UTC, datetime
-from typing import Any
-from random import uniform
 from urllib.parse import urlsplit
-import yaml
 
 import requests
 import sqlalchemy as sa
@@ -31,13 +27,13 @@ from src.cluster import (
     player_deployment_create,
     player_deployment_ready,
 )
-from src.cache import get_redis_conn
 from src.db import db
 from src.forms import (
     LoginForm,
     RegistrationForm,
 )
 from src.models import User
+from src.questions import _handle_splunk_webhook_content, _handle_splunk_webhook_content_openai
 
 routes = Blueprint("routes", __name__)
 
@@ -332,81 +328,19 @@ def otel_health():
         return "Opentelemetry Collector Offline"
 
 
-def _generate_similar_choices(value: Any) -> Any:
-    similar_values = [value * uniform(0.1, 10) for _ in range(3)]
-
-    if isinstance(value, int):
-        similar_values = [round(v) for v in similar_values]
-    elif isinstance(value, float):
-        decimal_places = len(str(value).split(".")[1])
-        similar_values = [round(v, decimal_places) for v in similar_values]
-
-        similar_values = [v if v != value else v + (10 ** -decimal_places) for v in similar_values]
-
-    return similar_values
-
-
-def _handle_splunk_webhook_content(app, payload: dict[str, Any]) -> None:
-    payload_question_content = payload.get("messageBody", "")
-
-    if not payload_question_content:
-        print("failed to get question content...")
-        return
-
-    game_title = payload.get("dimensions", {}).get("title")
-    if not game_title:
-        print("failed to get game title...")
-        return
-
-
-    question_title = payload.get("detector")
-    if not question_title:
-        print("failed to get question title...")
-        return
-
-    player_name = payload.get("dimensions", {}).get("player_name")
-    if not player_name:
-        print("failed to get player name for question...",)
-        return
-
-    question_data = yaml.safe_load(payload_question_content)
-
-    question = {
-        "question": question_data["question"],
-        "link": "",
-        "link_text": "",
-        "choices": [
-            {
-                "prompt": question_data["answer"],
-                "is_correct": True,
-            }
-        ]
-    }
-
-    question["choices"].extend(
-        [
-            {
-                "prompt": similar_value,
-                "is_correct": False,
-            } for similar_value in _generate_similar_choices(question_data["answer"])
-        ]
-    )
-
-    question["choices"] = json.dumps(question["choices"])
-
-    with app.app_context():
-        redis = get_redis_conn()
-
-        key = f"content:quiz:{game_title}:{player_name}:{question_title}"
-        redis.hmset(key,question)
-        redis.expire(key, 360)
-
-
 @routes.route("/splunk-webhook", methods=["POST"])
 def splunk_webhook():
     # we want to quickly return 200s always to the webhook sender, so handle this message
     # in the background then ship back 200 so we dont get spammed too hard :)
-    executor = ThreadPoolExecutor(max_workers=1)
-    executor.submit(_handle_splunk_webhook_content, current_app._get_current_object(), request.get_json())
+
+    # TODO (cm) should there be multiple routes for webhooks? one for "sorta dymaic" questions
+    # and one for openai questions?
+    executor = ThreadPoolExecutor(max_workers=2)
+    executor.submit(
+        _handle_splunk_webhook_content, current_app._get_current_object(), request.get_json()
+    )
+    executor.submit(
+        _handle_splunk_webhook_content_openai, current_app._get_current_object(), request.get_json()
+    )
 
     return jsonify(success=True)
