@@ -41,6 +41,7 @@ routes = Blueprint("routes", __name__)
 SPLUNK_OBSERVABILITY_REALM = os.getenv("SPLUNK_OBSERVABILITY_REALM", "")
 SPLUNK_OBSERVABILITY_API_ACCESS_TOKEN = os.getenv("SPLUNK_OBSERVABILITY_API_ACCESS_TOKEN", "")
 
+
 @routes.before_request
 def before_request():
     if current_user.is_authenticated:
@@ -337,9 +338,7 @@ def splunk_webhook():
     req_json = request.get_json()
 
     executor = ThreadPoolExecutor(max_workers=2)
-    executor.submit(
-        _handle_splunk_webhook_content, current_app._get_current_object(), req_json
-    )
+    executor.submit(_handle_splunk_webhook_content, current_app._get_current_object(), req_json)
     executor.submit(
         _handle_splunk_webhook_content_openai, current_app._get_current_object(), req_json
     )
@@ -348,12 +347,12 @@ def splunk_webhook():
     incident_id = req_json.get("incidentId", None)
     if incident_id:
         ret = requests.put(
-                f"https://api.{SPLUNK_OBSERVABILITY_REALM}.signalfx.com/v2/incident/{incident_id}/clear",
-                headers={
-                    "Content-Type": "application/json",
-                    "X-SF-TOKEN": SPLUNK_OBSERVABILITY_API_ACCESS_TOKEN,
-                },
-            )
+            f"https://api.{SPLUNK_OBSERVABILITY_REALM}.signalfx.com/v2/incident/{incident_id}/clear",
+            headers={
+                "Content-Type": "application/json",
+                "X-SF-TOKEN": SPLUNK_OBSERVABILITY_API_ACCESS_TOKEN,
+            },
+        )
         print("ret>>>", ret.status_code, ret.text)
 
     return jsonify(success=True)

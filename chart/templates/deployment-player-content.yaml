@@ -77,6 +77,8 @@ spec:
                   fieldPath: status.hostIP
             - name: SCOREBOARD_HOST
               value: "{{ $.Values.appName }}-scoreboard"
+            - name: REDIS_HOST
+              value: "{{ $.Values.appName }}-redis-master"
           ports:
             - name: http
               containerPort: 5000

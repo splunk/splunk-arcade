@@ -12,6 +12,7 @@ from src.cache import get_redis_conn
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 SPLUNK_OBSERVABILITY_API_TOKEN = os.getenv("SPLUNK_OBSERVABILITY_API_TOKEN")
 
+
 class _OpenAiClient:
     _instance = None
 
@@ -124,7 +125,6 @@ def _handle_splunk_webhook_content_openai(app, payload: dict[str, Any]) -> None:
     player_name = dimensions.get("player_name", "Unknown Player")
     score = dimensions.get("score", "N/A")
 
-
     prompt = f"""
     A critical alert was triggered in the Splunk Observability system with the following details:
     
@@ -175,7 +175,6 @@ def _handle_splunk_webhook_content_openai(app, payload: dict[str, Any]) -> None:
         model="chatgpt-4o-latest", messages=[{"role": "user", "content": prompt}]
     )
 
-    print(response.choices[0].message.content)
     question = json.loads(response.choices[0].message.content)
 
     question["choices"] = json.dumps(question["choices"])
