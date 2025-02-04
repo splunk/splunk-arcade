@@ -1,3 +1,4 @@
+import hashlib
 import json
 import os
 from random import uniform
@@ -9,7 +10,7 @@ import yaml
 from src.cache import get_redis_conn
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-
+SPLUNK_OBSERVABILITY_API_TOKEN = os.getenv("SPLUNK_OBSERVABILITY_API_TOKEN")
 
 class _OpenAiClient:
     _instance = None
@@ -109,7 +110,7 @@ def _handle_splunk_webhook_content_openai(app, payload: dict[str, Any]) -> None:
 
     game_title = payload.get("dimensions", {}).get("title")
     if not game_title:
-        print("failed to get game title... OPENAI")
+        print("failed to get game title...")
         return
 
     description = payload.get("description", "No description provided.")
@@ -117,12 +118,12 @@ def _handle_splunk_webhook_content_openai(app, payload: dict[str, Any]) -> None:
     severity = payload.get("severity", "Unknown Severity")
     metric_name = payload.get("originatingMetric", "Unknown Metric")
     status = payload.get("status", "Unknown Status")
-    dimensions = payload.get("dimensions", {})
-
-    player_name = dimensions.get("player_name", "Unknown Player")
-
-    score = dimensions.get("score", "N/A")
     condition = payload.get("detectOnCondition", "No condition provided.")
+
+    dimensions = payload.get("dimensions", {})
+    player_name = dimensions.get("player_name", "Unknown Player")
+    score = dimensions.get("score", "N/A")
+
 
     prompt = f"""
     A critical alert was triggered in the Splunk Observability system with the following details:
@@ -135,14 +136,37 @@ def _handle_splunk_webhook_content_openai(app, payload: dict[str, Any]) -> None:
     - **Condition:** {condition}
     - **Player:** {player_name} with score {score}
 
-    Generate  QTY 100 **multiple-choice quiz questions** related to observability and troubleshooting based on this alert. Can you print the player name value in the question body..   
-    Provide the output in JSON format occasionally can you use the player_name dimension and provide links back to the originating chart with player name in the filter. Dont always include player Name in there.  If the Alert comes from APM Ask Questions about APM And traces:
+    Generate one **multiple-choice quiz question** related to observability and troubleshooting
+    based on this alert. Can you print the player name value in the question body. Provide the 
+    output in the JSON format as outlined below. Occasionally, use the player_name dimension
+    and provide links back to the originating chart with player name in the filter. When choosing to
+    not provide a link, omit the link and link_text fields. If the Alert comes from APM ask 
+    questions about APM And traces. Please provide only the raw JSON (no formatting tags) such that
+    I can call json.loads() from python to parse the response! Thanks!
+    
     {{
         "question": "Generated quiz question?",
-        "choices": ["Option A", "Option B", "Option C", "Option D"],
-        "correct_answer": "Correct option",
-        "Click Link to Investigate in Splunk Observability", "https://app.us1.signalfx.com/#/dashboard/GZnl1qiA0AA?groupId=GZnlvm8AwAA&configId=GZnmm_8A4AI&sources%5B%5D=player_name:{player_name}",
-        "content": "generate a 3 paragraph related learning text related to the Associated Splunk Observability topic"
+        "link": "https://app.us1.signalfx.com/#/dashboard/GZnl1qiA0AA?groupId=GZnlvm8AwAA&configId=GZnmm_8A4AI&sources%5B%5D=player_name:{player_name}",
+        "link_text": "Click here to investigate",
+        "choices": [
+            {{
+                "prompt": "the question prompt",
+                "is_correct": true|false,
+            }},
+            {{
+                "prompt": "the question prompt",
+                "is_correct": true|false,
+            }},
+            {{
+                "prompt": "the question prompt",
+                "is_correct": true|false,
+            }},
+            {{
+                "prompt": "the question prompt",
+                "is_correct": true|false,
+            }}
+        ],
+        "content": "generate a sentence or two of learning text related to the topic"
     }}
     """
 
@@ -152,3 +176,17 @@ def _handle_splunk_webhook_content_openai(app, payload: dict[str, Any]) -> None:
     )
 
     print(response.choices[0].message.content)
+    question = json.loads(response.choices[0].message.content)
+
+    question["choices"] = json.dumps(question["choices"])
+
+    question_hash = hashlib.sha256()
+    question_hash.update(question["question"].encode("utf-8"))
+
+    with app.app_context():
+        redis = get_redis_conn()
+
+        key = f"content:quiz:{game_title}:{player_name}:{question_hash.hexdigest()}"
+        redis.hmset(key, question)
+        # for now we wont expire openai generated questions
+        # redis.expire(key, 360)

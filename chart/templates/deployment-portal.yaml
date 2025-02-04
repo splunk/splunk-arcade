@@ -92,6 +92,10 @@ spec:
               value: "{{ index $.Values "splunk-otel-collector" "environment" }}"
             - name: OTEL_RESOURCE_ATTRIBUTES
               value: "service.name=$(OTEL_SERVICE_NAME),service.namespace={{ .Release.Namespace }},deployment.environment=$(OTEL_ENVIRONMENT)"
+            - name: SPLUNK_OBSERVABILITY_REALM
+              value: "{{ index $.Values "splunk-otel-collector" "splunkObservability" "realm" }}"
+            - name: SPLUNK_OBSERVABILITY_API_ACCESS_TOKEN
+              value: "{{ $.Values.observabilityApiAccessToken }}"
             - name: PLAYER_IMAGE
               value: "{{ $.Values.cabinet.image }}"
             - name: PLAYER_IMAGE_PULL_POLICY

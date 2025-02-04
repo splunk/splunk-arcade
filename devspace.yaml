@@ -33,7 +33,11 @@ vars:
     source: env
     default: REPLACE_ME
 
-  OPENAI_API_KEY:
+  SPLUNK_ARCADE_OBSERVABILITY_API_ACCESS_TOKEN:
+    source: env
+    default: REPLACE_ME
+
+  SPLUNK_ARCADE_OPENAI_API_KEY:
     source: env
     default: ""
 
@@ -128,7 +132,8 @@ deployments:
       chart:
         name: ./chart/
       values:
-        openaiApiKey: ${OPENAI_API_KEY}
+        openaiApiKey: ${SPLUNK_ARCADE_OPENAI_API_KEY}
+        observabilityApiAccessToken: ${SPLUNK_ARCADE_OBSERVABILITY_API_ACCESS_TOKEN}
         splunk-otel-collector:
           environment: ${SPLUNK_ARCADE_OBSERVABILITY_ENV}
           splunkObservability:

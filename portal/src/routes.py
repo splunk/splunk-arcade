@@ -38,6 +38,9 @@ from src.questions import _handle_splunk_webhook_content, _handle_splunk_webhook
 routes = Blueprint("routes", __name__)
 
 
+SPLUNK_OBSERVABILITY_REALM = os.getenv("SPLUNK_OBSERVABILITY_REALM", "")
+SPLUNK_OBSERVABILITY_API_ACCESS_TOKEN = os.getenv("SPLUNK_OBSERVABILITY_API_ACCESS_TOKEN", "")
+
 @routes.before_request
 def before_request():
     if current_user.is_authenticated:
@@ -322,25 +325,35 @@ def otel_health():
         current_span.set_attribute(k, v)
 
     if otelhealth.json()["status"] == "Server available":
-        data = {"message": "Hello from Flask!"}
-        return jsonify(data)
+        return jsonify({"status": "online"})
     else:
-        return "Opentelemetry Collector Offline"
+        return jsonify({"status": "offline"})
 
 
 @routes.route("/splunk-webhook", methods=["POST"])
 def splunk_webhook():
     # we want to quickly return 200s always to the webhook sender, so handle this message
     # in the background then ship back 200 so we dont get spammed too hard :)
+    req_json = request.get_json()
 
-    # TODO (cm) should there be multiple routes for webhooks? one for "sorta dymaic" questions
-    # and one for openai questions?
     executor = ThreadPoolExecutor(max_workers=2)
     executor.submit(
-        _handle_splunk_webhook_content, current_app._get_current_object(), request.get_json()
+        _handle_splunk_webhook_content, current_app._get_current_object(), req_json
     )
     executor.submit(
-        _handle_splunk_webhook_content_openai, current_app._get_current_object(), request.get_json()
+        _handle_splunk_webhook_content_openai, current_app._get_current_object(), req_json
     )
+
+    # clear the incident so we dont keep gettin spammed the same event
+    incident_id = req_json.get("incidentId", None)
+    if incident_id:
+        ret = requests.put(
+                f"https://api.{SPLUNK_OBSERVABILITY_REALM}.signalfx.com/v2/incident/{incident_id}/clear",
+                headers={
+                    "Content-Type": "application/json",
+                    "X-SF-TOKEN": SPLUNK_OBSERVABILITY_API_ACCESS_TOKEN,
+                },
+            )
+        print("ret>>>", ret.status_code, ret.text)
 
     return jsonify(success=True)
