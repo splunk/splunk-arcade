@@ -56,7 +56,7 @@ splunk-otel-collector:
   splunkPlatform:
     endpoint: https://127.0.0.1:8088/services/collector
     token: REPLACE_ME
-    index: splunk-arcade-test
+    index: splunk-arcade
   splunkObservability:
     realm: us1
     accessToken: REPLACE_ME
