@@ -76,15 +76,15 @@ spec:
                   apiVersion: v1
                   fieldPath: status.hostIP
             - name: REDIS_HOST
-              value: "splunk-arcade-redis-master"
+              value: "{{ $.Values.appName }}-redis-master"
             - name: OTEL_EXPORTER_OTLP_ENDPOINT
               value: http://$(NODE_IP):4317
             - name: OTEL_SERVICE_NAME
-              value: "splunk-arcade-scoreboard"
+              value: "{{ $.Values.appName }}-scoreboard"
             - name: OTEL_ENVIRONMENT
               value: "{{ index $.Values "splunk-otel-collector" "environment" }}"
             - name: OTEL_RESOURCE_ATTRIBUTES
-              value: "service.name=$(OTEL_SERVICE_NAME),service.namespace=splunk-arcade,deployment.environment=$(OTEL_ENVIRONMENT)"
+              value: "service.name=$(OTEL_SERVICE_NAME),service.namespace={{ .Release.Namespace }},deployment.environment=$(OTEL_ENVIRONMENT)"
           ports:
             - name: http
               containerPort: 5000

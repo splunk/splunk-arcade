@@ -54,6 +54,7 @@ splunk-otel-collector:
   splunkObservability:
     realm: us1
     accessToken: REPLACE_ME
+    logsEnabled: true
     profilingEnabled: true
   extraAttributes:
     fromLabels:

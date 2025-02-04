@@ -49,13 +49,10 @@ def record_game_score():
     redis = get_redis_conn()
 
     content = request.get_json()
+
     current_span = trace.get_current_span()
-
-    attr = {}
-
     for k, v in content.items():
         current_span.set_attribute(k, v)
-        attr[k] = v
 
     scoreboard_update = {}
 
