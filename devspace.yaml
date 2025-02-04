@@ -33,6 +33,14 @@ vars:
     source: env
     default: REPLACE_ME
 
+  SPLUNK_ARCADE_OBSERVABILITY_API_ACCESS_TOKEN:
+    source: env
+    default: REPLACE_ME
+
+  SPLUNK_ARCADE_OPENAI_API_KEY:
+    source: env
+    default: ""
+
   IMAGE_PULL_POLICY: Always
   CABINET_IMAGE: ${SPLUNK_ARCADE_REGISTRY}/cabinet
   SCOREBOARD_IMAGE: ${SPLUNK_ARCADE_REGISTRY}/scoreboard
@@ -124,6 +132,8 @@ deployments:
       chart:
         name: ./chart/
       values:
+        openaiApiKey: ${SPLUNK_ARCADE_OPENAI_API_KEY}
+        observabilityApiAccessToken: ${SPLUNK_ARCADE_OBSERVABILITY_API_ACCESS_TOKEN}
         splunk-otel-collector:
           environment: ${SPLUNK_ARCADE_OBSERVABILITY_ENV}
           splunkObservability:

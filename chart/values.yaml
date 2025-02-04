@@ -2,6 +2,12 @@
 appName: splunk-arcade
 arcadeHost: splunk-arcade.home
 
+# when unset openai integration is simply disabled
+openaiApiKey: ""
+
+# used to clear incidents that we receive on the inbound webhook from observability cloud
+observabilityApiAccessToken: ""
+
 ingress-nginx:
   enabled: true
   namespaceOverride: ingress-nginx
