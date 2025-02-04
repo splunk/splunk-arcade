@@ -215,6 +215,27 @@ profiles:
       - op: replace
         path: deployments.splunk-arcade.helm.values.playerContent.imagePullPolicy
         value: IfNotPresent
+      # ensure we always use tagged version for the real deal
+      - op: replace
+        path: images.cabinet.tags
+        value:
+          - ${COMMIT_HASH}
+      - op: replace
+        path: images.scoreboard.tags
+        value:
+          - ${COMMIT_HASH}
+      - op: replace
+        path: images.portal.tags
+        value:
+          - ${COMMIT_HASH}
+      - op: replace
+        path: images.player-content.tags
+        value:
+          - ${COMMIT_HASH}
+      - op: replace
+        path: images.player-router.tags
+        value:
+          - ${COMMIT_HASH}
 
   - name: dev-cabinet
     patches:
