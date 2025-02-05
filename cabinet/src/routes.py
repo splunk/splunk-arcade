@@ -158,7 +158,7 @@ def record_question_thumbs_up_down():
     content = request.get_json(force=True)
 
     ret = requests.post(
-        f"http://{SCOREBOARD_HOST}/record_question_thumbs_up_down/",
+        f"http://{SCOREBOARD_HOST}/record_question_thumbs_up_down",
         headers={
             "Player-Name": PLAYER_NAME,
         },
