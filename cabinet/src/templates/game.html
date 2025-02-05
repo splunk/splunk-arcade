@@ -198,7 +198,7 @@
         </nav>
 
         <main class="relative opacity-90 bg-gray-800 flex flex-col flex-grow flex-1 justify-center items-center">
-            <div class="flex h-auto">
+            <div class="flex h-auto w-full">
                 <div class="w-1/12 flex items-center justify-center"></div>
 
                 <div id="game-container" class="flex flex-col w-full max-w-4xl py-2 h-auto mx-auto min-h-[600px]">
@@ -209,6 +209,8 @@
                     {% include 'cabinets/logger.html' %}
                     {% elif "bughunt" in data.title %}
                     {% include 'cabinets/bughunt.html' %}
+                    {% elif "floppybird" in data.title %}
+                    {% include 'cabinets/floppybird.html' %}
                     {% endif %}
                     {% endblock %}
                 </div>
