@@ -55,7 +55,6 @@
                 try {
                     let response = await fetch("{{url_for('routes.get_progression')}}");
                     let data = await response.json()
-                    console.log("data> ", data);
                     data = data["level_state"];
 
                     document.querySelectorAll("[data-game]").forEach(card => {
@@ -83,7 +82,7 @@
                                 banner.style.borderRadius = "14px";
                                 card.appendChild(banner);
                             }
-                        } else {
+                        } else if ( gameId !== "other") {
                             card.classList.remove("cursor-not-allowed");
                             card.onclick = () => submitForm(gameId);
                             card.removeAttribute("title");
@@ -146,6 +145,12 @@
                         <h3 class="font-bold text-white text-lg mb-2 text-center">BugHunt</h3>
                         <p class="text-gray-400 text-center mb-4">Are you ready to hunt some bugs?<br><br></p>
                         <img src="{{ url_for('static', filename='images/duckhunt_logo.png') }}" class="w-28 h-28">
+                    </div>
+
+                    <div data-game="floppybird" class="min-w-[300px] opacity-90 bg-gray-800 p-8 rounded-lg shadow-lg hover:shadow-2xl hover:shadow-cyan-500/50 p-4 flex flex-col items-center cursor-pointer" onclick="submitForm('flappybird', 'FlipFlapFlop', 'floppybird.html')">
+                        <h3 class="font-bold text-white text-lg mb-2 text-center">Floppy Bird</h3>
+                        <p class="text-gray-400 text-center mb-4">More Floppy, less Flappy<br><br></p>
+                        <img src="{{ url_for('static', filename='images/floppy_bird_logo.png') }}" class="w-28 h-28">
                     </div>
 
                     <div data-game="other" class="min-w-[300px] opacity-90 bg-gray-800 p-8 rounded-lg shadow-lg hover:shadow-2xl hover:shadow-cyan-500/50 p-4 flex flex-col items-center">
