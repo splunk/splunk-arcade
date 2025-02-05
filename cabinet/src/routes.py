@@ -116,6 +116,10 @@ def record_game_score():
             _ = exc
             pass
 
+        # we dont record score for slow version! gotta answer questions to get your score
+        # recorded!!
+        return {}
+
     ret = requests.post(
         f"http://{SCOREBOARD_HOST}/record_game_score/",
         json=content,
