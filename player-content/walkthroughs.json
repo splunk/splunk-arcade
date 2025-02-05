@@ -1,53 +1,81 @@
 {
   "imvaders": [
     {
-      "title": "Understanding Observability",
-      "content": "Observability is a critical concept for modern IT systems, enabling teams to monitor and analyze the performance of distributed architectures. In this section, you’ll learn about the three pillars of observability—metrics, traces, and logs—and how they work together to provide actionable insights. Metrics help you understand system health over time, logs capture detailed event data, and traces allow for end-to-end visibility into user transactions across services. By mastering these concepts, you’ll be equipped to diagnose issues, improve reliability, and optimize performance.",
+      "title": "Welcome to IMVADERS!",
+      "content": "Welcome to IMVADERS, a space-themed arcade game that teaches you how to use Splunk Observability to monitor real-time game performance. As you play, we'll introduce you to key metrics that track game behavior, performance insights, and how you can troubleshoot issues using Splunk APM. Get ready to blast through invaders while learning how metrics help developers diagnose and optimize game performance. Let's dive in!",
       "hyperlink": "https://docs.splunk.com/Observability_Basics"
     },
     {
-      "title": "Getting Started with Splunk Observability",
-      "content": "This section guides you through setting up your first Splunk Observability environment. You’ll learn how to install the OpenTelemetry Collector, configure integrations for your infrastructure, and begin collecting data. Additionally, you’ll explore the Splunk Observability interface, including how to set up dashboards and alerts to visualize system health. By the end of this section, you’ll have a functioning observability environment tailored to your needs.",
+      "title": "Understanding Metrics in IMVADERS",
+      "content": "As you start playing, your game is continuously sending metrics to Splunk Observability. Metrics are numerical values tracked over time, helping us monitor game performance. In IMVADERS, we track key metrics such as Projectile Count, Score, Game Duration, and Enemy Waves. By analyzing these metrics, we can assess performance, optimize gameplay, and detect anomalies in real-time.",
       "hyperlink": "https://docs.splunk.com/Getting_Started_Observability"
     },
     {
-      "title": "Metrics and Dashboards",
-      "content": "Metrics are the foundation of observability, offering real-time insights into system performance. In this section, you’ll learn how to collect, analyze, and visualize metrics using Splunk Observability. You’ll also explore best practices for building custom dashboards, including using chart types, defining thresholds, and configuring alerting rules. By creating tailored dashboards, you’ll empower teams to quickly identify and address performance issues.",
+      "title": "Spotting Game Slowdowns with Dimensions",
+      "content": "If you notice that IMVADERS is slow at the start, you’re experiencing a real-world performance issue! The game version you’re playing (0.75) is tracked as a dimension, meaning it’s an attribute tied to our metrics. Using Splunk APM, we can break down game performance by version and identify if specific versions (like 0.75) are causing slowdowns. Try using the Breakdown feature in Splunk to investigate!",
       "hyperlink": "https://docs.splunk.com/Metrics_and_Dashboards"
     },
     {
-      "title": "Troubleshooting with Logs and Traces",
-      "content": "Logs and traces are essential for diagnosing and resolving system issues. This section focuses on using Splunk Log Observer to search and analyze logs in real-time and Splunk APM (Application Performance Monitoring) to trace requests across distributed services. You’ll learn how to connect logs with traces to identify root causes of latency, errors, or failures. This integrated approach ensures you can resolve issues quickly and improve service reliability.",
+      "title": "Debugging Performance Bottlenecks",
+      "content": "In software, performance issues can stem from many factors, such as slow code execution, overloaded resources, or external dependencies. By tracking metrics over time, we can determine when and why the game is slow. For example, are projectile counts increasing but enemies aren’t being hit? Maybe there’s an issue with hit detection logic. Observability helps us pinpoint the problem!",
       "hyperlink": "https://docs.splunk.com/Log_Observer"
+    },
+    {
+      "title": "Real-Time Monitoring with Metrics",
+      "content": "Metrics in Splunk Observability are continuously streamed and updated. This allows developers to see trends and react to performance issues in real time. If game duration is unusually high, players might be stuck on a level. If projectile count is high but score is low, bullets might not be registering properly. Observability isn't just about collecting data; it's about making data-driven decisions.",
+      "hyperlink": "https://docs.splunk.com/Advanced_Metrics"
     }
   ],
   "logger": [
     {
-      "title": "Advanced Metrics Analysis",
-      "content": "Proactively identifying issues before they impact users is a key goal of observability. In this section, you’ll explore advanced metric analysis techniques, including anomaly detection, predictive analytics, and custom threshold configurations. You’ll learn how Splunk Observability uses machine learning to surface potential issues and how to configure alerts to notify the right teams at the right time.",
-      "hyperlink": "https://docs.splunk.com/Advanced_Metrics"
+      "title": "Welcome to Logger!",
+      "content": "Logger is a game where logs tell the story of your gameplay. Every movement, jump, or score event generates log entries in Splunk Observability. But there’s a catch—one of the log rows shrinks over time, eventually making the game impossible to play! Can you use logs to investigate why this is happening? Let’s dive into log analysis!",
+      "hyperlink": "https://docs.splunk.com/Log_Observer"
     },
     {
-      "title": "Optimizing Application Performance",
-      "content": "Splunk APM provides deep visibility into application performance by tracing user transactions across services and correlating them with logs and metrics. You’ll learn how to configure OpenTelemetry instrumentation to capture data about requests, response times, and error rates. This section also covers how Splunk APM processes and stores this data, making it available for advanced analysis and visualizations.",
-      "hyperlink": "https://docs.splunk.com/APM_Optimization"
+      "title": "Understanding Logs in Logger",
+      "content": "Logs are detailed event records that help developers track what’s happening in an application. In Logger, we track Player Score, Level Progression, and Game Events. These logs allow us to reconstruct player actions, identify errors, and debug game behavior.",
+      "hyperlink": "https://docs.splunk.com/Getting_Started_Logs"
     },
     {
-      "title": "Distributed Tracing Deep Dive",
-      "content": "Distributed tracing is essential for monitoring microservices architectures. This section explores how to use OpenTelemetry to capture spans and traces that map out complex interactions between services. You’ll learn to identify bottlenecks, debug service dependencies, and correlate traces with logs to improve troubleshooting.",
-      "hyperlink": "https://docs.splunk.com/Distributed_Tracing"
+      "title": "The Mystery of the Shrinking Logs",
+      "content": "Something strange is happening—one of the log rows is shrinking as the game progresses! We are shipping a Boolean field called 'SHRINKIFY' to Splunk Core Logs. Your mission is to use Log Observer Connect to investigate when and why SHRINKIFY is triggered!",
+      "hyperlink": "https://docs.splunk.com/Log_Observer_Connect"
     },
     {
-      "title": "Custom Integrations and Automation",
-      "content": "Integrate Splunk Observability Suite with third-party tools like PagerDuty and ServiceNow to streamline incident response. This section covers how to configure webhook integrations, automate workflows, and set up custom alerting logic for specific use cases. By automating these processes, you’ll reduce response times and improve operational efficiency.",
-      "hyperlink": "https://docs.splunk.com/Integrations"
-    }
-  ],
-  "bughunt": [
+      "title": "Debugging with Log Observer",
+      "content": "Splunk Log Observer allows you to filter, search, and analyze logs in real time. Try searching for SHRINKIFY=true events, filtering by player level, and correlating logs with score changes to uncover when the issue starts.",
+      "hyperlink": "https://docs.splunk.com/Log_Observer_Troubleshooting"
+    },
     {
-      "title": "Advanced Metrics Analysis",
-      "content": "Proactively identifying issues before they impact users is a key goal of observability. In this section, you’ll explore advanced metric analysis techniques, including anomaly detection, predictive analytics, and custom threshold configurations. You’ll learn how Splunk Observability uses machine learning to surface potential issues and how to configure alerts to notify the right teams at the right time.",
-      "hyperlink": "https://docs.splunk.com/Advanced_Metrics"
+      "title": "Filtering Logs for Insights",
+      "content": "When dealing with large datasets, filtering logs is key. In Log Observer Connect, search for specific event types like movement, collisions, and score updates. Group logs by level to determine when the shrinking effect intensifies.",
+      "hyperlink": "https://docs.splunk.com/Advanced_Logging"
+    },
+    {
+      "title": "Visualizing Log Trends",
+      "content": "Log Observer allows you to create log-based visualizations. Track SHRINKIFY occurrences over time, compare logs across levels, and detect spikes in log anomalies to understand the root cause.",
+      "hyperlink": "https://docs.splunk.com/Log_Visualization"
+    },
+    {
+      "title": "Using Log Context for Investigation",
+      "content": "Logs include metadata that provides context. Look at timestamps, player actions, and game states when SHRINKIFY is activated to determine whether this is an intentional game mechanic or an anomaly.",
+      "hyperlink": "https://docs.splunk.com/Logging_Metadata"
+    },
+    {
+      "title": "Correlating Logs with Other Observability Data",
+      "content": "Logs provide details, but correlating them with metrics and traces completes the observability picture. Use Splunk to track whether SHRINKIFY impacts performance, score progression, or difficulty scaling.",
+      "hyperlink": "https://docs.splunk.com/Full_Stack_Observability"
+    },
+    {
+      "title": "Proactive Log Monitoring with Alerts",
+      "content": "Set up alerts in Log Observer to detect SHRINKIFY activations early. Configure notifications for developers if logs indicate unusual shrinking behavior, ensuring smooth gameplay.",
+      "hyperlink": "https://docs.splunk.com/Log_Alerting"
+    },
+    {
+      "title": "Mastering Log Observability",
+      "content": "Congratulations! You’ve learned how to analyze logs to troubleshoot gameplay issues. Logger teaches you how to track key game events, use Log Observer Connect for debugging, and correlate logs with other observability data. These skills apply to real-world IT troubleshooting, making you an observability expert!",
+      "hyperlink": "https://docs.splunk.com/Logging_Best_Practices"
     }
   ]
 }
