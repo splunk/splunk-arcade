@@ -116,6 +116,10 @@ def record_game_score():
             _ = exc
             pass
 
+        # we dont record score for slow version! gotta answer questions to get your score
+        # recorded!!
+        return {}
+
     ret = requests.post(
         f"http://{SCOREBOARD_HOST}/record_game_score/",
         json=content,
@@ -148,6 +152,24 @@ def record_answer():
     )
 
     print(f"record quiz score status {ret.status_code}")
+
+    return {}
+
+
+@routes.route("/record_question_thumbs_up_down", methods=["POST"])
+def record_question_thumbs_up_down():
+    # we'll have the js just send {"question": "the question prompt as this is unique enough to id"}
+    content = request.get_json(force=True)
+
+    ret = requests.post(
+        f"http://{SCOREBOARD_HOST}/record_question_thumbs_up_down",
+        headers={
+            "Player-Name": PLAYER_NAME,
+        },
+        json=content,
+    )
+
+    print(f"record question thumps up/down status {ret.status_code}")
 
     return {}
 

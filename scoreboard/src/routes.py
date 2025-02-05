@@ -9,8 +9,8 @@ from src.metrics import metric_factory
 
 routes = Blueprint("routes", __name__)
 
-NUM_IMVADERS_QUESTIONS_TO_UNLOCK_VERSION_1_75 = 1
-NUM_QUESTIONS_TO_UNLOCK_NEXT = 2
+NUM_IMVADERS_QUESTIONS_TO_UNLOCK_VERSION_1_75 = 3
+NUM_QUESTIONS_TO_UNLOCK_NEXT = 4
 
 
 @routes.route("/alive", methods=["GET"])
@@ -201,3 +201,29 @@ def blackhole_sun():
     code, message = random.choice(errors)
 
     return jsonify(abort(code, description=message))
+
+
+@routes.route("/record_question_thumbs_up_down", methods=["POST"])
+def record_question_thumbs_up_down():
+    player_name = request.headers.get("Player-Name")
+    if not player_name:
+        raise Exception("No Player Name provided")
+
+    content = request.get_json()
+
+    question = content.get("question", None)
+    if not question:
+        raise Exception("No question provided")
+
+    question_hash = get_question_hash(question)
+
+    redis = get_redis_conn()
+
+    redis.hsetnx(f"feedback:{question_hash}", "question", question)
+
+    if content.get("is_good", None) is True:
+        redis.hincrby(f"feedback:{question_hash}", "count_positive", 1)
+    elif content.get("is_bad", None) is True:
+        redis.hincrby(f"feedback:{question_hash}", "count_positive", 1)
+
+    return {}
