@@ -111,10 +111,8 @@
                     if (selectedAnswer === window.correctAnswer) {
                         const endTime = new Date().getTime();
                         const timeTaken = (endTime - startTime) / 1000;
-                        feedbackElement.textContent = `Correct! It took you ${timeTaken.toFixed(2)} seconds and ${attemptsCount} attempt(s).`;
-                        feedbackElement.classList.add("bg-green-500", "text-white");
 
-                        console.log(`Time taken: ${timeTaken} seconds, Attempts: ${attemptsCount}`);
+                        showFeedbackPopup(timeTaken, attemptsCount, document.getElementById("quiz-question").textContent,);
 
                         $.ajax({
                             type: 'POST',
@@ -164,6 +162,86 @@
                         setTimeout(() => feedbackElement.remove(), 500);
                     }, 2000);
                 }
+            }
+
+            function showFeedbackPopup(timeTaken, attemptsCount, question) {
+                const feedbackElement = document.createElement("div");
+                feedbackElement.classList.add(
+                    "fixed", "top-1/2", "left-1/2", "transform", "-translate-x-1/2", "-translate-y-1/2",
+                    "px-6", "py-4", "rounded-lg", "transition-all", "duration-300",
+                    "max-w-md", "w-full", "bg-gray-800", "text-white", "shadow-lg",
+                    "space-y-3", "z-50"
+                );
+
+                feedbackElement.innerHTML = `
+        <p class="text-xl font-semibold">Correct! It took you ${timeTaken.toFixed(2)} seconds and ${attemptsCount} attempt(s).</p>
+        <p class="text-lg">Hey, if you liked this question, give it a thumbs up. If it wasn't so great, give it a thumbs down.</p>
+    `;
+
+                const thumbsContainer = document.createElement("div");
+                thumbsContainer.classList.add("flex", "justify-center", "space-x-4");
+
+                const thumbsUpBtn = document.createElement("button");
+                thumbsUpBtn.classList.add("bg-green-600", "text-white", "px-4", "py-2", "rounded-lg", "hover:bg-green-700", "transition");
+                thumbsUpBtn.textContent = "👍";
+                thumbsUpBtn.onclick = function() {
+                    feedbackElement.remove();
+                    backdrop.remove();
+                    sendFeedback(question, true);
+                };
+
+                const thumbsDownBtn = document.createElement("button");
+                thumbsDownBtn.classList.add("bg-red-600", "text-white", "px-4", "py-2", "rounded-lg", "hover:bg-red-700", "transition");
+                thumbsDownBtn.textContent = "👎";
+                thumbsDownBtn.onclick = function() {
+                    feedbackElement.remove();
+                    backdrop.remove();
+                    sendFeedback(question, false);
+                };
+
+                thumbsContainer.appendChild(thumbsUpBtn);
+                thumbsContainer.appendChild(thumbsDownBtn);
+                feedbackElement.appendChild(thumbsContainer);
+
+                const closeButton = document.createElement("button");
+                closeButton.textContent = "❌";
+                closeButton.classList.add("absolute", "top-2", "right-2", "text-white", "text-xl", "bg-transparent", "border-none", "cursor-pointer");
+
+                closeButton.onclick = function() {
+                    feedbackElement.remove();
+                    backdrop.remove();
+                };
+
+                feedbackElement.appendChild(closeButton);
+
+                const backdrop = document.createElement("div");
+                backdrop.classList.add(
+                    "fixed", "top-0", "left-0", "w-full", "h-full", "backdrop-blur-sm", "bg-opacity-30", "z-40"
+                );
+
+                document.body.appendChild(backdrop);
+                document.body.appendChild(feedbackElement);
+            }
+
+            function sendFeedback(question, is_good) {
+                $.ajax({
+                    type: 'POST',
+                    url: "{{ url_for('routes.record_question_thumbs_up_down') }}",
+                    data: JSON.stringify({
+                        game_session_id: "{{ gamesession }}",
+                        player_name: "{{ user_username }}",
+                        title: "{{ data.title }}",
+                        is_good: is_good,
+                        question: question,
+                    }),
+                    contentType: 'application/json',
+                    success: function(response) {
+                        console.log('Feedback recorded:', response);
+                    },
+                    error: function(error) {
+                        console.log('Error recording feedback:', error);
+                    }
+                });
             }
 
         </script>

@@ -170,7 +170,6 @@ def _handle_splunk_webhook_content_openai(app, payload: dict[str, Any]) -> None:
     }}
     """
 
-    # Make request to OpenAI API (new format)
     response = client.client.chat.completions.create(
         model="chatgpt-4o-latest", messages=[{"role": "user", "content": prompt}]
     )
@@ -187,5 +186,9 @@ def _handle_splunk_webhook_content_openai(app, payload: dict[str, Any]) -> None:
 
         key = f"content:quiz:{game_title}:{player_name}:{question_hash.hexdigest()}"
         redis.hmset(key, question)
-        # for now we wont expire openai generated questions
-        # redis.expire(key, 360)
+        redis.expire(key, 360)
+
+        # duplicating in a "persist" hash so that we dont have too many questions for each player
+        # to loop over and stuff
+        key = f"persist:content:quiz:{game_title}:{player_name}:{question_hash.hexdigest()}"
+        redis.hmset(key, question)

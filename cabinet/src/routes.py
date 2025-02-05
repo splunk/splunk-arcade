@@ -152,6 +152,24 @@ def record_answer():
     return {}
 
 
+@routes.route("/record_question_thumbs_up_down", methods=["POST"])
+def record_question_thumbs_up_down():
+    # we'll have the js just send {"question": "the question prompt as this is unique enough to id"}
+    content = request.get_json(force=True)
+
+    ret = requests.post(
+        f"http://{SCOREBOARD_HOST}/record_question_thumbs_up_down/",
+        headers={
+            "Player-Name": PLAYER_NAME,
+        },
+        json=content,
+    )
+
+    print(f"record question thumps up/down status {ret.status_code}")
+
+    return {}
+
+
 @routes.route("/reset_quiz_scores", methods=["POST"])
 def reset_quiz_scores():
     ret = requests.post(
