@@ -9,8 +9,8 @@ from src.metrics import metric_factory
 
 routes = Blueprint("routes", __name__)
 
-NUM_IMVADERS_QUESTIONS_TO_UNLOCK_VERSION_1_75 = 1
-NUM_QUESTIONS_TO_UNLOCK_NEXT = 2
+NUM_IMVADERS_QUESTIONS_TO_UNLOCK_VERSION_1_75 = 3
+NUM_QUESTIONS_TO_UNLOCK_NEXT = 4
 
 
 @routes.route("/alive", methods=["GET"])
