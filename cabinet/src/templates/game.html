@@ -90,6 +90,7 @@
 
             function showQuizModal(content) {
                 const modal = document.createElement("div");
+                modal.id = "quiz-modal";
                 modal.classList.add(
                     "fixed", "top-1/2", "left-1/2", "transform", "-translate-x-1/2", "-translate-y-1/2",
                     "px-6", "py-4", "rounded-lg", "transition-all", "duration-300", "max-w-md", "w-full",
@@ -107,6 +108,7 @@
                 modal.appendChild(closeButton);
 
                 const backdrop = document.createElement("div");
+                backdrop.id = "quiz-backdrop";
                 backdrop.classList.add("fixed", "top-0", "left-0", "w-full", "h-full", "backdrop-blur-sm", "bg-opacity-30", "z-40");
                 backdrop.onclick = () => {
                     modal.remove();
@@ -119,21 +121,18 @@
 
             function checkQuestionAnswer() {
                 const selectedOption = document.querySelector('input[name="quiz-answer"]:checked');
-                const quizModal = document.getElementById("quiz-modal"); // Assuming your modal has this ID
+                const quizModal = document.getElementById("quiz-modal");
+                const quizBackdrop = document.getElementById("quiz-backdrop");
 
                 if (selectedOption) {
                     const selectedAnswer = selectedOption.id.split("-")[1];
 
-                    // Create a feedback banner
-                    const feedbackElement = document.createElement("div");
-                    feedbackElement.classList.add(
-                        "quiz-feedback", "absolute", "top-0", "left-0", "w-full",
-                        "px-4", "py-2", "text-center", "rounded-t-lg", "transition-all", "duration-300"
-                    );
-
                     attemptsCount++;
 
                     if (selectedAnswer === window.correctAnswer) {
+                        quizModal.remove();
+                        quizBackdrop.remove();
+
                         const endTime = new Date().getTime();
                         const timeTaken = (endTime - startTime) / 1000;
 
@@ -159,25 +158,22 @@
                             }
                         });
 
-                        feedbackElement.textContent = "Correct! Well done!";
-                        feedbackElement.classList.add("bg-green-500", "text-white");
-
-                        // Hide modal after a short delay
-                        setTimeout(() => {
-                            quizModal.style.display = "none";
-                        }, 1500);
-
                         startTime = null;
                         attemptsCount = 0;
-                    } else {
-                        feedbackElement.textContent = "Wrong answer. Try again!";
-                        feedbackElement.classList.add("bg-red-500", "text-white");
+
+                        return;
                     }
 
-                    // Append feedback banner inside the quiz modal
+                    const feedbackElement = document.createElement("div");
+                    feedbackElement.classList.add(
+                        "quiz-feedback", "absolute", "top-0", "left-0", "w-full",
+                        "px-4", "py-2", "text-center", "rounded-t-lg", "transition-all", "duration-300"
+                    );
+                    feedbackElement.textContent = "Wrong answer. Try again!";
+                    feedbackElement.classList.add("bg-red-500", "text-white");
+
                     quizModal.appendChild(feedbackElement);
 
-                    // Remove feedback after 2 seconds
                     setTimeout(() => {
                         feedbackElement.classList.add("opacity-0");
                         setTimeout(() => feedbackElement.remove(), 500);
