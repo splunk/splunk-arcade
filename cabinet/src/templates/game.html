@@ -1,26 +1,9 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta charset="utf-8" />
         <title>The Splunk Arcade!</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
-        <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico')}}">
-
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/output.css')}}">
-
-        <script src="https://code.jquery.com/jquery-latest.js"></script>
-
-
-        <style>
-            @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
-            .press-start-2p-regular {
-                font-family: "Press Start 2P", serif;
-                font-weight: 400;
-                font-style: normal;
-            }
-        </style>
+        {% include 'head_content.html' %}
 
         <script>
             let startTime = null;
