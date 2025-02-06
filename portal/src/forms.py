@@ -53,6 +53,7 @@ class RegistrationForm(FlaskForm):
                 message="this username is not allowed.",
             ),
             rfc1123,
+            Length(min=4, max=64)
         ],
     )
     email = StringField("Email", validators=[DataRequired(), Email()])
