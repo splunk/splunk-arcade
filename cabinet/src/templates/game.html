@@ -10,6 +10,8 @@
             let attemptsCount = 0;
 
             function unlockQuizQuestion() {
+                startTime = new Date().getTime();
+
                 $.ajax({
                     type: 'GET',
                     url: '{{ url_for("routes.get_question", module=data.title) }}',
@@ -165,12 +167,12 @@
                     }
 
                     const feedbackElement = document.createElement("div");
-                    feedbackElement.classList.add(
-                        "quiz-feedback", "absolute", "top-0", "left-0", "w-full",
-                        "px-4", "py-2", "text-center", "rounded-t-lg", "transition-all", "duration-300"
-                    );
                     feedbackElement.textContent = "Wrong answer. Try again!";
-                    feedbackElement.classList.add("bg-red-500", "text-white");
+                    feedbackElement.classList.add(
+                        "bg-red-500", "text-white", "absolute", "top-[-120px]", "left-1/2",
+                        "transform", "-translate-x-1/2", "px-4", "py-2", "text-center",
+                        "rounded-lg", "shadow-lg", "z-[9999]"
+                    );
 
                     quizModal.appendChild(feedbackElement);
 
@@ -182,9 +184,11 @@
                     const feedbackElement = document.createElement("div");
                     feedbackElement.textContent = "Please select an answer before submitting.";
                     feedbackElement.classList.add(
-                        "bg-yellow-500", "text-white", "absolute", "top-0", "left-0", "w-full",
-                        "px-4", "py-2", "text-center", "rounded-t-lg"
+                        "bg-yellow-500", "text-white", "absolute", "top-[-120px]", "left-1/2",
+                        "transform", "-translate-x-1/2", "px-4", "py-2", "text-center",
+                        "rounded-lg", "shadow-lg", "z-[9999]"
                     );
+
                     quizModal.appendChild(feedbackElement);
 
                     setTimeout(() => {
@@ -204,8 +208,9 @@
                 );
 
                 feedbackElement.innerHTML = `
-        <p class="text-xl font-semibold">Correct! It took you ${timeTaken.toFixed(2)} seconds and ${attemptsCount} attempt(s).</p>
-        <p class="text-lg">Hey, if you liked this question, give it a thumbs up. If it wasn't so great, give it a thumbs down.</p>
+        <p class="text-xl font-bold text-center">Correct!</p>
+        <p class="text-center">It took you ${timeTaken.toFixed(2)} seconds and ${attemptsCount} attempt(s).</p>
+        <p class="text-center">Hey, if you liked this question, give it a thumbs up. If it wasn't so great, give it a thumbs down.</p>
     `;
 
                 const thumbsContainer = document.createElement("div");
