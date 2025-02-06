@@ -353,6 +353,7 @@ def splunk_webhook():
                 "X-SF-TOKEN": SPLUNK_OBSERVABILITY_API_ACCESS_TOKEN,
             },
         )
-        print("ret>>>", ret.status_code, ret.text)
+        if ret.status_code != 200:
+            print("non 200 response from clearing incident: ", ret.text)
 
     return jsonify(success=True)
