@@ -460,7 +460,7 @@
 
                 if (prevButton && nextButton) {
                     prevButton.onclick = function () {
-                        if (currentStage > 1) {
+                        if (currentStage >= 1) {
                             currentStage--;
                             fetchWalkthroughStage(currentStage);
                         } else {
