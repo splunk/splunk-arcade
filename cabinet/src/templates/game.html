@@ -15,24 +15,17 @@
                     url: '{{ url_for("routes.get_question", module=data.title) }}',
                     success: function(response) {
                         if (Object.keys(response).length === 0) {
-                            console.log("player has seen all questions")
-
-                            const quiz_message = document.getElementById("quiz-message")
-                            quiz_message.textContent = "You answered all the questions, just play and chill now!";
+                            console.log("player has seen all questions");
+                            const quizMessage = document.createElement("div");
+                            quizMessage.textContent = "You answered all the questions, just play and chill now!";
+                            quizMessage.classList.add("text-center", "text-xl", "font-semibold", "text-white");
+                            showQuizModal(quizMessage);
                             return;
                         }
 
                         const question = response.question;
-
-                        document.getElementById("quiz-message").style.display = "none";
-                        document.getElementById("quiz-options").style.display = "block";
-                        document.getElementById("quiz-question").textContent = question;
-
-                        attemptsCount = 0;
-                        startTime = new Date().getTime();
-
-                        const optionsList = document.getElementById("quiz-answer-options");
-                        optionsList.innerHTML = '';
+                        const optionsList = document.createElement("ul");
+                        optionsList.classList.add("space-y-2");
 
                         const options = ['A', 'B', 'C', 'D'];
                         const randomizedPrompts = [...response.choices].sort(() => Math.random() - 0.5);
@@ -55,7 +48,6 @@
 
                             li.appendChild(input);
                             li.appendChild(label);
-
                             optionsList.appendChild(li);
 
                             if (randomizedPrompts[idx].is_correct) {
@@ -63,16 +55,32 @@
                             }
                         });
 
+                        const submitButton = document.createElement("button");
+                        submitButton.textContent = "Submit Answer";
+                        submitButton.classList.add("w-full", "bg-cyan-600", "hover:bg-cyan-700", "text-white", "py-2", "px-4", "rounded-lg", "mt-4");
+                        submitButton.onclick = checkQuestionAnswer;
+
+                        const content = document.createElement("div");
+                        content.classList.add("space-y-4");
+                        content.innerHTML = `<p class="text-lg font-medium">${question}</p><hr class="border-gray-600 my-4">`;
+
                         if (response.link) {
-                            const linkElement = document.getElementById("quiz-link");
+                            const linkElement = document.createElement("a");
                             linkElement.href = response.link;
                             linkElement.target = "_blank";
                             linkElement.textContent = response.link_text;
+                            linkElement.classList.add("text-cyan-400", "hover:text-cyan-500", "block", "mt-4", "text-center");
+                            content.appendChild(linkElement);
+
+                            const hrElement = document.createElement("hr");
+                            hrElement.classList.add("border-gray-600", "my-4");
+                            content.appendChild(hrElement);
                         }
 
-                        const button = document.getElementById("open-right-drawer-btn");
-                        button.classList.add("animate-bounce");
-                        setTimeout(() => button.classList.remove("animate-bounce"), 5000);
+                        content.appendChild(optionsList);
+                        content.appendChild(submitButton);
+
+                        showQuizModal(content);
                     },
                     error: function(error) {
                         console.log(error);
@@ -80,14 +88,48 @@
                 });
             }
 
+            function showQuizModal(content) {
+                const modal = document.createElement("div");
+                modal.classList.add(
+                    "fixed", "top-1/2", "left-1/2", "transform", "-translate-x-1/2", "-translate-y-1/2",
+                    "px-6", "py-4", "rounded-lg", "transition-all", "duration-300", "max-w-md", "w-full",
+                    "bg-gray-800", "text-white", "shadow-lg", "space-y-3", "z-50"
+                );
+                modal.appendChild(content);
+
+                const closeButton = document.createElement("button");
+                closeButton.textContent = "❌";
+                closeButton.classList.add("absolute", "top-2", "right-2", "text-white", "text-xl", "bg-transparent", "border-none", "cursor-pointer");
+                closeButton.onclick = () => {
+                    modal.remove();
+                    backdrop.remove();
+                };
+                modal.appendChild(closeButton);
+
+                const backdrop = document.createElement("div");
+                backdrop.classList.add("fixed", "top-0", "left-0", "w-full", "h-full", "backdrop-blur-sm", "bg-opacity-30", "z-40");
+                backdrop.onclick = () => {
+                    modal.remove();
+                    backdrop.remove();
+                };
+
+                document.body.appendChild(backdrop);
+                document.body.appendChild(modal);
+            }
+
             function checkQuestionAnswer() {
                 const selectedOption = document.querySelector('input[name="quiz-answer"]:checked');
+                const quizModal = document.getElementById("quiz-modal"); // Assuming your modal has this ID
 
                 if (selectedOption) {
                     const selectedAnswer = selectedOption.id.split("-")[1];
 
+                    // Create a feedback banner
                     const feedbackElement = document.createElement("div");
-                    feedbackElement.classList.add("quiz-feedback", "absolute", "top-1/2", "left-1/2", "transform", "-translate-x-1/2", "px-4", "py-2", "rounded-lg", "transition-all", "duration-300");
+                    feedbackElement.classList.add(
+                        "quiz-feedback", "absolute", "top-0", "left-0", "w-full",
+                        "px-4", "py-2", "text-center", "rounded-t-lg", "transition-all", "duration-300"
+                    );
 
                     attemptsCount++;
 
@@ -95,7 +137,7 @@
                         const endTime = new Date().getTime();
                         const timeTaken = (endTime - startTime) / 1000;
 
-                        showFeedbackPopup(timeTaken, attemptsCount, document.getElementById("quiz-question").textContent,);
+                        showFeedbackPopup(timeTaken, attemptsCount, document.getElementById("quiz-question").textContent);
 
                         $.ajax({
                             type: 'POST',
@@ -117,9 +159,13 @@
                             }
                         });
 
-                        document.getElementById("quiz-options").style.display = "none";
-                        document.getElementById("quiz-message").style.display = "block";
-                        document.getElementById("quiz-link").style.display = "none";
+                        feedbackElement.textContent = "Correct! Well done!";
+                        feedbackElement.classList.add("bg-green-500", "text-white");
+
+                        // Hide modal after a short delay
+                        setTimeout(() => {
+                            quizModal.style.display = "none";
+                        }, 1500);
 
                         startTime = null;
                         attemptsCount = 0;
@@ -128,8 +174,10 @@
                         feedbackElement.classList.add("bg-red-500", "text-white");
                     }
 
-                    document.body.appendChild(feedbackElement);
+                    // Append feedback banner inside the quiz modal
+                    quizModal.appendChild(feedbackElement);
 
+                    // Remove feedback after 2 seconds
                     setTimeout(() => {
                         feedbackElement.classList.add("opacity-0");
                         setTimeout(() => feedbackElement.remove(), 500);
@@ -137,8 +185,11 @@
                 } else {
                     const feedbackElement = document.createElement("div");
                     feedbackElement.textContent = "Please select an answer before submitting.";
-                    feedbackElement.classList.add("bg-yellow-500", "text-white", "absolute", "top-1/2", "left-1/2", "transform", "-translate-x-1/2", "px-4", "py-2", "rounded-lg");
-                    document.body.appendChild(feedbackElement);
+                    feedbackElement.classList.add(
+                        "bg-yellow-500", "text-white", "absolute", "top-0", "left-0", "w-full",
+                        "px-4", "py-2", "text-center", "rounded-t-lg"
+                    );
+                    quizModal.appendChild(feedbackElement);
 
                     setTimeout(() => {
                         feedbackElement.classList.add("opacity-0");

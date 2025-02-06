@@ -87,12 +87,17 @@
                 }
             });
 
+            const button = document.getElementById("boredButton");
+            if (!button) {
+                // may not be loaded yet, but we also have event listener so will check again
+                // later and/or periodically; otherwise proceed to handle doom things
+                return;
+            }
+
             if (data["doom"] === "locked") {
-                const button = document.getElementById("boredButton");
                 button.setAttribute("disabled", "true");
                 button.classList.add("opacity-50", "cursor-not-allowed");
             } else if (data["doom"] === "unlocked") {
-                const button = document.getElementById("boredButton");
                 button.removeAttribute("disabled");
                 button.classList.remove("opacity-50", "cursor-not-allowed");
             }
