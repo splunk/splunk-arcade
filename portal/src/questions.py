@@ -146,7 +146,7 @@ def _handle_splunk_webhook_content_openai(app, payload: dict[str, Any]) -> None:
     
     {{
         "question": "Generated quiz question?",
-        "link": "https://app.us1.signalfx.com/#/dashboard/GZnl1qiA0AA?groupId=GZnlvm8AwAA&configId=GZnmm_8A4AI&sources%5B%5D=player_name:{player_name}",
+        "link": "https://app.us1.signalfx.com/#/dashboard/GjETzI8AwAI?groupId=GjETzI8AwAE&configId=GjETzI8AwAM&sources%5B%5D=player_name:{player_name}",
         "link_text": "Click here to investigate",
         "choices": [
             {{
