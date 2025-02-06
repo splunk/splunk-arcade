@@ -54,12 +54,11 @@ class _Questions:
             # a question for some module (game) that doesnt exist
             raise Exception(f"module '{module}' is not in questions bank")
 
-        if len(seen_questions) == len(self.content[_module]):
-            return {}
+        attempts = 0
 
         while True:
-            if random() < 0.1:
-                # for now, 10% of the time we'll try to use a ai gen question
+            if random() < 0.3:
+                # for now, 30% of the time we'll try to use a ai gen question
                 maybe_question = self._get_random_generated_question_for_module(
                     module=_module,
                     player_name=player_name,
@@ -74,3 +73,10 @@ class _Questions:
                     )
 
                 return maybe_question
+
+            attempts += 1
+
+            if attempts > 15:
+                # lets not try forever... if we didnt get a not seen question in this amount of
+                # attempts we can be done for now...
+                return {}
