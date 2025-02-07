@@ -4,6 +4,25 @@ from random import choice, randint, random
 
 from redis import StrictRedis
 
+# mapping is obviously game, then count of seen questions: index of question to show (as in the
+# position in the array of the questions.json for the given game)
+FIXED_POSITION_QUESTIONS = {
+    "imvaders": {
+        0: 0,
+        2: 1,
+    },
+    "logger": {
+        0: 0,
+        2: 1,
+    },
+    "bughunt": {
+
+    },
+    "floppybird": {
+
+    }
+}
+
 
 class _Questions:
     _instance = None
@@ -43,6 +62,17 @@ class _Questions:
         return loaded_content
 
 
+    def _get_random_static_question_for_module(
+            self,
+            module: str,
+    ) -> dict|None:
+        while True:
+            maybe_question = self.content[module][randint(0, len(self.content[module]) - 1)]
+            if maybe_question.get("is_fixed_position"):
+                continue
+
+            return maybe_question
+
     def random_question_for_module(
         self, module: str, seen_questions: [str], player_name: str
     ) -> dict:
@@ -54,6 +84,12 @@ class _Questions:
             # a question for some module (game) that doesnt exist
             raise Exception(f"module '{module}' is not in questions bank")
 
+        fixed_question_data = FIXED_POSITION_QUESTIONS.get(_module, None)
+        if fixed_question_data:
+            maybe_fixed_question_index = fixed_question_data.get(len(seen_questions), None)
+            if maybe_fixed_question_index is not None:
+                return self.content[module][maybe_fixed_question_index]
+
         attempts = 0
 
         while True:
@@ -64,7 +100,9 @@ class _Questions:
                     player_name=player_name,
                 )
             else:
-                maybe_question = self.content[_module][randint(0, len(self.content[_module]) - 1)]
+                maybe_question = self._get_random_static_question_for_module(
+                    module=_module,
+                )
 
             if maybe_question and maybe_question["question"] not in seen_questions:
                 if "link" in maybe_question:

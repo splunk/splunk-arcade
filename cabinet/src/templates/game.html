@@ -339,7 +339,7 @@
 
         <main class="relative opacity-90 bg-gray-800 flex flex-col flex-grow flex-1 justify-center items-center">
             <div class="flex h-auto w-full">
-                <div class="w-1/12 flex items-center justify-center"></div>
+                <div class="w-1/10 flex items-center justify-center"></div>
 
                 <div id="game-container" class="flex flex-col w-full max-w-4xl py-2 h-auto mx-auto min-h-[600px]">
                     {% block content %}
@@ -355,12 +355,12 @@
                     {% endblock %}
                 </div>
 
-                <div class="w-1/12 flex items-center justify-center"></div>
+                <div class="w-1/10 flex items-center justify-center"></div>
             </div>
 
             <div
                     id="left-drawer"
-                    class="absolute left-0 w-64 bg-gray-800 text-white shadow-lg transform transition-transform duration-300 z-50 h-full overflow-y-auto"
+                    class="absolute left-0 w-80 bg-gray-800 text-white shadow-lg transform transition-transform duration-300 z-50 h-full overflow-y-auto"
             >
                 <ul class="p-4 space-y-2">
                     <div class="walkthrough" id="walkthrough"></div>
@@ -381,13 +381,6 @@
                     </button>
                 </div>
             </div>
-
-            <div
-                    id="right-drawer"
-                    class="absolute right-0 w-64 bg-gray-800 text-white shadow-lg transform translate-x-full transition-transform duration-300 z-50 h-full overflow-y-auto"
-            >
-            </div>
-
         </main>
 
 

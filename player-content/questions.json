@@ -1,6 +1,7 @@
 {
   "imvaders": [
     {
+      "is_fixed_position": true,
       "question": "What does the player score metric tell us about the game’s performance or player behavior?",
       "link": "https://app.us1.signalfx.com/#/chart/v2/GiePtQJA0AE?groupId=GieD6s3AwAA&configId=GieJakLA4AY&sources%5B%5D=player_name:__PLAYER_NAME__",
       "link_text": "Click here to investigate",
@@ -24,6 +25,7 @@
       ]
     },
     {
+      "is_fixed_position": true,
       "question": "If the projectile count is unusually high but scores are low, what might that indicate?",
       "link": "https://app.us1.signalfx.com/#/chart/v2/GieMpoYAwAM?groupId=GieD6s3AwAA&configId=GieJakLA4AY&sources%5B%5D=player_name:__PLAYER_NAME__",
       "link_text": "Click here to investigate",
@@ -229,6 +231,7 @@
   ],
   "logger": [
     {
+      "is_fixed_position": true,
       "question": "What type of information should be included in logs to understand player actions in the game?",
       "choices": [
         {
@@ -250,6 +253,7 @@
       ]
     },
     {
+      "is_fixed_position": true,
       "question": "If logs show frequent \"failure\" events, what might this indicate?",
       "choices": [
         {
