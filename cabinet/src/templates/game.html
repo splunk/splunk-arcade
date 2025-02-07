@@ -6,6 +6,43 @@
         {% include 'head_content.html' %}
 
         <script>
+            window.addEventListener('gameStateChanged', (event) => {
+                const { gameId } = event.detail;
+
+                const main = document.getElementById("game-container");
+
+                const existingFeedback = document.getElementById("feedback-box");
+                if (existingFeedback) {
+                    existingFeedback.remove();
+                }
+
+                const feedbackElement = document.createElement("div");
+                feedbackElement.id = "feedback-box";
+                feedbackElement.classList.add(
+                    "bg-pink-500", "text-white", "absolute", "top-[-40px]", "left-1/2",
+                    "transform", "-translate-x-1/2", "px-6", "py-4", "text-center",
+                    "rounded-lg", "shadow-lg", "z-[9999]", "max-w-md", "w-full"
+                );
+
+                const messageContent = document.createElement("div");
+                messageContent.textContent = `Hey, you're pretty good! You unlocked ${gameId}!`;
+                messageContent.classList.add("mb-4");
+
+                const closeButton = document.createElement("button");
+                closeButton.textContent = "OK";
+                closeButton.classList.add(
+                    "bg-white", "text-pink-500", "px-4", "py-2", "rounded-lg",
+                    "font-bold", "cursor-pointer", "hover:bg-gray-200"
+                );
+
+                closeButton.onclick = () => feedbackElement.remove();
+
+                feedbackElement.appendChild(messageContent);
+                feedbackElement.appendChild(closeButton);
+
+                main.appendChild(feedbackElement);
+            });
+
             let startTime = null;
             let attemptsCount = 0;
 
