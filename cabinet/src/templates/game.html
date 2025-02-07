@@ -64,7 +64,7 @@
 
                         const content = document.createElement("div");
                         content.classList.add("space-y-4");
-                        content.innerHTML = `<p class="text-lg font-medium">${question}</p><hr class="border-gray-600 my-4">`;
+                        content.innerHTML = `<p id="quiz-question" class="text-lg font-medium">${question}</p><hr class="border-gray-600 my-4">`;
 
                         if (response.link) {
                             const linkElement = document.createElement("a");
@@ -132,13 +132,15 @@
                     attemptsCount++;
 
                     if (selectedAnswer === window.correctAnswer) {
+                        const quizQuestion = document.querySelector("#quiz-question").textContent;
+
                         quizModal.remove();
                         quizBackdrop.remove();
 
                         const endTime = new Date().getTime();
                         const timeTaken = (endTime - startTime) / 1000;
 
-                        showFeedbackPopup(timeTaken, attemptsCount, document.getElementById("quiz-question").textContent);
+                        showFeedbackPopup(timeTaken, attemptsCount, quizQuestion);
 
                         $.ajax({
                             type: 'POST',
@@ -147,7 +149,7 @@
                                 game_session_id: "{{ gamesession }}",
                                 player_name: "{{ user_username }}",
                                 title: "{{ data.title }}",
-                                question: document.getElementById("quiz-question").textContent,
+                                question: quizQuestion,
                                 attempts: attemptsCount,
                                 time_taken: timeTaken
                             }),
@@ -351,25 +353,6 @@
                     id="right-drawer"
                     class="absolute right-0 w-64 bg-gray-800 text-white shadow-lg transform translate-x-full transition-transform duration-300 z-50 h-full overflow-y-auto"
             >
-                <ul class="p-4">
-                    <div class="quiz">
-                        <p id="quiz-message" class="text-center text-xl font-semibold">Play a level to unlock a question.</p>
-
-                        <div id="quiz-options" class="hidden space-y-4">
-                            <p id="quiz-question" class="text-lg font-medium"></p>
-                            <hr class="border-gray-600 my-4">
-                            <ul id="quiz-answer-options" class="space-y-2">
-                                <!-- populated from quiz fetch func -->
-                            </ul>
-                            <a id="quiz-link" class="text-cyan-400 hover:text-cyan-500 block mt-4 text-center"></a>
-                            <button id="submit-answer" class="w-full bg-cyan-600 hover:bg-cyan-700 text-white py-2 px-4 rounded-lg mt-4" onclick="checkQuestionAnswer()">
-                                Submit Answer
-                            </button>
-                        </div>
-
-                        <div id="quiz-feedback" class="mt-4 text-lg"></div>
-                    </div>
-                </ul>
             </div>
 
         </main>
