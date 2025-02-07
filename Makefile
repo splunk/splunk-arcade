@@ -49,11 +49,14 @@ clean-pvcs: ## Cleanup any pvcs for redis/postgres
 		redis-data-splunk-arcade-redis-replicas-2 || true
 
 clean-players: ## Cleanup any created player deployments
-	kubectl get deployments -l "app.kubernetes.io/name=splunk-arcade-player" \
+	kubectl get deployments -l "app.kubernetes.io/name=splunk-arcade-cabinet" \
 		--no-headers -o custom-columns=":metadata.name" \
 		| xargs -I {} kubectl delete deployment {}
-	kubectl get services -l "app.kubernetes.io/name=splunk-arcade-player" \
+	kubectl get services -l "app.kubernetes.io/name=splunk-arcade-cabinet" \
 		--no-headers -o custom-columns=":metadata.name" \
 		| xargs -I {} kubectl delete service {}
+	kubectl get jobs -l "app.kubernetes.io/name=splunk-arcade-player-cloud" \
+		--no-headers -o custom-columns=":metadata.name" \
+		| xargs -I {} kubectl delete jobs {}
 
 clean-all: clean-players clean-pvcs ## Cleanup all cruft from cluster
