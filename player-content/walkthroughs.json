@@ -2,7 +2,7 @@
   "imvaders": [
     {
       "title": "Welcome to IMVADERS!",
-      "content": "Welcome to IMVADERS, a space-themed arcade game that teaches you how to use Splunk Observability to monitor real-time game performance. As you play, we'll introduce you to key metrics that track game behavior, performance insights, and how you can troubleshoot issues using Splunk APM. Get ready to blast through invaders while learning how metrics help developers diagnose and optimize game performance. Use the left and right arrow keys to move and space bar to shoot. Let's dive in!",
+      "content": "Welcome to IMVADERS, a space-themed arcade game that teaches you how to use Splunk Observability to monitor real-time game performance. As you play, we'll introduce you to key metrics that track game behavior, performance insights, and how you can troubleshoot issues using Splunk APM.<br><br>Get ready to blast through invaders while learning how metrics help developers diagnose and optimize game performance.<br><br>Use the left and right arrow keys to move and space bar to shoot. Let's dive in!",
       "hyperlink": "https://docs.splunk.com/Observability_Basics"
     },
     {

@@ -560,17 +560,11 @@
   .top-2 {
     top: calc(var(--spacing) * 2);
   }
-  .top-\[-20px\] {
-    top: -20px;
-  }
   .top-\[-40px\] {
     top: -40px;
   }
   .top-\[-120px\] {
     top: -120px;
-  }
-  .right-0 {
-    right: calc(var(--spacing) * 0);
   }
   .right-2 {
     right: calc(var(--spacing) * 2);
@@ -647,9 +641,6 @@
   .my-4 {
     margin-block: calc(var(--spacing) * 4);
   }
-  .mt-2 {
-    margin-top: calc(var(--spacing) * 2);
-  }
   .mt-4 {
     margin-top: calc(var(--spacing) * 4);
   }
@@ -710,8 +701,8 @@
   .min-h-screen {
     min-height: 100vh;
   }
-  .w-1\/12 {
-    width: calc(1/12 * 100%);
+  .w-1\/10 {
+    width: calc(1/10 * 100%);
   }
   .w-15 {
     width: calc(var(--spacing) * 15);
@@ -724,6 +715,12 @@
   }
   .w-64 {
     width: calc(var(--spacing) * 64);
+  }
+  .w-78 {
+    width: calc(var(--spacing) * 78);
+  }
+  .w-80 {
+    width: calc(var(--spacing) * 80);
   }
   .w-full {
     width: 100%;
@@ -762,10 +759,6 @@
   }
   .-translate-y-1\/2 {
     --tw-translate-y: calc(calc(1/2 * 100%) * -1);
-    translate: var(--tw-translate-x) var(--tw-translate-y);
-  }
-  .translate-x-full {
-    --tw-translate-x: 100%;
     translate: var(--tw-translate-x) var(--tw-translate-y);
   }
   .transform {
@@ -1204,16 +1197,6 @@
       @media (hover: hover) {
         --tw-shadow-color: color-mix(in oklab, var(--color-cyan-500) 50%, transparent);
       }
-    }
-  }
-  .disabled\:cursor-not-allowed {
-    &:disabled {
-      cursor: not-allowed;
-    }
-  }
-  .disabled\:bg-gray-400 {
-    &:disabled {
-      background-color: var(--color-gray-400);
     }
   }
   .sm\:grid-cols-2 {
