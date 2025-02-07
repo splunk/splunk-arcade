@@ -1,3 +1,4 @@
+import logging
 import os
 import uuid
 from datetime import datetime
@@ -21,6 +22,10 @@ PLAYER_CONTENT_HOST = os.getenv("PLAYER_CONTENT_HOST")
 
 IMVADERS_SLOW_VERSION = 0.75
 UNPROCESSABLE_ENTITY = 422
+
+
+logging.basicConfig(level=logging.INFO)
+LOGGER = logging.getLogger(f"player_cabinet_{PLAYER_NAME}")
 
 
 @login.user_loader
@@ -232,7 +237,7 @@ def are_you_not_entertained():
 def log():
     content = request.get_json(force=True)
 
-    print(
+    LOGGER.info(
         f"{content.get("title", "unknown title")} |"
         f"{datetime.now()} |"
         f"{content.get("message", "unknown message")}"

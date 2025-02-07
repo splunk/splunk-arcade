@@ -590,11 +590,20 @@
   .z-2 {
     z-index: 2;
   }
+  .z-10 {
+    z-index: 10;
+  }
   .z-40 {
     z-index: 40;
   }
   .z-50 {
     z-index: 50;
+  }
+  .z-60 {
+    z-index: 60;
+  }
+  .z-70 {
+    z-index: 70;
   }
   .z-\[9999\] {
     z-index: 9999;
@@ -683,6 +692,9 @@
   .table {
     display: table;
   }
+  .h-3\/4 {
+    height: calc(3/4 * 100%);
+  }
   .h-28 {
     height: calc(var(--spacing) * 28);
   }
@@ -703,6 +715,9 @@
   }
   .w-1\/10 {
     width: calc(1/10 * 100%);
+  }
+  .w-3\/4 {
+    width: calc(3/4 * 100%);
   }
   .w-15 {
     width: calc(var(--spacing) * 15);
@@ -864,6 +879,9 @@
   .bg-black {
     background-color: var(--color-black);
   }
+  .bg-blue-600 {
+    background-color: var(--color-blue-600);
+  }
   .bg-cyan-600 {
     background-color: var(--color-cyan-600);
   }
@@ -921,6 +939,9 @@
   .p-8 {
     padding: calc(var(--spacing) * 8);
   }
+  .p-10 {
+    padding: calc(var(--spacing) * 10);
+  }
   .px-2 {
     padding-inline: calc(var(--spacing) * 2);
   }
@@ -939,8 +960,17 @@
   .py-4 {
     padding-block: calc(var(--spacing) * 4);
   }
+  .pt-16 {
+    padding-top: calc(var(--spacing) * 16);
+  }
+  .pb-16 {
+    padding-bottom: calc(var(--spacing) * 16);
+  }
   .text-center {
     text-align: center;
+  }
+  .text-left {
+    text-align: left;
   }
   .text-2xl {
     font-size: var(--text-2xl);
@@ -973,6 +1003,12 @@
   .tracking-wide {
     --tw-tracking: var(--tracking-wide);
     letter-spacing: var(--tracking-wide);
+  }
+  .whitespace-pre-wrap {
+    white-space: pre-wrap;
+  }
+  .text-black {
+    color: var(--color-black);
   }
   .text-blue-400 {
     color: var(--color-blue-400);
@@ -1022,6 +1058,12 @@
   }
   .opacity-50 {
     opacity: 50%;
+  }
+  .opacity-70 {
+    opacity: 70%;
+  }
+  .opacity-80 {
+    opacity: 80%;
   }
   .opacity-90 {
     opacity: 90%;
@@ -1101,6 +1143,13 @@
     --tw-ease: var(--ease-out);
     transition-timing-function: var(--ease-out);
   }
+  .hover\:bg-blue-700 {
+    &:hover {
+      @media (hover: hover) {
+        background-color: var(--color-blue-700);
+      }
+    }
+  }
   .hover\:bg-cyan-700 {
     &:hover {
       @media (hover: hover) {
@@ -1126,6 +1175,13 @@
     &:hover {
       @media (hover: hover) {
         background-color: var(--color-gray-600);
+      }
+    }
+  }
+  .hover\:bg-gray-700 {
+    &:hover {
+      @media (hover: hover) {
+        background-color: var(--color-gray-700);
       }
     }
   }
