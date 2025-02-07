@@ -24,6 +24,8 @@ from opentelemetry import trace
 from src.cluster import (
     APP_NAME,
     ARCADE_HOST,
+    player_cloud_job_create,
+    player_cloud_job_complete,
     player_deployment_create,
     player_deployment_ready,
 )
@@ -40,6 +42,8 @@ routes = Blueprint("routes", __name__)
 
 SPLUNK_OBSERVABILITY_REALM = os.getenv("SPLUNK_OBSERVABILITY_REALM", "")
 SPLUNK_OBSERVABILITY_API_ACCESS_TOKEN = os.getenv("SPLUNK_OBSERVABILITY_API_ACCESS_TOKEN", "")
+
+PLAYER_CLOUD_JOB_POD_BLOCK = os.getenv("PLAYER_CLOUD_JOB_BLOCK", "false").lower() == "true"
 
 
 @routes.before_request
@@ -159,8 +163,17 @@ def register():
         db.session.commit()
         flash("Congratulations, you are now a registered user!")
 
-        # create the players deployment
-        player_deployment_create(form.username.data)
+        # create the player's job (that creates its charts in o11y cloud) and their deployment
+        player_cloud_job_create(
+            player_id=form.username.data,
+            observability_token=SPLUNK_OBSERVABILITY_API_ACCESS_TOKEN,
+            observability_realm=SPLUNK_OBSERVABILITY_REALM,
+        )
+
+        if PLAYER_CLOUD_JOB_POD_BLOCK:
+            player_cloud_job_complete(player_id=form.username.data)
+
+        player_deployment_create(player_id=form.username.data)
 
         return redirect(url_for("routes.login"))
 

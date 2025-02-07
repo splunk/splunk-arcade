@@ -46,6 +46,7 @@ vars:
   SCOREBOARD_IMAGE: ${SPLUNK_ARCADE_REGISTRY}/scoreboard
   PORTAL_IMAGE: ${SPLUNK_ARCADE_REGISTRY}/portal
   PLAYER_CONTENT_IMAGE: ${SPLUNK_ARCADE_REGISTRY}/player-content
+  PLAYER_CLOUD_IMAGE: ${SPLUNK_ARCADE_REGISTRY}/player-cloud
   PLAYER_ROUTER_IMAGE: ${SPLUNK_ARCADE_REGISTRY}/player-router
   PY_IMAGE_DEV: ${SPLUNK_ARCADE_REGISTRY}/py-dev
   GO_IMAGE_DEV: ${SPLUNK_ARCADE_REGISTRY}/go-dev
@@ -115,6 +116,16 @@ images:
       - latest
       - ${COMMIT_HASH}
 
+  player-cloud:
+    createPullSecret: false
+    image: ${PLAYER_CLOUD_IMAGE}
+    context: ./player-cloud
+    dockerfile: ./player-cloud/Dockerfile
+    rebuildStrategy: ignoreContextChanges
+    tags:
+      - latest
+      - ${COMMIT_HASH}
+
   player-router:
     createPullSecret: false
     image: ${PLAYER_ROUTER_IMAGE}
@@ -156,6 +167,9 @@ deployments:
           imagePullPolicy: ${IMAGE_PULL_POLICY}
         playerRouter:
           image: ${PLAYER_ROUTER_IMAGE}
+          imagePullPolicy: ${IMAGE_PULL_POLICY}
+        playerCloud:
+          image: ${PLAYER_CLOUD_IMAGE}
           imagePullPolicy: ${IMAGE_PULL_POLICY}
 
 dev:
@@ -236,6 +250,10 @@ profiles:
         path: images.player-router.tags
         value:
           - ${COMMIT_HASH}
+      # block on player job pod completion
+      - op: add
+        path: deployments.splunk-arcade.helm.values.portal.blockOnPlayerCloudJob
+        value: true
 
   - name: dev-cabinet
     patches:
@@ -347,3 +365,10 @@ pipelines:
       kubectl delete deployments -n ${DEVSPACE_NAMESPACE} registry || true
       kubectl delete statefulsets -n ${DEVSPACE_NAMESPACE} registry || true
       kubectl delete pvc -n ${DEVSPACE_NAMESPACE} registry-registry-0 || true
+      APP_NAME=splunk-arcade \
+        IMAGE_PLAYER_CLOUD=${PLAYER_CLOUD_IMAGE} \
+        IMAGE_PULL_POLICY=${IMAGE_PULL_POLICY} \
+        NAMESPACE=${DEVSPACE_NAMESPACE} \
+        SPLUNK_OBSERVABILITY_REALM=${SPLUNK_ARCADE_OBSERVABILITY_REALM} \
+        SPLUNK_OBSERVABILITY_API_ACCESS_TOKEN=${SPLUNK_ARCADE_OBSERVABILITY_API_ACCESS_TOKEN} \
+        venv/bin/python util/clean-player-cloud/main.py || true
