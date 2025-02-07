@@ -13,7 +13,7 @@
     <canvas id="gameCanvas" width="800" height="600"></canvas>
     <script>
       if (typeof window.soundVolume === "undefined") {
-        window.soundVolume = 0.1;
+        window.soundVolume = 0;
       }
 
       const canvas = document.getElementById("gameCanvas");
@@ -141,10 +141,10 @@
         "https://assets.mixkit.co/active_storage/sfx/220/220-preview.mp3"
       );
 
-      shootSound.volume = 0.1;
-      explosionSound.volume = 0.1;
-      playerHitSound.volume = 0.1;
-      levelUpSound.volume = 0.1;
+      shootSound.volume = 0;
+      explosionSound.volume = 0;
+      playerHitSound.volume = 0;
+      levelUpSound.volume = 0;
 
       function postState() {
         if(!gameOver) gameDuration+=2;
@@ -349,7 +349,7 @@
         unlockQuizQuestion();
       }
 
-      let isMuted = false;
+      let isMuted = true;
 
       // Define button position and size
       const muteButtonWidth = 75;

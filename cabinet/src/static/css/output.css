@@ -560,6 +560,15 @@
   .top-2 {
     top: calc(var(--spacing) * 2);
   }
+  .top-\[-20px\] {
+    top: -20px;
+  }
+  .top-\[-40px\] {
+    top: -40px;
+  }
+  .top-\[-120px\] {
+    top: -120px;
+  }
   .right-0 {
     right: calc(var(--spacing) * 0);
   }
@@ -592,6 +601,9 @@
   }
   .z-50 {
     z-index: 50;
+  }
+  .z-\[9999\] {
+    z-index: 9999;
   }
   .\!container {
     width: 100% !important;
@@ -634,6 +646,9 @@
   }
   .my-4 {
     margin-block: calc(var(--spacing) * 4);
+  }
+  .mt-2 {
+    margin-top: calc(var(--spacing) * 2);
   }
   .mt-4 {
     margin-top: calc(var(--spacing) * 4);
@@ -745,20 +760,8 @@
     --tw-translate-x: -100%;
     translate: var(--tw-translate-x) var(--tw-translate-y);
   }
-  .-translate-y-0 {
-    --tw-translate-y: calc(var(--spacing) * -0);
-    translate: var(--tw-translate-x) var(--tw-translate-y);
-  }
-  .-translate-y-1 {
-    --tw-translate-y: calc(var(--spacing) * -1);
-    translate: var(--tw-translate-x) var(--tw-translate-y);
-  }
   .-translate-y-1\/2 {
     --tw-translate-y: calc(calc(1/2 * 100%) * -1);
-    translate: var(--tw-translate-x) var(--tw-translate-y);
-  }
-  .-translate-y-3\/4 {
-    --tw-translate-y: calc(calc(3/4 * 100%) * -1);
     translate: var(--tw-translate-x) var(--tw-translate-y);
   }
   .translate-x-full {
@@ -767,9 +770,6 @@
   }
   .transform {
     transform: var(--tw-rotate-x) var(--tw-rotate-y) var(--tw-rotate-z) var(--tw-skew-x) var(--tw-skew-y);
-  }
-  .animate-bounce {
-    animation: var(--animate-bounce);
   }
   .cursor-not-allowed {
     cursor: not-allowed;
@@ -883,20 +883,17 @@
   .bg-gray-300 {
     background-color: var(--color-gray-300);
   }
-  .bg-gray-500 {
-    background-color: var(--color-gray-500);
-  }
   .bg-gray-700 {
     background-color: var(--color-gray-700);
   }
   .bg-gray-800 {
     background-color: var(--color-gray-800);
   }
-  .bg-green-500 {
-    background-color: var(--color-green-500);
-  }
   .bg-green-600 {
     background-color: var(--color-green-600);
+  }
+  .bg-pink-500 {
+    background-color: var(--color-pink-500);
   }
   .bg-pink-600 {
     background-color: var(--color-pink-600);
@@ -1004,6 +1001,9 @@
   }
   .text-gray-800 {
     color: var(--color-gray-800);
+  }
+  .text-pink-500 {
+    color: var(--color-pink-500);
   }
   .text-white {
     color: var(--color-white);
@@ -1121,6 +1121,13 @@
       }
     }
   }
+  .hover\:bg-gray-200 {
+    &:hover {
+      @media (hover: hover) {
+        background-color: var(--color-gray-200);
+      }
+    }
+  }
   .hover\:bg-gray-400 {
     &:hover {
       @media (hover: hover) {
@@ -1197,6 +1204,16 @@
       @media (hover: hover) {
         --tw-shadow-color: color-mix(in oklab, var(--color-cyan-500) 50%, transparent);
       }
+    }
+  }
+  .disabled\:cursor-not-allowed {
+    &:disabled {
+      cursor: not-allowed;
+    }
+  }
+  .disabled\:bg-gray-400 {
+    &:disabled {
+      background-color: var(--color-gray-400);
     }
   }
   .sm\:grid-cols-2 {

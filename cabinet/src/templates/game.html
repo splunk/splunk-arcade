@@ -1,55 +1,70 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta charset="utf-8" />
         <title>The Splunk Arcade!</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
-        <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico')}}">
-
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/output.css')}}">
-
-        <script src="https://code.jquery.com/jquery-latest.js"></script>
-
-
-        <style>
-            @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
-            .press-start-2p-regular {
-                font-family: "Press Start 2P", serif;
-                font-weight: 400;
-                font-style: normal;
-            }
-        </style>
+        {% include 'head_content.html' %}
 
         <script>
+            window.addEventListener('gameStateChanged', (event) => {
+                const { gameId } = event.detail;
+
+                const main = document.getElementById("game-container");
+
+                const existingFeedback = document.getElementById("feedback-box");
+                if (existingFeedback) {
+                    existingFeedback.remove();
+                }
+
+                const feedbackElement = document.createElement("div");
+                feedbackElement.id = "feedback-box";
+                feedbackElement.classList.add(
+                    "bg-pink-500", "text-white", "absolute", "top-[-40px]", "left-1/2",
+                    "transform", "-translate-x-1/2", "px-6", "py-4", "text-center",
+                    "rounded-lg", "shadow-lg", "z-[9999]", "max-w-md", "w-full"
+                );
+
+                const messageContent = document.createElement("div");
+                messageContent.textContent = `Hey, you're pretty good! You unlocked ${gameId}!`;
+                messageContent.classList.add("mb-4");
+
+                const closeButton = document.createElement("button");
+                closeButton.textContent = "OK";
+                closeButton.classList.add(
+                    "bg-white", "text-pink-500", "px-4", "py-2", "rounded-lg",
+                    "font-bold", "cursor-pointer", "hover:bg-gray-200"
+                );
+
+                closeButton.onclick = () => feedbackElement.remove();
+
+                feedbackElement.appendChild(messageContent);
+                feedbackElement.appendChild(closeButton);
+
+                main.appendChild(feedbackElement);
+            });
+
             let startTime = null;
             let attemptsCount = 0;
 
             function unlockQuizQuestion() {
+                startTime = new Date().getTime();
+
                 $.ajax({
                     type: 'GET',
                     url: '{{ url_for("routes.get_question", module=data.title) }}',
                     success: function(response) {
                         if (Object.keys(response).length === 0) {
-                            console.log("player has seen all questions")
-
-                            const quiz_message = document.getElementById("quiz-message")
-                            quiz_message.textContent = "You answered all the questions, just play and chill now!";
+                            console.log("player has seen all questions");
+                            const quizMessage = document.createElement("div");
+                            quizMessage.textContent = "You answered all the questions, just play and chill now!";
+                            quizMessage.classList.add("text-center", "text-xl", "font-semibold", "text-white");
+                            showQuizModal(quizMessage);
                             return;
                         }
 
                         const question = response.question;
-
-                        document.getElementById("quiz-message").style.display = "none";
-                        document.getElementById("quiz-options").style.display = "block";
-                        document.getElementById("quiz-question").textContent = question;
-
-                        attemptsCount = 0;
-                        startTime = new Date().getTime();
-
-                        const optionsList = document.getElementById("quiz-answer-options");
-                        optionsList.innerHTML = '';
+                        const optionsList = document.createElement("ul");
+                        optionsList.classList.add("space-y-2");
 
                         const options = ['A', 'B', 'C', 'D'];
                         const randomizedPrompts = [...response.choices].sort(() => Math.random() - 0.5);
@@ -72,7 +87,6 @@
 
                             li.appendChild(input);
                             li.appendChild(label);
-
                             optionsList.appendChild(li);
 
                             if (randomizedPrompts[idx].is_correct) {
@@ -80,16 +94,32 @@
                             }
                         });
 
+                        const submitButton = document.createElement("button");
+                        submitButton.textContent = "Submit Answer";
+                        submitButton.classList.add("w-full", "bg-cyan-600", "hover:bg-cyan-700", "text-white", "py-2", "px-4", "rounded-lg", "mt-4");
+                        submitButton.onclick = checkQuestionAnswer;
+
+                        const content = document.createElement("div");
+                        content.classList.add("space-y-4");
+                        content.innerHTML = `<p id="quiz-question" class="text-lg font-medium">${question}</p><hr class="border-gray-600 my-4">`;
+
                         if (response.link) {
-                            const linkElement = document.getElementById("quiz-link");
+                            const linkElement = document.createElement("a");
                             linkElement.href = response.link;
                             linkElement.target = "_blank";
                             linkElement.textContent = response.link_text;
+                            linkElement.classList.add("text-cyan-400", "hover:text-cyan-500", "block", "mt-4", "text-center");
+                            content.appendChild(linkElement);
+
+                            const hrElement = document.createElement("hr");
+                            hrElement.classList.add("border-gray-600", "my-4");
+                            content.appendChild(hrElement);
                         }
 
-                        const button = document.getElementById("open-right-drawer-btn");
-                        button.classList.add("animate-bounce");
-                        setTimeout(() => button.classList.remove("animate-bounce"), 5000);
+                        content.appendChild(optionsList);
+                        content.appendChild(submitButton);
+
+                        showQuizModal(content);
                     },
                     error: function(error) {
                         console.log(error);
@@ -97,22 +127,53 @@
                 });
             }
 
+            function showQuizModal(content) {
+                const modal = document.createElement("div");
+                modal.id = "quiz-modal";
+                modal.classList.add(
+                    "fixed", "top-1/2", "left-1/2", "transform", "-translate-x-1/2", "-translate-y-1/2",
+                    "px-6", "py-4", "rounded-lg", "transition-all", "duration-300", "max-w-md", "w-full",
+                    "bg-gray-800", "text-white", "shadow-lg", "space-y-3", "z-50"
+                );
+                modal.appendChild(content);
+
+                const closeButton = document.createElement("button");
+                closeButton.textContent = "❌";
+                closeButton.classList.add("absolute", "top-2", "right-2", "text-white", "text-xl", "bg-transparent", "border-none", "cursor-pointer");
+                closeButton.onclick = () => {
+                    modal.remove();
+                    backdrop.remove();
+                };
+                modal.appendChild(closeButton);
+
+                const backdrop = document.createElement("div");
+                backdrop.id = "quiz-backdrop";
+                backdrop.classList.add("fixed", "top-0", "left-0", "w-full", "h-full", "backdrop-blur-sm", "bg-opacity-30", "z-40");
+
+                document.body.appendChild(backdrop);
+                document.body.appendChild(modal);
+            }
+
             function checkQuestionAnswer() {
                 const selectedOption = document.querySelector('input[name="quiz-answer"]:checked');
+                const quizModal = document.getElementById("quiz-modal");
+                const quizBackdrop = document.getElementById("quiz-backdrop");
 
                 if (selectedOption) {
                     const selectedAnswer = selectedOption.id.split("-")[1];
 
-                    const feedbackElement = document.createElement("div");
-                    feedbackElement.classList.add("quiz-feedback", "absolute", "top-1/2", "left-1/2", "transform", "-translate-x-1/2", "px-4", "py-2", "rounded-lg", "transition-all", "duration-300");
-
                     attemptsCount++;
 
                     if (selectedAnswer === window.correctAnswer) {
+                        const quizQuestion = document.querySelector("#quiz-question").textContent;
+
+                        quizModal.remove();
+                        quizBackdrop.remove();
+
                         const endTime = new Date().getTime();
                         const timeTaken = (endTime - startTime) / 1000;
 
-                        showFeedbackPopup(timeTaken, attemptsCount, document.getElementById("quiz-question").textContent,);
+                        showFeedbackPopup(timeTaken, attemptsCount, quizQuestion);
 
                         $.ajax({
                             type: 'POST',
@@ -121,7 +182,7 @@
                                 game_session_id: "{{ gamesession }}",
                                 player_name: "{{ user_username }}",
                                 title: "{{ data.title }}",
-                                question: document.getElementById("quiz-question").textContent,
+                                question: quizQuestion,
                                 attempts: attemptsCount,
                                 time_taken: timeTaken
                             }),
@@ -134,18 +195,21 @@
                             }
                         });
 
-                        document.getElementById("quiz-options").style.display = "none";
-                        document.getElementById("quiz-message").style.display = "block";
-                        document.getElementById("quiz-link").style.display = "none";
-
                         startTime = null;
                         attemptsCount = 0;
-                    } else {
-                        feedbackElement.textContent = "Wrong answer. Try again!";
-                        feedbackElement.classList.add("bg-red-500", "text-white");
+
+                        return;
                     }
 
-                    document.body.appendChild(feedbackElement);
+                    const feedbackElement = document.createElement("div");
+                    feedbackElement.textContent = "Wrong answer. Try again!";
+                    feedbackElement.classList.add(
+                        "bg-red-500", "text-white", "absolute", "top-[-120px]", "left-1/2",
+                        "transform", "-translate-x-1/2", "px-4", "py-2", "text-center",
+                        "rounded-lg", "shadow-lg", "z-[9999]"
+                    );
+
+                    quizModal.appendChild(feedbackElement);
 
                     setTimeout(() => {
                         feedbackElement.classList.add("opacity-0");
@@ -154,8 +218,13 @@
                 } else {
                     const feedbackElement = document.createElement("div");
                     feedbackElement.textContent = "Please select an answer before submitting.";
-                    feedbackElement.classList.add("bg-yellow-500", "text-white", "absolute", "top-1/2", "left-1/2", "transform", "-translate-x-1/2", "px-4", "py-2", "rounded-lg");
-                    document.body.appendChild(feedbackElement);
+                    feedbackElement.classList.add(
+                        "bg-yellow-500", "text-white", "absolute", "top-[-120px]", "left-1/2",
+                        "transform", "-translate-x-1/2", "px-4", "py-2", "text-center",
+                        "rounded-lg", "shadow-lg", "z-[9999]"
+                    );
+
+                    quizModal.appendChild(feedbackElement);
 
                     setTimeout(() => {
                         feedbackElement.classList.add("opacity-0");
@@ -174,8 +243,9 @@
                 );
 
                 feedbackElement.innerHTML = `
-        <p class="text-xl font-semibold">Correct! It took you ${timeTaken.toFixed(2)} seconds and ${attemptsCount} attempt(s).</p>
-        <p class="text-lg">Hey, if you liked this question, give it a thumbs up. If it wasn't so great, give it a thumbs down.</p>
+        <p class="text-xl font-bold text-center">Correct!</p>
+        <p class="text-center">It took you ${timeTaken.toFixed(2)} seconds and ${attemptsCount} attempt(s).</p>
+        <p class="text-center">Hey, if you liked this question, give it a thumbs up. If it wasn't so great, give it a thumbs down.</p>
     `;
 
                 const thumbsContainer = document.createElement("div");
@@ -260,18 +330,10 @@
 
             <a
                     id="open-left-drawer-btn"
-                    onclick="toggleDrawer('left')"
+                    onclick="toggleContent()"
                     class="text-sm tracking-wide press-start-2p-regular cursor-pointer absolute left-4 top-1/2 transform -translate-y-1/2"
             >
                 Toggle Content
-            </a>
-
-            <a
-                    id="open-right-drawer-btn"
-                    onclick="toggleDrawer('right')"
-                    class="text-sm tracking-wide press-start-2p-regular cursor-pointer absolute right-4 top-1/2 transform -translate-y-1/2"
-            >
-                Toggle Quiz
             </a>
         </nav>
 
@@ -298,7 +360,7 @@
 
             <div
                     id="left-drawer"
-                    class="absolute left-0 w-64 bg-gray-800 text-white shadow-lg transform -translate-x-full transition-transform duration-300 z-50 h-full overflow-y-auto"
+                    class="absolute left-0 w-64 bg-gray-800 text-white shadow-lg transform transition-transform duration-300 z-50 h-full overflow-y-auto"
             >
                 <ul class="p-4 space-y-2">
                     <div class="walkthrough" id="walkthrough"></div>
@@ -324,40 +386,16 @@
                     id="right-drawer"
                     class="absolute right-0 w-64 bg-gray-800 text-white shadow-lg transform translate-x-full transition-transform duration-300 z-50 h-full overflow-y-auto"
             >
-                <ul class="p-4">
-                    <div class="quiz">
-                        <p id="quiz-message" class="text-center text-xl font-semibold">Play a level to unlock a question.</p>
-
-                        <div id="quiz-options" class="hidden space-y-4">
-                            <p id="quiz-question" class="text-lg font-medium"></p>
-                            <hr class="border-gray-600 my-4">
-                            <ul id="quiz-answer-options" class="space-y-2">
-                                <!-- populated from quiz fetch func -->
-                            </ul>
-                            <a id="quiz-link" class="text-cyan-400 hover:text-cyan-500 block mt-4 text-center"></a>
-                            <button id="submit-answer" class="w-full bg-cyan-600 hover:bg-cyan-700 text-white py-2 px-4 rounded-lg mt-4" onclick="checkQuestionAnswer()">
-                                Submit Answer
-                            </button>
-                        </div>
-
-                        <div id="quiz-feedback" class="mt-4 text-lg"></div>
-                    </div>
-                </ul>
             </div>
 
         </main>
 
 
         <script>
-            function toggleDrawer(side) {
+            function toggleContent() {
                 const leftDrawer = document.getElementById('left-drawer');
-                const rightDrawer = document.getElementById('right-drawer');
 
-                if (side === 'left') {
-                    leftDrawer.classList.toggle('-translate-x-full');
-                } else if (side === 'right') {
-                    rightDrawer.classList.toggle('translate-x-full');
-                }
+                leftDrawer.classList.toggle('-translate-x-full');
             }
         </script>
         <script>
@@ -443,7 +481,7 @@
 
                 if (prevButton && nextButton) {
                     prevButton.onclick = function () {
-                        if (currentStage > 1) {
+                        if (currentStage >= 1) {
                             currentStage--;
                             fetchWalkthroughStage(currentStage);
                         } else {

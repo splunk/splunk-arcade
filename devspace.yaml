@@ -151,7 +151,7 @@ deployments:
         portal:
           image: ${PORTAL_IMAGE}
           imagePullPolicy: ${IMAGE_PULL_POLICY}
-        player-content:
+        playerContent:
           image: ${PLAYER_CONTENT_IMAGE}
           imagePullPolicy: ${IMAGE_PULL_POLICY}
         playerRouter:
