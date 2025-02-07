@@ -149,10 +149,6 @@
                 const backdrop = document.createElement("div");
                 backdrop.id = "quiz-backdrop";
                 backdrop.classList.add("fixed", "top-0", "left-0", "w-full", "h-full", "backdrop-blur-sm", "bg-opacity-30", "z-40");
-                backdrop.onclick = () => {
-                    modal.remove();
-                    backdrop.remove();
-                };
 
                 document.body.appendChild(backdrop);
                 document.body.appendChild(modal);
