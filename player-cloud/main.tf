@@ -6,6 +6,10 @@ terraform {
       source  = "splunk-terraform/signalfx"
       version = "~> 9.7.1"
     }
+    kubernetes = {
+      source = "hashicorp/kubernetes"
+      version = "~> 2.35.1"
+    }
   }
 
   backend "kubernetes" {
@@ -74,4 +78,21 @@ resource "signalfx_time_chart" "logger_player_score" {
   program_text = <<-EOF
     A = data('arcade.logger.score', filter=filter('player_name', '${var.player_name}')).publish(label='A')
   EOF
+}
+
+resource "kubernetes_config_map" "tf_outputs" {
+  metadata {
+    name = "tf-outputs-${var.player_name}"
+    namespace = var.namespace
+    labels = {
+      "app.kubernetes.io/name" = "splunk-arcade-player-cloud-outputs"
+    }
+  }
+
+  data = {
+    dashboard_url = signalfx_dashboard.splunk_arcade_dashboard.url
+    chart_imvaders_score_url = signalfx_time_chart.imvaders_score.url
+    chart_imvaders_score_by_player_url = signalfx_time_chart.imvaders_mean_score_by_player.url
+    chart_logger_score_url = signalfx_time_chart.logger_player_score.url
+  }
 }

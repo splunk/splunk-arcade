@@ -15,6 +15,7 @@ rules:
     resources:
       - services
       - secrets
+      - configmaps
     verbs:
       - get
       - create
@@ -44,6 +45,7 @@ rules:
       - get
       - create
       - delete
+      - list
   - apiGroups:
       - coordination.k8s.io
     resources:

@@ -1,4 +1,5 @@
 import os
+import time
 
 from kubernetes import client, config
 
@@ -81,6 +82,10 @@ def player_cloud_job_create(player_id: str, observability_token: str, observabil
                                     name=f"TF_VAR_realm",
                                     value=observability_realm,
                                 ),
+                                client.V1EnvVar(
+                                    name=f"TF_VAR_namespace",
+                                    value=NAMESPACE,
+                                ),
                             ],
                         ),
                     ],
@@ -95,6 +100,26 @@ def player_cloud_job_create(player_id: str, observability_token: str, observabil
     batch_v1.create_namespaced_job(namespace=NAMESPACE, body=job)
 
 
+def _player_cloud_job_complete(player_id: str) -> bool:
+    timeout = 300
+    interval = 5
+    batch_v1 = client.BatchV1Api()
+    start_time = time.time()
+
+    while time.time() - start_time < timeout:
+        resp = batch_v1.list_namespaced_job(
+            namespace=NAMESPACE,
+            label_selector=f"app.kubernetes.io/instance={APP_NAME}-player-cloud-{player_id}",
+        )
+
+        if resp.items and resp.items[0].status.succeeded:
+            return True
+
+        time.sleep(interval)
+
+    return False
+
+
 def player_cloud_job_complete(player_id: str) -> bool:
     if player_id == "devplayer":
         # this is our player for testing/dev, and we prohibit use of this username, so this will
@@ -105,16 +130,7 @@ def player_cloud_job_complete(player_id: str) -> bool:
     # ensure config is loaded
     _ = _Config()
 
-    batch_v1 = client.BatchV1Api()
-    resp = batch_v1.list_namespaced_job(
-        namespace=NAMESPACE,
-        label_selector=f"app.kubernetes.io/instance={APP_NAME}-player-cloud-{player_id}",
-    )
-
-    if not resp.items:
-        return False
-
-    breakpoint()
+    _player_cloud_job_complete(player_id=player_id)
 
 
 def player_deployment_create(player_id: str) -> None:
@@ -160,6 +176,12 @@ def player_deployment_create(player_id: str) -> None:
                     },
                 ),
                 spec=client.V1PodSpec(
+                    volumes=[
+                        client.V1Volume(
+                            name="config-volume",
+                            config_map=client.V1ConfigMapVolumeSource(name="my-config"),
+                        )
+                    ],
                     containers=[
                         client.V1Container(
                             name="player",
@@ -227,6 +249,13 @@ def player_deployment_create(player_id: str) -> None:
                                     name="PLAYER_CONTENT_HOST",
                                     value=PLAYER_CONTENT_HOST,
                                 ),
+                            ],
+                            env_from=[
+                                client.V1EnvFromSource(
+                                    config_map_ref=client.V1ConfigMapEnvSource(
+                                        name=f"tf-outputs-{player_id}"
+                                    )
+                                )
                             ],
                             ports=[
                                 client.V1ContainerPort(
@@ -299,11 +328,12 @@ def player_deployment_ready(player_id: str) -> bool:
     apps_v1 = client.AppsV1Api()
     resp = apps_v1.list_namespaced_deployment(
         namespace=NAMESPACE,
-        label_selector=f"app.kubernetes.io/instance={player_id}",
+        label_selector=f"app.kubernetes.io/instance={APP_NAME}-cabinet-{player_id}",
     )
 
     if not resp.items:
         return False
+
 
     ready_replicas = resp.items[0].status.ready_replicas
     if not ready_replicas:

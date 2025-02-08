@@ -357,18 +357,19 @@ profiles:
               - port: "8080:5000"
 
 pipelines:
-  # override the default purge pipeline so we can nuke registry too
+  # override the default purge pipeline so we can nuke registry and all sorts of other fun stuff
   purge:
     run: |-
+      [ "$SPLUNK_ARCADE_OBSERVABILITY_API_ACCESS_TOKEN" = REPLACE_ME ] && echo "api token unset" && exit 1
       stop_dev --all
+      # must be done prior to cleaning service account! hence why not || true as well!
+      APP_NAME=splunk-arcade \
+        NAMESPACE=${DEVSPACE_NAMESPACE} \
+        SPLUNK_OBSERVABILITY_REALM=${SPLUNK_ARCADE_OBSERVABILITY_REALM} \
+        SPLUNK_OBSERVABILITY_API_ACCESS_TOKEN=${SPLUNK_ARCADE_OBSERVABILITY_API_ACCESS_TOKEN} \
+        venv/bin/python util/clean-player-cloud/main.py
       purge_deployments --all
       kubectl delete deployments -n ${DEVSPACE_NAMESPACE} registry || true
       kubectl delete statefulsets -n ${DEVSPACE_NAMESPACE} registry || true
       kubectl delete pvc -n ${DEVSPACE_NAMESPACE} registry-registry-0 || true
-      APP_NAME=splunk-arcade \
-        IMAGE_PLAYER_CLOUD=${PLAYER_CLOUD_IMAGE} \
-        IMAGE_PULL_POLICY=${IMAGE_PULL_POLICY} \
-        NAMESPACE=${DEVSPACE_NAMESPACE} \
-        SPLUNK_OBSERVABILITY_REALM=${SPLUNK_ARCADE_OBSERVABILITY_REALM} \
-        SPLUNK_OBSERVABILITY_API_ACCESS_TOKEN=${SPLUNK_ARCADE_OBSERVABILITY_API_ACCESS_TOKEN} \
-        venv/bin/python util/clean-player-cloud/main.py || true
+

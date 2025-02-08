@@ -15,3 +15,9 @@ variable "realm" {
   type        = string
   sensitive   = false
 }
+
+variable "namespace" {
+  description = "The Kubernetes namespace"
+  type        = string
+  default     = "splunk-arcade"
+}
