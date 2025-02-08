@@ -91,6 +91,8 @@ portal:
     limits:
       memory: 512Mi
       cpu: 500m
+  # blocks waiting for charts to be built via job pod (via tf) or not
+  blockOnPlayerCloudJob: false
 
 playerRouter:
   image: splunk-arcade/player-router:latest
@@ -127,6 +129,10 @@ playerContent:
     limits:
       memory: 512Mi
       cpu: 500m
+
+playerCloud:
+  image: splunk-arcade/player-cloud:latest
+  imagePullPolicy: Always
 
 # only used for dev on cabinet, otherwise spawn player cabinets via registration portal
 players: []

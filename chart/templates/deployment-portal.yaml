@@ -74,6 +74,10 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: status.hostIP
+            - name: NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
             - name: OTEL_EXPORTER_OTLP_ENDPOINT
               value: http://$(NODE_IP):4317
             - name: OTEL_EXPORTER_HEALTH_ENDPOINT
@@ -96,14 +100,19 @@ spec:
               value: "{{ index $.Values "splunk-otel-collector" "splunkObservability" "realm" }}"
             - name: SPLUNK_OBSERVABILITY_API_ACCESS_TOKEN
               value: "{{ $.Values.observabilityApiAccessToken }}"
-            - name: PLAYER_IMAGE
+            - name: PLAYER_CABINET_IMAGE
               value: "{{ $.Values.cabinet.image }}"
-            - name: PLAYER_IMAGE_PULL_POLICY
+            - name: PLAYER_CLOUD_IMAGE
+              value: "{{ $.Values.playerCloud.image }}"
+            # for pull we'll just do whatever cabinet is (even for the cloud job)
+            - name: IMAGE_PULL_POLICY
               value: "{{ $.Values.cabinet.imagePullPolicy }}"
             - name: ARCADE_HOST
               value: "{{ $.Values.arcadeHost }}"
             - name: OPENAI_API_KEY
               value: "{{ $.Values.openaiApiKey }}"
+            - name: PLAYER_CLOUD_JOB_BLOCK
+              value: "{{ $.Values.portal.blockOnPlayerCloudJob }}"
           ports:
             - name: http
               containerPort: 5000

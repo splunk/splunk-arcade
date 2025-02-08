@@ -14,10 +14,14 @@ rules:
       - ""
     resources:
       - services
+      - secrets
+      - configmaps
     verbs:
       - get
       - create
+      - update
       - delete
+      - list
   - apiGroups:
       - apps
     resources:
@@ -33,3 +37,24 @@ rules:
       - deployments/status
     verbs:
       - get
+  - apiGroups:
+      - batch
+    resources:
+      - jobs
+    verbs:
+      - get
+      - create
+      - delete
+      - list
+  - apiGroups:
+      - coordination.k8s.io
+    resources:
+      - leases
+    verbs:
+      - get
+      - list
+      - create
+      - update
+      - delete
+      - patch
+      - watch

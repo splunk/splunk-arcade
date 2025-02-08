@@ -5,6 +5,169 @@
 
         {% include 'head_content.html' %}
 
+        <style>
+            .crt-overlay {
+                position: fixed;
+                z-index: 9999;
+                pointer-events: auto;
+                background: repeating-linear-gradient(
+                        to bottom,
+                        rgba(0, 255, 0, 0.6),
+                        rgba(0, 255, 0, 0.7) 2px,
+                        transparent 2px,
+                        transparent 4px
+                );
+                animation: flicker 0.03s infinite alternate, glow 1.5s infinite alternate;
+            }
+
+            @keyframes flicker {
+                0% { opacity: 1; }
+                50% { opacity: 0.75; }
+                100% { opacity: 1; }
+            }
+
+            @keyframes glow {
+                0% { box-shadow: 0 0 10px limegreen; }
+                100% { box-shadow: 0 0 20px limegreen; }
+            }
+
+            @keyframes glitch {
+                0% { transform: none; }
+                20% { transform: skewX(-5deg); }
+                40% { transform: skewX(3deg); }
+                60% { transform: none; }
+                80% { transform: skewX(-3deg); }
+                100% { transform: none; }
+            }
+
+            .glitch {
+                animation: glitch 0.5s infinite;
+            }
+        </style>
+
+        <script>
+            const introModal = document.createElement("div");
+            introModal.classList.add(
+                "fixed", "top-1/2", "left-1/2", "transform", "-translate-x-1/2", "-translate-y-1/2",
+                "w-3/4", "h-3/4", "rounded-lg", "shadow-lg", "flex", "crt-overlay", "z-50", "p-10"
+            );
+
+
+            const startButton = document.createElement("button");
+            startButton.classList.add("bg-white", "text-black", "px-4", "py-2", "rounded-lg", "hover:bg-gray-700", "absolute", "bottom-4", "left-1/2", "-translate-x-1/2", "z-50");
+            startButton.textContent = "> ENTER THE ARCADE <";
+            startButton.setAttribute("id", "startButton");
+
+            function showIntroModal() {
+                if (localStorage.getItem("visited")) return;
+                // TODOO set true
+
+
+                const overlay = document.createElement("div");
+                overlay.classList.add(
+                    "absolute", "top-0", "left-0", "w-full", "h-full","rounded-lg", "bg-black", "opacity-50", "z-40"
+                );
+
+                const img = document.createElement("img");
+                img.src = "{{ url_for('static', filename='images/pwnybtn.png')}}"
+                img.classList.add("absolute", "bottom-4", "left-4", "rounded-lg");
+
+                const text = document.createElement("p");
+                text.id = "terminal-content";
+                text.classList.add("text-lg", "text-left", "press-start-2p-regular", "mb-4", "text-white", "relative", "z-50", "whitespace-pre-wrap");
+                text.style.wordWrap = "break-word";
+
+                introModal.appendChild(overlay);
+                introModal.appendChild(img);
+                introModal.appendChild(text);
+                document.body.appendChild(introModal);
+
+                setTimeout(typeText, 100);
+
+                let i = 0;
+                let j = 0;
+                const speed = 30;
+                const terminalContent = document.getElementById("terminal-content");
+
+                const customDashboardElement = document.createElement("a");
+                customDashboardElement.setAttribute("href", "https://www.splunk.com");
+                customDashboardElement.setAttribute("target", "_blank");
+                customDashboardElement.classList.add("text-cyan-400", "underline");
+                customDashboardElement.textContent = "> INVESTIGATE SMARTER USING THIS CUSTOM DASHBOARD"
+
+                const brElement1 = document.createElement("br");
+                const brElement2 = document.createElement("br");
+                const brElement3 = document.createElement("br");
+                const brElement4 = document.createElement("br");
+
+                const textContent = [
+                    "WELCOME TO SPLUNK ARCADE!",
+                    "-------------------------",
+                    "> MISSION:",
+                    "> \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0LEARN ABOUT SPLUNK",
+                    "> \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0PLAY RAD GAMES",
+                    "> OBJECTIVE: SCORE POINTS BY...",
+                    "> \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0PLAYING GAMES",
+                    "> \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0ANSWERING QUESTIONS",
+                    brElement1,
+                    "> ONLY THE TOP PLAYERS WILL ENTER THE GRAND PRIZE SHOWDOWN!",
+                    brElement2,
+                    customDashboardElement,
+                    brElement3,
+                    "> LOADING GAME ENGINE...",
+                    "> LOADING GAME ENGINE...",
+                    "> LOADING GAME ENGINE...",
+                    "> READY!",
+                    brElement4,
+                    startButton,
+                ];
+
+                function typeText() {
+                    if (i < textContent.length) {
+                        const currentItem = textContent[i];
+
+                        if (typeof currentItem === 'string') {
+                            if (j < currentItem.length) {
+                                terminalContent.innerHTML += currentItem.charAt(j);
+                                j++;
+                                terminalContent.scrollTop = terminalContent.scrollHeight;
+                                setTimeout(typeText, speed);
+                            } else {
+                                terminalContent.innerHTML += "<br>";
+                                i++;
+                                j = 0;
+                                setTimeout(typeText, speed);
+                            }
+                        } else if (currentItem instanceof HTMLElement) {
+                            terminalContent.appendChild(currentItem);
+                            terminalContent.innerHTML += "<br>";
+                            i++;
+                            setTimeout(typeText, speed);
+                        }
+                    }
+                }
+
+                function addGlitchEffect() {
+                    const terminal = document.getElementById("terminal-content");
+                    terminal.classList.add("glitch");
+                    setTimeout(() => {
+                        terminal.classList.remove("glitch");
+                    }, Math.random() * 300 + 100);
+                }
+
+                setInterval(addGlitchEffect, Math.random() * 5000 + 2000);
+            }
+
+            window.onload = showIntroModal;
+
+            document.addEventListener("click", (event) => {
+                if (event.target && event.target.id === "startButton") {
+                    console.log("FOO");
+                    introModal.remove();
+                }
+            });
+        </script>
+
         <script>
             function submitForm(titleKey, descriptionKey, uriKey) {
                 const form = document.getElementById('gameForm');

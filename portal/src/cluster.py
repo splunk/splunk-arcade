@@ -1,11 +1,13 @@
 import os
+import time
 
 from kubernetes import client, config
 
 APP_NAME = "splunk-arcade"
-NAMESPACE = "splunk-arcade"
-IMAGE_PLAYER_CABINET = os.getenv("PLAYER_IMAGE") or "splunk-arcade/cabinet:latest"
-IMAGE_PULL_POLICY = os.getenv("PLAYER_IMAGE_PULL_POLICY") or "IfNotPresent"
+NAMESPACE = os.getenv("NAMESPACE") or "splunk-arcade"
+IMAGE_PLAYER_CABINET = os.getenv("PLAYER_CABINET_IMAGE") or "splunk-arcade/cabinet:latest"
+IMAGE_PLAYER_CLOUD = os.getenv("PLAYER_CLOUD_IMAGE") or "splunk-arcade/player-cloud:latest"
+IMAGE_PULL_POLICY = os.getenv("IMAGE_PULL_POLICY") or "IfNotPresent"
 ARCADE_HOST = os.getenv("ARCADE_HOST") or "www.splunkarcade.com"
 PLAYER_CONTENT_HOST = os.getenv("PLAYER_CONTENT_HOST") or f"{APP_NAME}-player-content"
 
@@ -21,6 +23,114 @@ class _Config:
 
     def __init__(self):
         self.config = config.load_incluster_config()
+
+
+def player_cloud_job_create(player_id: str, observability_token: str, observability_realm: str) -> None:
+    # ensure config is loaded
+    _ = _Config()
+
+    job = client.V1Job(
+        api_version="batch/v1",
+        kind="Job",
+        metadata=client.V1ObjectMeta(
+            name=f"{APP_NAME}-player-{player_id}-cloud",
+            labels={
+                "app.kubernetes.io/name": f"{APP_NAME}-player-cloud",
+                "app.kubernetes.io/instance": f"{APP_NAME}-player-cloud-{player_id}",
+            },
+        ),
+        spec=client.V1JobSpec(
+            ttl_seconds_after_finished=60,
+            template=client.V1PodTemplateSpec(
+                metadata=client.V1ObjectMeta(
+                    labels={
+                        "app.kubernetes.io/name": f"{APP_NAME}-player-cloud",
+                        "app.kubernetes.io/instance": f"{APP_NAME}-player-cloud-{player_id}",
+                    },
+                ),
+                spec=client.V1PodSpec(
+                    restart_policy="Never",
+                    containers=[
+                        client.V1Container(
+                            name="player-cloud",
+                            image=IMAGE_PLAYER_CLOUD,
+                            image_pull_policy=IMAGE_PULL_POLICY,
+                            resources=client.V1ResourceRequirements(
+                                requests={
+                                    "cpu": "250m",
+                                    "memory": "128Mi",
+                                },
+                                limits={
+                                    "cpu": "500m",
+                                    "memory": "512Mi",
+                                },
+                            ),
+                            env=[
+                                client.V1EnvVar(
+                                    name=f"TF_VAR_signalfx_api_token",
+                                    value=observability_token,
+                                ),
+                                client.V1EnvVar(
+                                    name=f"KUBE_NAMESPACE",
+                                    value=NAMESPACE,
+                                ),
+                                client.V1EnvVar(
+                                    name=f"TF_VAR_player_name",
+                                    value=player_id,
+                                ),
+                                client.V1EnvVar(
+                                    name=f"TF_VAR_realm",
+                                    value=observability_realm,
+                                ),
+                                client.V1EnvVar(
+                                    name=f"TF_VAR_namespace",
+                                    value=NAMESPACE,
+                                ),
+                            ],
+                        ),
+                    ],
+                    # so it can get secrets for tfstate
+                    service_account_name=f"{APP_NAME}-service-account",
+                ),
+            )
+        ),
+    )
+
+    batch_v1 = client.BatchV1Api()
+    batch_v1.create_namespaced_job(namespace=NAMESPACE, body=job)
+
+
+def _player_cloud_job_complete(player_id: str) -> bool:
+    timeout = 300
+    interval = 5
+    batch_v1 = client.BatchV1Api()
+    start_time = time.time()
+
+    while time.time() - start_time < timeout:
+        resp = batch_v1.list_namespaced_job(
+            namespace=NAMESPACE,
+            label_selector=f"app.kubernetes.io/instance={APP_NAME}-player-cloud-{player_id}",
+        )
+
+        if resp.items and resp.items[0].status.succeeded:
+            return True
+
+        time.sleep(interval)
+
+    return False
+
+
+def player_cloud_job_complete(player_id: str) -> bool:
+    if player_id == "devplayer":
+        # this is our player for testing/dev, and we prohibit use of this username, so this will
+        # only be needed when doing devspace things in which case the deployment/service will
+        # already exist
+        return True
+
+    # ensure config is loaded
+    _ = _Config()
+
+    _player_cloud_job_complete(player_id=player_id)
 
 
 def player_deployment_create(player_id: str) -> None:
@@ -39,8 +149,8 @@ def player_deployment_create(player_id: str) -> None:
         metadata=client.V1ObjectMeta(
             name=f"{APP_NAME}-player-{player_id}",
             labels={
-                "app.kubernetes.io/name": "splunk-arcade-player",
-                "app.kubernetes.io/instance": player_id,
+                "app.kubernetes.io/name": f"{APP_NAME}-cabinet",
+                "app.kubernetes.io/instance": f"{APP_NAME}-cabinet-{player_id}",
             },
         ),
         spec=client.V1DeploymentSpec(
@@ -66,6 +176,12 @@ def player_deployment_create(player_id: str) -> None:
                     },
                 ),
                 spec=client.V1PodSpec(
+                    volumes=[
+                        client.V1Volume(
+                            name="config-volume",
+                            config_map=client.V1ConfigMapVolumeSource(name="my-config"),
+                        )
+                    ],
                     containers=[
                         client.V1Container(
                             name="player",
@@ -134,6 +250,13 @@ def player_deployment_create(player_id: str) -> None:
                                     value=PLAYER_CONTENT_HOST,
                                 ),
                             ],
+                            env_from=[
+                                client.V1EnvFromSource(
+                                    config_map_ref=client.V1ConfigMapEnvSource(
+                                        name=f"tf-outputs-{player_id}"
+                                    )
+                                )
+                            ],
                             ports=[
                                 client.V1ContainerPort(
                                     name="http",
@@ -166,7 +289,8 @@ def player_deployment_create(player_id: str) -> None:
         metadata=client.V1ObjectMeta(
             name=f"{APP_NAME}-cabinet-player-{player_id}",
             labels={
-                "app.kubernetes.io/name": "splunk-arcade-player",
+                "app.kubernetes.io/name": f"{APP_NAME}-cabinet",
+                "app.kubernetes.io/instance": f"{APP_NAME}-cabinet-{player_id}",
             },
         ),
         spec=client.V1ServiceSpec(
@@ -204,11 +328,12 @@ def player_deployment_ready(player_id: str) -> bool:
     apps_v1 = client.AppsV1Api()
     resp = apps_v1.list_namespaced_deployment(
         namespace=NAMESPACE,
-        label_selector=f"app.kubernetes.io/instance={player_id}",
+        label_selector=f"app.kubernetes.io/instance={APP_NAME}-cabinet-{player_id}",
     )
 
     if not resp.items:
         return False
+
 
     ready_replicas = resp.items[0].status.ready_replicas
     if not ready_replicas:
