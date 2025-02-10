@@ -54,14 +54,13 @@
 
 
             const startButton = document.createElement("button");
-            startButton.classList.add("bg-white", "text-black", "px-4", "py-2", "rounded-lg", "hover:bg-gray-700", "absolute", "bottom-4", "left-1/2", "-translate-x-1/2", "z-50");
+            startButton.classList.add("bg-white", "text-black", "px-4", "py-2", "rounded-lg", "hover:bg-gray-700", "absolute", "bottom-4", "left-1/2", "-translate-x-1/2", "w-max", "z-50");
             startButton.textContent = "> ENTER THE ARCADE <";
             startButton.setAttribute("id", "startButton");
 
             function showIntroModal() {
                 if (localStorage.getItem("visited")) return;
-                // TODOO set true
-
+                localStorage.setItem("visited", "true");
 
                 const overlay = document.createElement("div");
                 overlay.classList.add(
