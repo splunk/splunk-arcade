@@ -111,8 +111,6 @@ spec:
               value: "{{ $.Values.arcadeHost }}"
             - name: OPENAI_API_KEY
               value: "{{ $.Values.openaiApiKey }}"
-            - name: PLAYER_CLOUD_JOB_BLOCK
-              value: "{{ $.Values.portal.blockOnPlayerCloudJob }}"
           ports:
             - name: http
               containerPort: 5000
