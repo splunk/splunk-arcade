@@ -23,12 +23,14 @@ PLAYER_CONTENT_HOST = os.getenv("PLAYER_CONTENT_HOST")
 IMVADERS_SLOW_VERSION = 0.75
 UNPROCESSABLE_ENTITY = 422
 
+DEFAULT_DASHBOARD_URL = "https://www.splunk.com"
 DASHBOARD_URL_ENV_KEYS = [
     "dashboard_url",
     "chart_imvaders_score_url",
     "chart_imvaders_score_by_player_url",
     "chart_logger_score_url",
 ]
+MAIN_DASHBOARD_URL = os.getenv("dashboard_url", DEFAULT_DASHBOARD_URL)
 
 logging.basicConfig(level=logging.INFO)
 LOGGER = logging.getLogger(f"player_cabinet_{PLAYER_NAME}")
@@ -81,6 +83,7 @@ def home():
         "home.html",
         scoreboard_endpoint=f"http://{ARCADE_HOST}/scoreboard",
         logout_endpoint=f"http://{ARCADE_HOST}/logout",
+        dashboard_home_endpoint=MAIN_DASHBOARD_URL,
     )
 
 
@@ -104,6 +107,7 @@ def game():
         gamesession=uuid.uuid4(),
         scoreboard_endpoint=f"http://{ARCADE_HOST}/scoreboard",
         logout_endpoint=f"http://{ARCADE_HOST}/logout",
+        dashboard_home_endpoint=MAIN_DASHBOARD_URL,
     )
 
 
