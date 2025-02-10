@@ -143,10 +143,15 @@ def logout():
 
 
 def _register(player_id: str):
-    player_cloud_job_completed = player_cloud_job_complete(player_id)
+    player_cloud_job_completed = player_cloud_job_complete(
+        player_id=player_id,
+    )
     print(f"player {player_id} cloud job (tf chart creation) state: {player_cloud_job_completed}")
 
-    player_deployment_create(player_id=player_id)
+    player_deployment_create(
+        player_id=player_id,
+        observability_realm=SPLUNK_OBSERVABILITY_REALM,
+    )
     print(f"player {player_id} cabinet deployment complete")
 
 
@@ -176,7 +181,10 @@ def register():
             observability_realm=SPLUNK_OBSERVABILITY_REALM,
         )
 
-        print(f"player {form.username.data} cloud job created, spawning background thread to wait and create cabinet deployment...")
+        print(
+            f"player {form.username.data} cloud job created, "
+            "spawning background thread to wait and create cabinet deployment..."
+        )
 
         executor = ThreadPoolExecutor(max_workers=1)
         executor.submit(_register, form.username.data)
@@ -376,5 +384,3 @@ def splunk_webhook():
             print("non 200 response from clearing incident: ", ret.text)
 
     return jsonify(success=True)
-
-
