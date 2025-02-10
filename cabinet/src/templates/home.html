@@ -77,21 +77,6 @@
 
                 let dashboard_link = "";
 
-                $.ajax({
-                    type: 'GET',
-                    url: "{{ url_for('routes.splunk_dashboard_urls') }}",
-                    contentType: 'application/json',
-                    success: function(response) {
-                        console.log('available urls:', response);
-                        dashboard_link = response.dashboard_url && response.dashboard_url !== ""
-                            ? response.dashboard_url
-                            : response.default;
-                    },
-                    error: function(error) {
-                        console.log('failed fetching dashboard urls...:', error);
-                    }
-                });
-
                 const overlay = document.createElement("div");
                 overlay.classList.add(
                     "absolute", "top-0", "left-0", "w-full", "h-full","rounded-lg", "bg-black", "opacity-50", "z-40"
