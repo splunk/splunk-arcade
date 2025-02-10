@@ -25,7 +25,9 @@ class _Config:
         self.config = config.load_incluster_config()
 
 
-def player_cloud_job_create(player_id: str, observability_token: str, observability_realm: str) -> None:
+def player_cloud_job_create(
+    player_id: str, observability_token: str, observability_realm: str
+) -> None:
     # ensure config is loaded
     _ = _Config()
 
@@ -67,23 +69,23 @@ def player_cloud_job_create(player_id: str, observability_token: str, observabil
                             ),
                             env=[
                                 client.V1EnvVar(
-                                    name=f"TF_VAR_signalfx_api_token",
+                                    name="TF_VAR_signalfx_api_token",
                                     value=observability_token,
                                 ),
                                 client.V1EnvVar(
-                                    name=f"KUBE_NAMESPACE",
+                                    name="KUBE_NAMESPACE",
                                     value=NAMESPACE,
                                 ),
                                 client.V1EnvVar(
-                                    name=f"TF_VAR_player_name",
+                                    name="TF_VAR_player_name",
                                     value=player_id,
                                 ),
                                 client.V1EnvVar(
-                                    name=f"TF_VAR_realm",
+                                    name="TF_VAR_realm",
                                     value=observability_realm,
                                 ),
                                 client.V1EnvVar(
-                                    name=f"TF_VAR_namespace",
+                                    name="TF_VAR_namespace",
                                     value=NAMESPACE,
                                 ),
                             ],
@@ -92,7 +94,7 @@ def player_cloud_job_create(player_id: str, observability_token: str, observabil
                     # so it can get secrets for tfstate
                     service_account_name=f"{APP_NAME}-service-account",
                 ),
-            )
+            ),
         ),
     )
 
@@ -333,7 +335,6 @@ def player_deployment_ready(player_id: str) -> bool:
 
     if not resp.items:
         return False
-
 
     ready_replicas = resp.items[0].status.ready_replicas
     if not ready_replicas:

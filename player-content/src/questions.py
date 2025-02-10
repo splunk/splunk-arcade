@@ -4,6 +4,10 @@ from random import choice, randint, random
 
 from redis import StrictRedis
 
+# for now, 30% of the time we'll try to use a ai gen question
+OPENAI_QUESTION_CHANCE_THRESHOLD = 0.3
+MAX_QUESTION_SELECTION_ATTEMPTS = 15
+
 # mapping is obviously game, then count of seen questions: index of question to show (as in the
 # position in the array of the questions.json for the given game)
 FIXED_POSITION_QUESTIONS = {
@@ -15,12 +19,8 @@ FIXED_POSITION_QUESTIONS = {
         0: 0,
         2: 1,
     },
-    "bughunt": {
-
-    },
-    "floppybird": {
-
-    }
+    "bughunt": {},
+    "floppybird": {},
 }
 
 
@@ -47,7 +47,7 @@ class _Questions:
         self,
         module: str,
         player_name: str,
-    ) -> dict|None:
+    ) -> dict | None:
         key_namespace = f"content:quiz:{module}:{player_name}:*"
 
         found_keys = self.redis.keys(pattern=key_namespace)
@@ -61,11 +61,10 @@ class _Questions:
 
         return loaded_content
 
-
     def _get_random_static_question_for_module(
-            self,
-            module: str,
-    ) -> dict|None:
+        self,
+        module: str,
+    ) -> dict | None:
         while True:
             maybe_question = self.content[module][randint(0, len(self.content[module]) - 1)]
             if maybe_question.get("is_fixed_position"):
@@ -93,8 +92,7 @@ class _Questions:
         attempts = 0
 
         while True:
-            if random() < 0.3:
-                # for now, 30% of the time we'll try to use a ai gen question
+            if random() < OPENAI_QUESTION_CHANCE_THRESHOLD:
                 maybe_question = self._get_random_generated_question_for_module(
                     module=_module,
                     player_name=player_name,
@@ -114,7 +112,7 @@ class _Questions:
 
             attempts += 1
 
-            if attempts > 15:
+            if attempts > MAX_QUESTION_SELECTION_ATTEMPTS:
                 # lets not try forever... if we didnt get a not seen question in this amount of
                 # attempts we can be done for now...
                 return {}

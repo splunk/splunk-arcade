@@ -2,6 +2,7 @@ import os
 import uuid
 from concurrent.futures import ThreadPoolExecutor
 from datetime import UTC, datetime
+from http import HTTPStatus
 from urllib.parse import urlsplit
 
 import requests
@@ -24,8 +25,8 @@ from opentelemetry import trace
 from src.cluster import (
     APP_NAME,
     ARCADE_HOST,
-    player_cloud_job_create,
     player_cloud_job_complete,
+    player_cloud_job_create,
     player_deployment_create,
     player_deployment_ready,
 )
@@ -366,7 +367,7 @@ def splunk_webhook():
                 "X-SF-TOKEN": SPLUNK_OBSERVABILITY_API_ACCESS_TOKEN,
             },
         )
-        if ret.status_code != 200:
+        if ret.status_code != HTTPStatus.OK.value:
             print("non 200 response from clearing incident: ", ret.text)
 
     return jsonify(success=True)
