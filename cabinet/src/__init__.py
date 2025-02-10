@@ -48,4 +48,8 @@ def create_app():
             print(f"db not ready... exception: {exc}")
             os._exit(1)
 
+    print("env vars...")
+    for k, v in os.environ.items():
+        print(f"{k}: {v}")
+
     return app
