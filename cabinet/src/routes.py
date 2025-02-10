@@ -163,7 +163,13 @@ def get_question(module: str):
         },
     )
 
-    return content.json()
+    question_content = content.json()
+    if question_content.get("link_text") and not question_content.get("link"):
+        # for questions that provide link text but not a specific link we
+        # insert the link we built from tf data + realm info
+        question_content["link"] = FINAL_DASHBOARD_URL
+
+    return jsonify(question_content)
 
 
 @routes.route("/answer", methods=["POST"])

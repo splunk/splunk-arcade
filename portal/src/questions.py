@@ -139,14 +139,20 @@ def _handle_splunk_webhook_content_openai(app, payload: dict[str, Any]) -> None:
     Generate one **multiple-choice quiz question** related to observability and troubleshooting
     based on this alert. Can you print the player name value in the question body. Provide the 
     output in the JSON format as outlined below. Occasionally, use the player_name dimension
-    and provide links back to the originating chart with player name in the filter. When choosing to
-    not provide a link, omit the link and link_text fields. If the Alert comes from APM ask 
-    questions about APM And traces. Please provide only the raw JSON (no formatting tags) such that
-    I can call json.loads() from python to parse the response! Thanks!
+    and provide links back to the originating chart with player name in the filter.
+    
+    If you decide it would be helpful to provide a link to the player to a dashboard containing
+    multiple charts they can use to research teh answer, ensure that the "link_text" field is
+    retained (you do *not* need to insert a link, we will do so when/if the "link_text" field
+    is present). If you chose to *not* include a link, just omit the "link_text" field. Note that
+    you don't need to include a link each time, just mix it up a bit!
+
+    If the Alert comes from APM ask questions about APM And traces. Please provide only the raw 
+    JSON (no formatting tags) such that I can call json.loads() from python to parse the response!
+    Thanks!
     
     {{
         "question": "Generated quiz question?",
-        "link": "https://app.us1.signalfx.com/#/dashboard/GjETzI8AwAI?groupId=GjETzI8AwAE&configId=GjETzI8AwAM&sources%5B%5D=player_name:{player_name}",
         "link_text": "Click here to investigate",
         "choices": [
             {{
