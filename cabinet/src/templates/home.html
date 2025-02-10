@@ -46,28 +46,17 @@
         </style>
 
         <script>
-            async function fetchDashboardLink() {
-                try {
-                    const response = await fetch("{{ url_for('routes.splunk_dashboard_urls') }}");
-                    const data = await response.json();
-                    return data.dashboard_url && data.dashboard_url !== ""
-                        ? data.dashboard_url
-                        : data.default;
-                } catch (error) {
-                    console.error("Failed fetching dashboard URLs:", error);
-                    return "";
-                }
-            }
-
             const introModal = document.createElement("div");
             introModal.classList.add(
                 "fixed", "top-1/2", "left-1/2", "transform", "-translate-x-1/2", "-translate-y-1/2",
-                "w-3/4", "h-3/4", "rounded-lg", "shadow-lg", "flex", "crt-overlay", "z-50", "p-10"
+                "w-3/4", "h-3/4", "rounded-lg", "shadow-lg", "flex", "crt-overlay", "z-50", "p-10", "relative"
             );
 
-
             const startButton = document.createElement("button");
-            startButton.classList.add("bg-white", "text-black", "px-4", "py-2", "rounded-lg", "hover:bg-gray-700", "absolute", "bottom-4", "left-1/2", "-translate-x-1/2", "w-max", "z-50");
+            startButton.classList.add(
+                "bg-white", "text-black", "px-4", "py-2", "rounded-lg", "hover:bg-gray-700",
+                "absolute", "bottom-4", "left-1/2", "-translate-x-1/2", "w-max", "z-50"
+            );
             startButton.textContent = "> ENTER THE ARCADE <";
             startButton.setAttribute("id", "startButton");
 
@@ -108,11 +97,7 @@
                 customDashboardElement.setAttribute("target", "_blank");
                 customDashboardElement.classList.add("text-cyan-400", "underline");
                 customDashboardElement.textContent = "> INVESTIGATE SMARTER USING THIS CUSTOM DASHBOARD";
-
-                (async () => {
-                    const dashboard_link = await fetchDashboardLink();
-                    customDashboardElement.setAttribute("href", dashboard_link);
-                })();
+                customDashboardElement.setAttribute("href", "{{ dashboard_home_endpoint }}")
 
                 const brElement1 = document.createElement("br");
                 const brElement2 = document.createElement("br");
@@ -223,6 +208,7 @@
 
         <nav class="bg-gray-800 text-white py-2 shadow-md opacity-90">
             <ul class="flex justify-center space-x-8">
+                <li><a href="{{ dashboard_home_endpoint }}" class="text-2xl tracking-wide press-start-2p-regular">Dashboard</a></li>
                 <li><a href="{{ scoreboard_endpoint }}" class="text-2xl tracking-wide press-start-2p-regular">Scoreboard</a></li>
                 <li><a href="{{ logout_endpoint }}" class="text-2xl tracking-wide press-start-2p-regular">Logout</a></li>
             </ul>
