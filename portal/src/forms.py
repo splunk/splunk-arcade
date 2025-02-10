@@ -1,4 +1,5 @@
 import re
+
 import sqlalchemy as sa
 from flask_wtf import FlaskForm
 from wtforms import BooleanField, PasswordField, StringField, SubmitField, TextAreaField
@@ -6,7 +7,6 @@ from wtforms.validators import DataRequired, Email, EqualTo, Length, NoneOf, Val
 
 from . import db
 from .models import User
-
 
 RFC1123_PATTERN = re.compile(r"[a-z0-9]([-a-z0-9]*[a-z0-9])?(\\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*")
 
@@ -18,7 +18,6 @@ def rfc1123(_, field):
             "\tconsist of lower case alphanumeric characters, '-' or '.', and\n"
             "\tmust start and end with an alphanumeric character"
         )
-
 
 
 class LoginForm(FlaskForm):
@@ -53,7 +52,7 @@ class RegistrationForm(FlaskForm):
                 message="this username is not allowed.",
             ),
             rfc1123,
-            Length(min=4, max=64)
+            Length(min=4, max=64),
         ],
     )
     email = StringField("Email", validators=[DataRequired(), Email()])

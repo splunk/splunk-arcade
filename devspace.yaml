@@ -255,6 +255,8 @@ profiles:
         path: deployments.splunk-arcade.helm.values.portal.blockOnPlayerCloudJob
         value: true
 
+  # note: does *not* run player-cloud things (at least rn) meaning there will be no charts
+  # setup via tf, and no correct links to them
   - name: dev-cabinet
     patches:
       - op: add
@@ -357,6 +359,13 @@ profiles:
               - port: "8080:5000"
 
 pipelines:
+  # override the default deploy pipeline to not bother building dev images
+  deploy:
+    run: |
+      run_dependencies --all
+      build_images cabinet scoreboard portal player-content player-cloud player-router
+      create_deployments --all
+
   # override the default purge pipeline so we can nuke registry and all sorts of other fun stuff
   purge:
     run: |-

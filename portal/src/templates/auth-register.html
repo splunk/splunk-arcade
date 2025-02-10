@@ -85,26 +85,27 @@
                         {% endfor %}
                     </div>
 
-                    <div class="mb-4">
-                        <div class="flex items-start">
-                            <input
-                                    class="form-check-input bg-gray-600 border-gray-500 text-blue-500 focus:ring-blue-500 mt-1 mr-2"
-                                    type="checkbox"
-                                    id="checkbox-signup"
-                            >
-                            <label class="text-gray-300" for="checkbox-signup">
-                                I accept
-                                <a href="javascript:void(0);" class="text-blue-400 hover:text-blue-500">
-                                    Terms and Conditions
-                                </a>
-                            </label>
+                    <div class="flex justify-center">
+                        <div class="mb-4">
+                            <div class="flex items-center">
+                                <input
+                                        class="form-check-input bg-gray-600 border-gray-500 text-blue-500 focus:ring-blue-500 mt-1 mr-2"
+                                        type="checkbox"
+                                        id="checkbox-signup"
+                                >
+                                <label class="text-gray-300" for="checkbox-signup">
+                                    <a href="https://www.splunk.com/en_us/legal/splunk-general-terms.html" class="text-purple-400 hover:text-purple-500">
+                                        I accept Terms and Conditions
+                                    </a>
+                                </label>
+                            </div>
                         </div>
                     </div>
 
                     <div class="text-center mt-4">
                         <a
                                 href="{{ url_for('routes.login') }}"
-                                class="text-blue-400 hover:text-blue-500"
+                                class="text-purple-400 hover:text-purple-500"
                         >
                             Already have an account? Login here
                         </a>
@@ -113,7 +114,7 @@
                     <div class="d-grid text-center mt-6">
                         <button
                                 type="submit"
-                                class="bg-blue-500 text-white py-2 px-4 rounded-lg w-full hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                class="bg-pink-500 text-white py-2 px-4 rounded-lg w-full hover:bg-pink-600 focus:outline-none focus:ring-2 focus:ring-pink-500"
                         >
                             Sign Up
                         </button>
@@ -125,7 +126,7 @@
                     <a
                             href="https://www.splunk.com"
                             target="_blank"
-                            class="text-blue-400 hover:text-blue-500"
+                            class="text-pink-400 hover:text-purple-500"
                     >
                         Splunk
                     </a>
