@@ -103,7 +103,7 @@ def player_cloud_job_create(
 
 
 def _player_cloud_job_complete(player_id: str) -> bool:
-    timeout = 300
+    timeout = 90
     interval = 5
     batch_v1 = client.BatchV1Api()
     start_time = time.time()
@@ -132,7 +132,7 @@ def player_cloud_job_complete(player_id: str) -> bool:
     # ensure config is loaded
     _ = _Config()
 
-    _player_cloud_job_complete(player_id=player_id)
+    return _player_cloud_job_complete(player_id=player_id)
 
 
 def player_deployment_create(player_id: str) -> None:
@@ -255,7 +255,8 @@ def player_deployment_create(player_id: str) -> None:
                             env_from=[
                                 client.V1EnvFromSource(
                                     config_map_ref=client.V1ConfigMapEnvSource(
-                                        name=f"tf-outputs-{player_id}"
+                                        name=f"tf-outputs-{player_id}",
+                                        optional=True,
                                     )
                                 )
                             ],
