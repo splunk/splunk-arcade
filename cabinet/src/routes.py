@@ -19,18 +19,27 @@ PLAYER_NAME = os.getenv("PLAYER_NAME")
 ARCADE_HOST = os.getenv("ARCADE_HOST")
 SCOREBOARD_HOST = os.getenv("SCOREBOARD_HOST")
 PLAYER_CONTENT_HOST = os.getenv("PLAYER_CONTENT_HOST")
+SPLUNK_OBSERVABILITY_REALM = os.getenv("SPLUNK_OBSERVABILITY_REALM", "us1")
 
 IMVADERS_SLOW_VERSION = 0.75
 UNPROCESSABLE_ENTITY = 422
 
-DEFAULT_DASHBOARD_URL = "https://www.splunk.com"
-DASHBOARD_URL_ENV_KEYS = [
-    "dashboard_url",
-    "chart_imvaders_score_url",
-    "chart_imvaders_score_by_player_url",
-    "chart_logger_score_url",
-]
-MAIN_DASHBOARD_URL = os.getenv("dashboard_url", DEFAULT_DASHBOARD_URL)
+
+def _realmify_dashboard_url(url: str) -> str:
+    return url.replace("app.signalfx.com", f"app.{SPLUNK_OBSERVABILITY_REALM}.signalfx.com")
+
+
+DASHBOARD_URLS = {
+    "default": _realmify_dashboard_url("https://app.signalfx.com/#/dashboard/"),
+    "dashboard_url": _realmify_dashboard_url(os.getenv("dashboard_url", "")),
+    "chart_imvaders_score_url": _realmify_dashboard_url(os.getenv("chart_imvaders_score_url", "")),
+    "chart_imvaders_score_by_player_url": _realmify_dashboard_url(
+        os.getenv("chart_imvaders_score_by_player_url", "")
+    ),
+    "chart_logger_score_url": _realmify_dashboard_url(os.getenv("chart_logger_score_url", "")),
+}
+FINAL_DASHBOARD_URL = DASHBOARD_URLS.get("dashboard_url", "") or DASHBOARD_URLS.get("default", "")
+
 
 logging.basicConfig(level=logging.INFO)
 LOGGER = logging.getLogger(f"player_cabinet_{PLAYER_NAME}")
@@ -83,7 +92,7 @@ def home():
         "home.html",
         scoreboard_endpoint=f"http://{ARCADE_HOST}/scoreboard",
         logout_endpoint=f"http://{ARCADE_HOST}/logout",
-        dashboard_home_endpoint=MAIN_DASHBOARD_URL,
+        dashboard_home_endpoint=FINAL_DASHBOARD_URL,
     )
 
 
@@ -107,7 +116,7 @@ def game():
         gamesession=uuid.uuid4(),
         scoreboard_endpoint=f"http://{ARCADE_HOST}/scoreboard",
         logout_endpoint=f"http://{ARCADE_HOST}/logout",
-        dashboard_home_endpoint=MAIN_DASHBOARD_URL,
+        dashboard_home_endpoint=FINAL_DASHBOARD_URL,
     )
 
 
@@ -154,7 +163,13 @@ def get_question(module: str):
         },
     )
 
-    return content.json()
+    question_content = content.json()
+    if question_content.get("link_text") and not question_content.get("link"):
+        # for questions that provide link text but not a specific link we
+        # insert the link we built from tf data + realm info
+        question_content["link"] = FINAL_DASHBOARD_URL
+
+    return jsonify(question_content)
 
 
 @routes.route("/answer", methods=["POST"])
@@ -254,14 +269,3 @@ def log():
     )
 
     return {}
-
-@routes.route("/splunk-dashboard-urls", methods=["GET"])
-def splunk_dashboard_urls():
-    urls = {
-        "default": "https://www.splunk.com/",
-    }
-
-    for k in DASHBOARD_URL_ENV_KEYS:
-        urls[k] = os.environ.get(k, "")
-
-    return jsonify(urls)

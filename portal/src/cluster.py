@@ -135,7 +135,7 @@ def player_cloud_job_complete(player_id: str) -> bool:
     return _player_cloud_job_complete(player_id=player_id)
 
 
-def player_deployment_create(player_id: str) -> None:
+def player_deployment_create(player_id: str, observability_realm: str) -> None:
     if player_id == "devplayer":
         # this is our player for testing/dev, and we prohibit use of this username, so this will
         # only be needed when doing devspace things in which case the deployment/service will
@@ -250,6 +250,10 @@ def player_deployment_create(player_id: str) -> None:
                                 client.V1EnvVar(
                                     name="PLAYER_CONTENT_HOST",
                                     value=PLAYER_CONTENT_HOST,
+                                ),
+                                client.V1EnvVar(
+                                    name="SPLUNK_OBSERVABILITY_REALM",
+                                    value=observability_realm,
                                 ),
                             ],
                             env_from=[

@@ -3,7 +3,6 @@
     {
       "is_fixed_position": true,
       "question": "What does the player score metric tell us about the game’s performance or player behavior?",
-      "link": "https://app.us1.signalfx.com/#/chart/v2/GiePtQJA0AE?groupId=GieD6s3AwAA&configId=GieJakLA4AY&sources%5B%5D=player_name:__PLAYER_NAME__",
       "link_text": "Click here to investigate",
       "choices": [
         {
@@ -27,7 +26,6 @@
     {
       "is_fixed_position": true,
       "question": "If the projectile count is unusually high but scores are low, what might that indicate?",
-      "link": "https://app.us1.signalfx.com/#/chart/v2/GieMpoYAwAM?groupId=GieD6s3AwAA&configId=GieJakLA4AY&sources%5B%5D=player_name:__PLAYER_NAME__",
       "link_text": "Click here to investigate",
       "choices": [
         {
@@ -50,7 +48,6 @@
     },
     {
       "question": "Are player score and projectile count sufficient to evaluate player performance?",
-      "link": "https://app.us1.signalfx.com/#/chart/v2/GieMfAjAwAE?groupId=GieD6s3AwAA&configId=GieKF2eA0AY&startTime=-180d&endTime=Now&sources%5B%5D=player_name:__PLAYER_NAME__",
       "link_text": "Click here to investigate",
       "choices": [
         {
@@ -73,7 +70,6 @@
     },
     {
       "question": "What kind of dashboard would help track player scores and projectile counts over time?",
-      "link": "https://app.us1.signalfx.com/#/chart/v2/GieMpoYAwAM?groupId=GieD6s3AwAA&configId=GieJakLA4AY&sources%5B%5D=player_name:__PLAYER_NAME__",
       "link_text": "Click here to investigate",
       "choices": [
         {
@@ -96,7 +92,6 @@
     },
     {
       "question": "How could you correlate player score trends with projectile counts?",
-      "link": "https://app.us1.signalfx.com/#/chart/v2/GiePhHHA0Bk?groupId=GieD6s3AwAA&configId=GieJakLA4AY&sources%5B%5D=player_name:__PLAYER_NAME__",
       "link_text": "Click here to investigate",
       "choices": [
         {
@@ -119,7 +114,6 @@
     },
     {
       "question": "What thresholds would you set for player score or projectile count to trigger an alert for potential issues?",
-      "link": "https://app.us1.signalfx.com/#/detector/v2/GieRP-3A0AA/edit?startTime=-12h&endTime=Now",
       "link_text": "Click here to investigate",
       "choices": [
         {
@@ -163,7 +157,6 @@
     },
     {
       "question": "What might it mean if projectile counts are high but player scores aren’t increasing?",
-      "link": "https://app.us1.signalfx.com/#/chart/v2/GiePhHHA0Bk?groupId=GieD6s3AwAA&configId=GieJakLA4AY&sources%5B%5D=player_name:__PLAYER_NAME__",
       "link_text": "Click here to investigate",
       "choices": [
         {
@@ -207,7 +200,6 @@
     },
     {
       "question": "What Splunk Observability tool(s) can be used to form a hypothesis on why some players are advancing in levels significantly faster than others?",
-      "link": "https://app.us1.signalfx.com/#/chart/v2/GiePhHHA0Bk?groupId=GieD6s3AwAA&configId=GieJakLA4AY&sources%5B%5D=player_name:__PLAYER_NAME__",
       "link_text": "Click here to investigate",
       "choices": [
         {
