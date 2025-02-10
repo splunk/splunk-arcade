@@ -255,6 +255,8 @@ profiles:
         path: deployments.splunk-arcade.helm.values.portal.blockOnPlayerCloudJob
         value: true
 
+  # note: does *not* run player-cloud things (at least rn) meaning there will be no charts
+  # setup via tf, and no correct links to them
   - name: dev-cabinet
     patches:
       - op: add
