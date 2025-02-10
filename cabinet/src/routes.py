@@ -23,6 +23,12 @@ PLAYER_CONTENT_HOST = os.getenv("PLAYER_CONTENT_HOST")
 IMVADERS_SLOW_VERSION = 0.75
 UNPROCESSABLE_ENTITY = 422
 
+DASHBOARD_URL_ENV_KEYS = [
+    "dashboard_url",
+    "chart_imvaders_score_url",
+    "chart_imvaders_score_by_player_url",
+    "chart_logger_score_url",
+]
 
 logging.basicConfig(level=logging.INFO)
 LOGGER = logging.getLogger(f"player_cabinet_{PLAYER_NAME}")
@@ -244,3 +250,14 @@ def log():
     )
 
     return {}
+
+@routes.route("/splunk-dashboard-urls", methods=["GET"])
+def splunk_dashboard_urls():
+    urls = {
+        "default": "https://www.splunk.com/",
+    }
+
+    for k in DASHBOARD_URL_ENV_KEYS:
+        urls[k] = os.environ.get(k, "")
+
+    return jsonify(urls)

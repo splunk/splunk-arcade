@@ -376,3 +376,5 @@ def splunk_webhook():
             print("non 200 response from clearing incident: ", ret.text)
 
     return jsonify(success=True)
+
+

@@ -46,6 +46,19 @@
         </style>
 
         <script>
+            async function fetchDashboardLink() {
+                try {
+                    const response = await fetch("{{ url_for('routes.splunk_dashboard_urls') }}");
+                    const data = await response.json();
+                    return data.dashboard_url && data.dashboard_url !== ""
+                        ? data.dashboard_url
+                        : data.default;
+                } catch (error) {
+                    console.error("Failed fetching dashboard URLs:", error);
+                    return "";
+                }
+            }
+
             const introModal = document.createElement("div");
             introModal.classList.add(
                 "fixed", "top-1/2", "left-1/2", "transform", "-translate-x-1/2", "-translate-y-1/2",
@@ -61,6 +74,23 @@
             function showIntroModal() {
                 if (localStorage.getItem("visited")) return;
                 localStorage.setItem("visited", "true");
+
+                let dashboard_link = "";
+
+                $.ajax({
+                    type: 'GET',
+                    url: "{{ url_for('routes.splunk_dashboard_urls') }}",
+                    contentType: 'application/json',
+                    success: function(response) {
+                        console.log('available urls:', response);
+                        dashboard_link = response.dashboard_url && response.dashboard_url !== ""
+                            ? response.dashboard_url
+                            : response.default;
+                    },
+                    error: function(error) {
+                        console.log('failed fetching dashboard urls...:', error);
+                    }
+                });
 
                 const overlay = document.createElement("div");
                 overlay.classList.add(
@@ -89,10 +119,15 @@
                 const terminalContent = document.getElementById("terminal-content");
 
                 const customDashboardElement = document.createElement("a");
-                customDashboardElement.setAttribute("href", "https://www.splunk.com");
+                customDashboardElement.setAttribute("href", dashboard_link);
                 customDashboardElement.setAttribute("target", "_blank");
                 customDashboardElement.classList.add("text-cyan-400", "underline");
-                customDashboardElement.textContent = "> INVESTIGATE SMARTER USING THIS CUSTOM DASHBOARD"
+                customDashboardElement.textContent = "> INVESTIGATE SMARTER USING THIS CUSTOM DASHBOARD";
+
+                (async () => {
+                    const dashboard_link = await fetchDashboardLink();
+                    customDashboardElement.setAttribute("href", dashboard_link);
+                })();
 
                 const brElement1 = document.createElement("br");
                 const brElement2 = document.createElement("br");
