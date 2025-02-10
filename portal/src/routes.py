@@ -44,8 +44,6 @@ routes = Blueprint("routes", __name__)
 SPLUNK_OBSERVABILITY_REALM = os.getenv("SPLUNK_OBSERVABILITY_REALM", "")
 SPLUNK_OBSERVABILITY_API_ACCESS_TOKEN = os.getenv("SPLUNK_OBSERVABILITY_API_ACCESS_TOKEN", "")
 
-PLAYER_CLOUD_JOB_POD_BLOCK = os.getenv("PLAYER_CLOUD_JOB_BLOCK", "false").lower() == "true"
-
 
 @routes.before_request
 def before_request():
@@ -144,6 +142,14 @@ def logout():
     return redirect(url_for("routes.login"))
 
 
+def _register(player_id: str):
+    player_cloud_job_completed = player_cloud_job_complete(player_id)
+    print(f"player {player_id} cloud job (tf chart creation) state: {player_cloud_job_completed}")
+
+    player_deployment_create(player_id=player_id)
+    print(f"player {player_id} cabinet deployment complete")
+
+
 @routes.route("/register", methods=["GET", "POST"])
 def register():
     if current_user.is_authenticated:
@@ -162,7 +168,6 @@ def register():
         user.set_password(form.password.data)
         db.session.add(user)
         db.session.commit()
-        flash("Congratulations, you are now a registered user!")
 
         # create the player's job (that creates its charts in o11y cloud) and their deployment
         player_cloud_job_create(
@@ -171,10 +176,10 @@ def register():
             observability_realm=SPLUNK_OBSERVABILITY_REALM,
         )
 
-        if PLAYER_CLOUD_JOB_POD_BLOCK:
-            player_cloud_job_complete(player_id=form.username.data)
+        print(f"player {form.username.data} cloud job created, spawning background thread to wait and create cabinet deployment...")
 
-        player_deployment_create(player_id=form.username.data)
+        executor = ThreadPoolExecutor(max_workers=1)
+        executor.submit(_register, form.username.data)
 
         return redirect(url_for("routes.login"))
 
