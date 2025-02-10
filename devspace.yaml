@@ -369,7 +369,7 @@ pipelines:
   # override the default purge pipeline so we can nuke registry and all sorts of other fun stuff
   purge:
     run: |-
-      [ "$SPLUNK_ARCADE_OBSERVABILITY_API_ACCESS_TOKEN" = REPLACE_ME ] && echo "api token unset" && exit 1
+      bash -c util/purge_token_check.sh
       stop_dev --all
       # must be done prior to cleaning service account! hence why not || true as well!
       APP_NAME=splunk-arcade \
