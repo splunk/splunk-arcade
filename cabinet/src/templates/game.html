@@ -62,6 +62,7 @@
                             return;
                         }
 
+                        window.questionSource = response.source;
                         const question = response.question;
                         const optionsList = document.createElement("ul");
                         optionsList.classList.add("space-y-2");
@@ -184,7 +185,8 @@
                                 title: "{{ data.title }}",
                                 question: quizQuestion,
                                 attempts: attemptsCount,
-                                time_taken: timeTaken
+                                time_taken: timeTaken,
+                                source: window.questionSource
                             }),
                             contentType: 'application/json',
                             success: function(response) {
@@ -324,7 +326,8 @@
         <nav class="bg-gray-800 text-white shadow-md py-2 opacity-90 relative">
             <ul class="flex justify-center space-x-8">
                 <li><a href="{{ url_for('routes.home') }}" class="text-2xl tracking-wide press-start-2p-regular">Home</a></li>
-                <li><a href="{{ scoreboard_endpoint }}" class="text-2xl tracking-wide press-start-2p-regular">Scoreboard</a></li>
+                <li><a href="{{ dashboard_home_endpoint }}" class="text-2xl tracking-wide press-start-2p-regular">Dashboard</a></li>
+                <li><a id="scoreboardLink"  href="#" class="text-2xl tracking-wide press-start-2p-regular">Scoreboard</a></li>
                 <li><a href="{{ logout_endpoint }}" class="text-2xl tracking-wide press-start-2p-regular">Logout</a></li>
             </ul>
 
@@ -474,12 +477,8 @@
 
                 if (prevButton && nextButton) {
                     prevButton.onclick = function () {
-                        if (currentStage >= 1) {
-                            currentStage--;
-                            fetchWalkthroughStage(currentStage);
-                        } else {
-                            alert("You're already at the first stage!");
-                        }
+                        currentStage--;
+                        fetchWalkthroughStage(currentStage);
                     };
 
                     nextButton.onclick = function () {

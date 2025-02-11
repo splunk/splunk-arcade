@@ -2,6 +2,7 @@
   "imvaders": [
     {
       "is_fixed_position": true,
+      "source": "static",
       "question": "In a moment you'll have a dashboard with some data to investigate, including a player score metric. What do you think that metric will tell us about the game’s performance or player behavior?",
       "choices": [
         {
@@ -24,6 +25,7 @@
     },
     {
       "is_fixed_position": true,
+      "source": "static",
       "question": "If the projectile count is unusually high but scores are low, what might that indicate?",
       "link_text": "Click here to investigate",
       "choices": [
@@ -46,6 +48,7 @@
       ]
     },
     {
+      "source": "static",
       "question": "Are player score and projectile count sufficient to evaluate player performance?",
       "link_text": "Click here to investigate",
       "choices": [
@@ -68,6 +71,7 @@
       ]
     },
     {
+      "source": "static",
       "question": "What kind of dashboard would help track player scores and projectile counts over time?",
       "link_text": "Click here to investigate",
       "choices": [
@@ -90,6 +94,7 @@
       ]
     },
     {
+      "source": "static",
       "question": "How could you correlate player score trends with projectile counts?",
       "link_text": "Click here to investigate",
       "choices": [
@@ -112,6 +117,7 @@
       ]
     },
     {
+      "source": "static",
       "question": "What thresholds would you set for player score or projectile count to trigger an alert for potential issues?",
       "link_text": "Click here to investigate",
       "choices": [
@@ -134,6 +140,7 @@
       ]
     },
     {
+      "source": "static",
       "question": "If the average player score drops significantly, how would you use Splunk Observability to find the root cause?",
       "choices": [
         {
@@ -155,6 +162,7 @@
       ]
     },
     {
+      "source": "static",
       "question": "What might it mean if projectile counts are high but player scores aren’t increasing?",
       "link_text": "Click here to investigate",
       "choices": [
@@ -177,6 +185,7 @@
       ]
     },
     {
+      "source": "static",
       "question": "What insights about player behavior can you gain by analyzing trends in projectile usage and scores?",
       "choices": [
         {
@@ -198,6 +207,7 @@
       ]
     },
     {
+      "source": "static",
       "question": "What Splunk Observability tool(s) can be used to form a hypothesis on why some players are advancing in levels significantly faster than others?",
       "link_text": "Click here to investigate",
       "choices": [
@@ -223,6 +233,7 @@
   "logger": [
     {
       "is_fixed_position": true,
+      "source": "static",
       "question": "What type of information should be included in logs to understand player actions in the game?",
       "choices": [
         {
@@ -245,6 +256,7 @@
     },
     {
       "is_fixed_position": true,
+      "source": "static",
       "question": "If logs show frequent \"failure\" events, what might this indicate?",
       "choices": [
         {
@@ -266,6 +278,7 @@
       ]
     },
     {
+      "source": "static",
       "question": "How could you use logs to detect when a player encounters a bug?",
       "choices": [
         {
@@ -287,6 +300,7 @@
       ]
     },
     {
+      "source": "static",
       "question": "Why might logging the position of obstacles during gameplay be useful?",
       "choices": [
         {
@@ -308,6 +322,7 @@
       ]
     },
     {
+      "source": "static",
       "question": "What additional context in logs would help analyze why players fail to complete a level?",
       "choices": [
         {
@@ -329,6 +344,7 @@
       ]
     },
     {
+      "source": "static",
       "question": "If logs show a pattern of players stopping at the same point in the game, what should you investigate?",
       "choices": [
         {
@@ -350,6 +366,7 @@
       ]
     },
     {
+      "source": "static",
       "question": "How could you use logs to determine the impact of introducing a new obstacle type?",
       "choices": [
         {
@@ -371,6 +388,7 @@
       ]
     },
     {
+      "source": "static",
       "question": "What would be the best way to monitor if the game servers are handling player actions correctly?",
       "choices": [
         {
@@ -392,6 +410,7 @@
       ]
     },
     {
+      "source": "static",
       "question": "How can analyzing logs help balance the difficulty of the game?",
       "choices": [
         {
@@ -413,6 +432,7 @@
       ]
     },
     {
+      "source": "static",
       "question": "What is the value of having structured logs in a Frogger game?",
       "choices": [
         {
@@ -436,6 +456,7 @@
   ],
   "bughunt": [
     {
+      "source": "static",
       "question": "What is the meaning of life?",
       "choices": [
         {
@@ -459,6 +480,7 @@
   ],
   "floppybird": [
     {
+      "source": "static",
       "question": "What is the meaning of life?",
       "choices": [
         {
