@@ -39,6 +39,12 @@ def get_quiz_scores():
 
     for key in redis.scan_iter(match="quiz:*"):
         score_entry = redis.hgetall(key)
+
+        if score_entry.get("source", "") != "static":
+            # for now at least we only "score" (like on the scoreboard) static content
+            # -- no ai/dynamic questions count toward score for competition!
+            continue
+
         scoreboard.append(score_entry)
 
     return jsonify(scoreboard)

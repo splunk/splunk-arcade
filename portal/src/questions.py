@@ -13,6 +13,10 @@ OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 SPLUNK_OBSERVABILITY_API_TOKEN = os.getenv("SPLUNK_OBSERVABILITY_API_TOKEN")
 
 
+QUESTION_SOURCE_WEBHOOK_AND_SCRIPT = "webhook+script"
+QUESTION_SOURCE_OPENAI = "openai"
+
+
 class _OpenAiClient:
     _instance = None
 
@@ -71,6 +75,7 @@ def _handle_splunk_webhook_content(app, payload: dict[str, Any]) -> None:
     question_data = yaml.safe_load(payload_question_content)
 
     question = {
+        "source": QUESTION_SOURCE_WEBHOOK_AND_SCRIPT,
         "question": question_data["question"],
         "link": "",
         "link_text": "",
@@ -182,6 +187,7 @@ def _handle_splunk_webhook_content_openai(app, payload: dict[str, Any]) -> None:
 
     question = json.loads(response.choices[0].message.content)
 
+    question["source"] = QUESTION_SOURCE_OPENAI
     question["choices"] = json.dumps(question["choices"])
 
     question_hash = hashlib.sha256()

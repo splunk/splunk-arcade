@@ -62,6 +62,7 @@
                             return;
                         }
 
+                        window.questionSource = response.source;
                         const question = response.question;
                         const optionsList = document.createElement("ul");
                         optionsList.classList.add("space-y-2");
@@ -184,7 +185,8 @@
                                 title: "{{ data.title }}",
                                 question: quizQuestion,
                                 attempts: attemptsCount,
-                                time_taken: timeTaken
+                                time_taken: timeTaken,
+                                source: window.questionSource
                             }),
                             contentType: 'application/json',
                             success: function(response) {
