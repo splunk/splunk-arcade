@@ -324,7 +324,8 @@
         <nav class="bg-gray-800 text-white shadow-md py-2 opacity-90 relative">
             <ul class="flex justify-center space-x-8">
                 <li><a href="{{ url_for('routes.home') }}" class="text-2xl tracking-wide press-start-2p-regular">Home</a></li>
-                <li><a href="{{ scoreboard_endpoint }}" class="text-2xl tracking-wide press-start-2p-regular">Scoreboard</a></li>
+                <li><a href="{{ dashboard_home_endpoint }}" class="text-2xl tracking-wide press-start-2p-regular">Dashboard</a></li>
+                <li><a id="scoreboardLink"  href="#" class="text-2xl tracking-wide press-start-2p-regular">Scoreboard</a></li>
                 <li><a href="{{ logout_endpoint }}" class="text-2xl tracking-wide press-start-2p-regular">Logout</a></li>
             </ul>
 

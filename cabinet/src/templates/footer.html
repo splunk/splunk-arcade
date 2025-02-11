@@ -53,3 +53,12 @@
         checkGameStatus();
     });
 </script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const scoreboardEndpoint = "{{ scoreboard_endpoint }}";
+        const referrer = encodeURIComponent(window.location.href);
+
+        document.getElementById("scoreboardLink").href = `${scoreboardEndpoint}?referrer=${referrer}`;
+    });
+</script>
