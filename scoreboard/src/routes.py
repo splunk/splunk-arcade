@@ -1,6 +1,5 @@
 import hashlib
 import random
-from typing import Any
 
 from flask import Blueprint, abort, jsonify, request
 from opentelemetry import trace
