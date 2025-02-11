@@ -477,12 +477,8 @@
 
                 if (prevButton && nextButton) {
                     prevButton.onclick = function () {
-                        if (currentStage >= 1) {
-                            currentStage--;
-                            fetchWalkthroughStage(currentStage);
-                        } else {
-                            alert("You're already at the first stage!");
-                        }
+                        currentStage--;
+                        fetchWalkthroughStage(currentStage);
                     };
 
                     nextButton.onclick = function () {
