@@ -57,16 +57,22 @@ class ImvadersMetrics(Metrics):
             "title": self.name,
             "version": game_data.get("version", "unknown"),
             "player_name": game_data.get("player_name", "unknown"),
+
+
+
+
+        }
+        values = {
             "score": game_data.get("current_score", 0),
             "projectiles": game_data.get("projectiles", 0),
-            "level": game_data.get("level", 0),
             "duration": game_data.get("duration", 0),
+            "level": game_data.get("level", 0),
         }
 
-        self.score_gauge.set(amount=attributes["score"], attributes=attributes)
-        self.projectile_counter.add(amount=attributes["projectiles"], attributes=attributes)
-        self.level_counter.add(amount=attributes["level"], attributes=attributes)
-        self.duration_counter.add(amount=attributes["duration"], attributes=attributes)
+        self.score_gauge.set(amount=values["score"], attributes=attributes)
+        self.projectile_counter.add(amount=values["projectiles"], attributes=attributes)
+        self.level_counter.add(amount=values["level"], attributes=attributes)
+        self.duration_counter.add(amount=values["duration"], attributes=attributes)
 
 
 class LoggerMetrics(Metrics):
@@ -87,11 +93,19 @@ class LoggerMetrics(Metrics):
         self.initialized = True
 
     def process(self, game_data: dict[str, Any]) -> None:
-        attributes = {
+        values = {
             "score": game_data.get("current_score", 0),
         }
+        attributes = {
+            "title": self.name,
+            "version": game_data.get("version", "unknown"),
+            "player_name": game_data.get("player_name", "unknown"),
 
-        self.score_gauge.set(amount=attributes["score"], attributes=attributes)
+
+
+        }
+
+        self.score_gauge.set(amount=values["score"], attributes=attributes)
 
 
 class BughuntMetrics(Metrics):
@@ -112,11 +126,17 @@ class BughuntMetrics(Metrics):
         self.initialized = True
 
     def process(self, game_data: dict[str, Any]) -> None:
-        attributes = {
+        values = {
             "score": game_data.get("current_score", 0),
         }
+        attributes = {
+            "title": self.name,
+            "version": game_data.get("version", "unknown"),
+            "player_name": game_data.get("player_name", "unknown"),
 
-        self.score_gauge.set(amount=attributes["score"], attributes=attributes)
+        }
+
+        self.score_gauge.set(amount=values["score"], attributes=attributes)
 
 
 def metric_factory(name: str) -> Metrics:
