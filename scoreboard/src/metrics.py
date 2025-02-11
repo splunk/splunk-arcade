@@ -57,11 +57,8 @@ class ImvadersMetrics(Metrics):
             "title": self.name,
             "version": game_data.get("version", "unknown"),
             "player_name": game_data.get("player_name", "unknown"),
-
-
-
-
         }
+
         values = {
             "score": game_data.get("current_score", 0),
             "projectiles": game_data.get("projectiles", 0),
@@ -100,9 +97,6 @@ class LoggerMetrics(Metrics):
             "title": self.name,
             "version": game_data.get("version", "unknown"),
             "player_name": game_data.get("player_name", "unknown"),
-
-
-
         }
 
         self.score_gauge.set(amount=values["score"], attributes=attributes)
@@ -133,7 +127,6 @@ class BughuntMetrics(Metrics):
             "title": self.name,
             "version": game_data.get("version", "unknown"),
             "player_name": game_data.get("player_name", "unknown"),
-
         }
 
         self.score_gauge.set(amount=values["score"], attributes=attributes)
