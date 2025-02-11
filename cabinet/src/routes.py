@@ -1,5 +1,6 @@
 import logging
 import os
+import random
 import uuid
 from datetime import datetime
 
@@ -262,10 +263,23 @@ def are_you_not_entertained():
 def log():
     content = request.get_json(force=True)
 
-    LOGGER.info(
-        f"{content.get("title", "unknown title")} |"
-        f"{datetime.now()} |"
-        f"{content.get("message", "unknown message")}"
+    logf = LOGGER.info
+
+    title = content.get("title", "unknown title")
+    content = content.get("message", "unknown message")
+
+    if title == "logger" and content == "shrinkify them logs":
+        log_messages = [
+            (LOGGER.warning, "Log Shrinkage Detected: Hope you’ve been practicing your jumps!"),
+            (LOGGER.info, "Structural Integrity Failing: This log is now 50% nostalgia."),
+            (LOGGER.error, "Log Density Reduction: Someone forgot to pay the tree rent."),
+            (LOGGER.critical, "Log Vaporization Imminent: Frog insurance not included."),
+            (LOGGER.debug, "Quantum Log Uncertainty: It exists… but also doesn’t."),
+        ]
+        logf, content = random.choice(log_messages)
+
+    logf(
+        f"{title} | {datetime.now()} | {content}"
     )
 
     return {}

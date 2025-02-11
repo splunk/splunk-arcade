@@ -1,5 +1,6 @@
 import hashlib
 import random
+from typing import Any
 
 from flask import Blueprint, abort, jsonify, request
 from opentelemetry import trace
@@ -191,6 +192,26 @@ def reset_player_quiz_scores():
 
 @routes.route("/blackhole_sun", methods=["POST"])
 def blackhole_sun():
+    content = request.get_json()
+
+    current_span = trace.get_current_span()
+    for k, v in content.items():
+        current_span.set_attribute(k, v)
+
+    scoreboard_update = {}
+
+    for k, v in content.items():
+        if isinstance(v, bool) or isinstance(v, list):
+            x = str(v)
+        else:
+            x = v
+        scoreboard_update[k] = x
+
+    try:
+        metric_factory(name=scoreboard_update["title"]).process(game_data=scoreboard_update)
+    except Exception as e:
+        print(f"ignoring metrics exception: {e}")
+
     errors = [
         (400, "Bad Request: Cosmic interference detected."),
         (403, "Forbidden: You lack the necessary gravitation."),
