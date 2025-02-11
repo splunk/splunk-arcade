@@ -2,8 +2,7 @@
   "imvaders": [
     {
       "is_fixed_position": true,
-      "question": "What does the player score metric tell us about the game’s performance or player behavior?",
-      "link_text": "Click here to investigate",
+      "question": "In a moment you'll have a dashboard with some data to investigate, including a player score metric. What do you think that metric will tell us about the game’s performance or player behavior?",
       "choices": [
         {
           "prompt": "It indicates how well players are performing in the game.",

@@ -277,6 +277,24 @@
                             // Inform other code modules that the player has lost a life
                             Frogger.observer.publish("player-lost-life");
 
+                            dict = {
+                                game_session_id: "{{ gamesession }}",
+                                title: "logger",
+                                player_name: "{{ user_username }}",
+                                player_id: "{{ user_uuid }}",
+                                version: "v1.0",
+                                message: "you killed a frog!",
+                                level: _timesAtGoal,
+                                shrinkage: curLongLogWidth
+                            };
+
+                            $.ajax({
+                                type: "POST",
+                                url: '{{ url_for("routes.log") }}',
+                                data: JSON.stringify(dict),
+                                contentType: "application/json",
+                            });
+
                             if (_lives === 0) {
 
                                 // Declare the game to be over if the player has no lives remaining
@@ -350,6 +368,26 @@
                                 data: JSON.stringify(dict),
                                 contentType: "application/json",
                             });
+
+                            if (_score % 50 === 0) {
+                                dict = {
+                                    game_session_id: "{{ gamesession }}",
+                                    title: "logger",
+                                    player_name: "{{ user_username }}",
+                                    player_id: "{{ user_uuid }}",
+                                    version: "v1.0",
+                                    message: "hop hop hop",
+                                    level: _timesAtGoal,
+                                    shrinkage: curLongLogWidth
+                                };
+
+                                $.ajax({
+                                    type: "POST",
+                                    url: '{{ url_for("routes.log") }}',
+                                    data: JSON.stringify(dict),
+                                    contentType: "application/json",
+                                });
+                            }
                         }
 
                         // Define a function to execute once the player reaches the designated goal
@@ -357,14 +395,23 @@
                             // When the player reaches the goal, increase their score by 1000 points
                             increaseScore(1000);
 
-                            // TODO (cm) probably need to log this back on flask land
+                            // Increment the value indicating the total number of times the player's character
+                            // has reached the goal
+                            _timesAtGoal++;
+
+                            curShortLogWidth -= 25;
+                            curMediumLogWidth -= 45;
+                            curLongLogWidth -= 65;
+
                             dict = {
                                 game_session_id: "{{ gamesession }}",
                                 title: "logger",
                                 player_name: "{{ user_username }}",
                                 player_id: "{{ user_uuid }}",
                                 version: "v1.0",
-                                message: "shrinkify them logs",
+                                message: "shrinkify",
+                                level: _timesAtGoal,
+                                shrinkage: curLongLogWidth
                             };
 
                             $.ajax({
@@ -373,14 +420,6 @@
                                 data: JSON.stringify(dict),
                                 contentType: "application/json",
                             });
-
-                            curShortLogWidth -= 25;
-                            curMediumLogWidth -= 45;
-                            curLongLogWidth -= 65;
-
-                            // Increment the value indicating the total number of times the player's character
-                            // has reached the goal
-                            _timesAtGoal++;
 
                             // Freeze the player's character movement temporarily to acknowledge they have
                             // reached the goal

@@ -1,4 +1,5 @@
 import os
+import random
 import uuid
 from concurrent.futures import ThreadPoolExecutor
 from datetime import UTC, datetime
@@ -43,6 +44,16 @@ routes = Blueprint("routes", __name__)
 
 SPLUNK_OBSERVABILITY_REALM = os.getenv("SPLUNK_OBSERVABILITY_REALM", "")
 SPLUNK_OBSERVABILITY_API_ACCESS_TOKEN = os.getenv("SPLUNK_OBSERVABILITY_API_ACCESS_TOKEN", "")
+
+
+WAIT_ARCADE_CHOICES = [
+    "Initializing Terraform to provision your custom dashboards...",
+    "Deploying your player's environment in the Kubernetes cluster...",
+    "Compiling amphibious movement heuristics... 🐸",
+    "Calibrating quantum log stability...",
+    "Defending against rogue Space Invaders... 🚀",
+    "Recalibrating Duck Hunt hitboxes... the dog is still laughing. 🎯🐶",
+]
 
 
 @routes.before_request
@@ -206,7 +217,12 @@ def wait_arcade():
 
         return resp
 
-    return render_template("wait-arcade.html", title="Waiting", user=session)
+    return render_template(
+        "wait-arcade.html",
+        title="Waiting",
+        user=session,
+        message=random.choice(WAIT_ARCADE_CHOICES),
+    )
 
 
 def calculate_quiz_answer_score(
