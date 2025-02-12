@@ -4,6 +4,8 @@
       "is_fixed_position": true,
       "source": "static",
       "question": "In a moment you'll have a dashboard with some data to investigate, including a player score metric. What do you think that metric will tell us about the game’s performance or player behavior?",
+      "link_text": "Click here to investigate service dependencies in Splunk APM!",
+      "static_link": "https://app.us1.signalfx.com/#/apm/troubleshooting?endTime=Now&filters=%7B%22traceFilte[…]%22%5D%7D%5D%7D,%22spanFilters%22:%5B%5D%7D&startTime=-15m",
       "choices": [
         {
           "prompt": "It indicates how well players are performing in the game.",
@@ -20,6 +22,79 @@
         {
           "prompt": "It tracks how fast players are moving.",
           "is_correct": false
+        }
+      ]
+    },
+    {
+      "is_fixed_position": true,
+      "source": "static",
+      "question": "What version of the IMVaders game is more error-prone than the other games?",
+      "link_text": "Click here to investigate using metrics in Splunk IM",
+      "static_link": "https://app.us1.signalfx.com/#/apm/analysis?analyze=errors&endTime=Now&filters=%7B%22traceFilter%22:%7B%22tags%22:%5B%7B%22tag%22:%22sf_environment%22,%22operation%22:%22IN%22,%22values%22:%5B%22gameify%22%5D%7D%5D%7D,%22spanFilters%22:%5B%7B%22tags%22:%5B%7B%22tag%22:%22sf_service%22,%22operation%22:%22IN%22,%22values%22:%5B%22splunk-arcade-scoreboard%22%5D%7D%5D%7D%5D%7D&selected=%5B%7B%22nodeID%22:%22l1jian%22,%22nodeTags%22:%5B%7B%22tagName%22:%22sf_service%22,%22value%22:%22splunk-arcade-scoreboard%22%7D%5D%7D%5D&serviceTo=splunk-arcade-scoreboard&startTime=-1h",
+      "choices": [
+        {
+          "prompt": ".25",
+          "is_correct": false
+        },
+        {
+          "prompt": ".5",
+          "is_correct": false
+        },
+        {
+          "prompt": "1.0",
+          "is_correct": false
+        },
+        {
+          "prompt": ".75",
+          "is_correct": true
+        }
+      ]
+    },
+      {
+      "is_fixed_position": true,
+      "source": "static",
+      "question": "What services does your splunk-arcade-cabinet-player-XXX talk to?",
+      "choices": [
+        {
+          "prompt": "splunk-arcade-scoreboard, splunk-arcade-portal",
+          "is_correct": false
+        },
+        {
+          "prompt": "splunk-arcade-scoreboard, postgres",
+          "is_correct": false
+        },
+        {
+          "prompt": "splunk-arcade-scoreboard, redis",
+          "is_correct": false
+        },
+        {
+          "prompt": "splunk-arcade-scoreboard, postgres, redis",
+          "is_correct": true
+        }
+      ]
+    },
+    {
+      "is_fixed_position": true,
+      "source": "static",
+      "question": "Which endpoint is the culprit of all of those errors?",
+      "link_text": "Click here to investigate using metrics in Splunk IM",
+      "static_link": "https://app.us1.signalfx.com/#/apm/analysis?analyze=errors&endTime=Now&filters=%7B%22traceFilter%22:%7B%22tags%22:%5B%7B%22tag%22:%22sf_environment%22,%22operation%22:%22IN%22,%22values%22:%5B%22gameify%22%5D%7D%5D%7D,%22spanFilters%22:%5B%7B%22tags%22:%5B%7B%22tag%22:%22sf_service%22,%22operation%22:%22IN%22,%22values%22:%5B%22splunk-arcade-scoreboard%22%5D%7D%5D%7D%5D%7D&selected=%5B%7B%22nodeID%22:%22l1jian%22,%22nodeTags%22:%5B%7B%22tagName%22:%22sf_service%22,%22value%22:%22splunk-arcade-scoreboard%22%7D%5D%7D%5D&serviceTo=splunk-arcade-scoreboard&startTime=-1h",
+      "choices": [
+        {
+          "prompt": "/player_progression",
+          "is_correct": false
+        },
+        {
+          "prompt": "/record_quiz_scores",
+          "is_correct": false
+        },
+        {
+          "prompt": "/alive",
+          "is_correct": false
+        },
+        {
+          "prompt": "/blackhole_sun",
+          "is_correct": true
         }
       ]
     },
