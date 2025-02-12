@@ -241,6 +241,12 @@
                         <img src="{{ url_for('static', filename='images/floppy_bird_logo.png') }}" class="w-28 h-28">
                     </div>
 
+                    <div data-game="zelda" class="min-w-[300px] opacity-90 bg-gray-800 p-8 rounded-lg shadow-lg hover:shadow-2xl hover:shadow-cyan-500/50 p-4 flex flex-col items-center cursor-pointer" onclick="submitForm('zelda', 'Are you the Link?', 'zelda.html')">
+                        <h3 class="font-bold text-white text-lg mb-2 text-center">Zelda JS</h3>
+                        <p class="text-gray-400 text-center mb-4">Are you the Link?<br><br></p>
+                        <img src="{{ url_for('static', filename='images/zelda.png') }}" class="w-28 h-28">
+                    </div>
+
                     <div data-game="other" class="min-w-[300px] opacity-90 bg-gray-800 p-8 rounded-lg shadow-lg hover:shadow-2xl hover:shadow-cyan-500/50 p-4 flex flex-col items-center">
                         <h3 class="font-bold text-white text-lg mb-2 text-center">?!</h3>
                         <p class="text-gray-400 text-center mb-4">What could go here?<br><br></p>

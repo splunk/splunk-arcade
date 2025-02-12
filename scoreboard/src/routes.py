@@ -148,6 +148,7 @@ def get_player_progression():
             "bughunt": "locked",
             "doom": "locked",
             "floppybird": "locked",
+            "zelda": "locked",
         },
         "game_versions": {
             "imvaders": "",
@@ -177,6 +178,7 @@ def get_player_progression():
     ):
         progression["level_state"]["doom"] = "unlocked"
         progression["level_state"]["floppybird"] = "unlocked"
+        progression["level_state"]["zelda"] = "unlocked"
 
     return jsonify(progression)
 

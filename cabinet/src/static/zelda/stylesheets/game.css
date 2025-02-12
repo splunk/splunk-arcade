@@ -1,0 +1,97 @@
+/*html body {*/
+/*  margin: 0;*/
+/*  overscroll-behavior-y: none;*/
+/*  min-width: 816px;*/
+/*  background:*/
+/*    radial-gradient(black 15%, transparent 16%) 0 0,*/
+/*    radial-gradient(black 15%, transparent 16%) 8px 8px,*/
+/*    radial-gradient(rgba(255,255,255,.1) 15%, transparent 20%) 0 1px,*/
+/*    radial-gradient(rgba(255,255,255,.1) 15%, transparent 20%) 8px 9px;*/
+/*    background-color:#282828;*/
+/*    background-size:16px 16px;*/
+/*}*/
+
+/*header {*/
+/*  !* position: absolute; *!*/
+/*  padding: 10px;*/
+/*  height: 100px;*/
+/*  width: 776px;*/
+/*  left: 0;*/
+/*  right: 0;*/
+/*  margin: auto;*/
+/*  background-color: grey;*/
+/*  border-radius: 0 0 15px 15px;*/
+/*}*/
+
+canvas {
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin: auto;
+  border: 1px solid silver;
+  border-radius: 15px;
+}
+
+/*footer {*/
+/*  padding: 10px;*/
+/*  height: 100px;*/
+/*  width: 776px;*/
+/*  bottom: 0;*/
+/*  left: 0;*/
+/*  right: 0;*/
+/*  margin: auto;*/
+/*  background-color: grey;*/
+/*  border-radius: 15px 15px 0 0;*/
+/*}*/
+
+
+.fab {
+  color: silver;
+  text-decoration: none;
+  font-size: 35px;
+  float: right;
+  margin: 65px 5px 0 5px;
+}
+
+.fab:hover{
+  color: white;
+  cursor: pointer;
+}
+
+#logo {
+  margin-top: 5px;
+  margin-left: 10px;
+}
+
+#game-container {
+  margin: 20px;
+  height: 704px;
+}
+
+#menu-canvas {
+  z-index: 4;
+}
+
+#sprite-canvas {
+  z-index: 3;
+}
+
+#map-canvas {
+  z-index: 2;
+}
+
+#collision-canvas {
+  z-index: 1;
+}
+
+#canvas-underlayer {
+  background-color: black;
+  height: 696px;
+  width: 768px;
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin: auto;
+  border: 1px solid silver;
+  border-radius: 15px;
+}
