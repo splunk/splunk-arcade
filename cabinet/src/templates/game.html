@@ -354,6 +354,8 @@
                     {% include 'cabinets/bughunt.html' %}
                     {% elif "floppybird" in data.title %}
                     {% include 'cabinets/floppybird.html' %}
+                    {% elif "zelda" in data.title %}
+                    {% include 'cabinets/zelda.html' %}
                     {% endif %}
                     {% endblock %}
                 </div>
@@ -431,6 +433,7 @@
 
                         if (!walkthroughElement) {
                             console.error("Walkthrough element not found");
+
                             return;
                         }
 
@@ -467,6 +470,10 @@
                     },
                     error: function (error) {
                         console.error("Error fetching walkthrough stage:", error);
+
+                        const leftDrawer = document.getElementById('left-drawer');
+
+                        leftDrawer.classList.add('-translate-x-full');
                     },
                 });
             }
