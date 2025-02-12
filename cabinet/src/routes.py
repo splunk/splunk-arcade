@@ -263,11 +263,11 @@ def _logger_log(content: str):
 
     if "shrinkify" in content:
         log_messages = [
-            (LOGGER.warning, "Quantum Log Uncertainty: It exists… but also doesn't."),
+            (LOGGER.warning, "Quantum Log Shrinkage Uncertainty: It exists… but also doesn't."),
             (LOGGER.warning, "Log Shrinkage Detected: Hope you've been practicing your jumps!"),
-            (LOGGER.error, "Structural Integrity Failing: This log is now 50% nostalgia."),
-            (LOGGER.error, "Log Density Reduction: Someone forgot to pay the tree rent."),
-            (LOGGER.critical, "Log Vaporization Imminent: Frog insurance not included."),
+            (LOGGER.error, "Structural Integrity Failing: This log shrinking to 50% nostalgia."),
+            (LOGGER.error, "Log Density Shrinkage: Someone forgot to pay the tree rent."),
+            (LOGGER.critical, "Log Vaporization Imminent: No logs left to shrink."),
         ]
     elif "you killed a frog" in content:
         log_messages = [
