@@ -43,26 +43,45 @@
             .glitch {
                 animation: glitch 0.5s infinite;
             }
+
+            body.blur-background::before {
+                content: "";
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100vw;
+                height: 100vh;
+                backdrop-filter: blur(5px);
+                background: rgba(0, 0, 0, 0.3);
+                z-index: 40;
+            }
         </style>
 
         <script>
             const introModal = document.createElement("div");
+            introModal.id = "introModal";
             introModal.classList.add(
                 "fixed", "top-1/2", "left-1/2", "transform", "-translate-x-1/2", "-translate-y-1/2",
-                "w-3/4", "h-3/4", "rounded-lg", "shadow-lg", "flex", "crt-overlay", "z-50", "p-10", "relative"
+                "w-3/4", "h-3/4", "rounded-lg", "shadow-lg", "flex", "crt-overlay", "z-50", "p-10", "relative",
             );
 
             const startButton = document.createElement("button");
             startButton.classList.add(
                 "bg-white", "text-black", "px-4", "py-2", "rounded-lg", "hover:bg-gray-700",
-                "absolute", "bottom-4", "left-1/2", "-translate-x-1/2", "w-max", "z-50"
+                "absolute", "bottom-4", "left-1/2", "-translate-x-1/2", "w-max", "z-50",
+                "press-start-2p-regular"
             );
             startButton.textContent = "> ENTER THE ARCADE <";
             startButton.setAttribute("id", "startButton");
 
+            const startButtonWrapper = document.createElement("div");
+            startButtonWrapper.classList.add("absolute", "p-4", "bottom-4", "left-0", "w-full", "flex", "justify-center");
+
             function showIntroModal() {
                 if (localStorage.getItem("visited")) return;
                 localStorage.setItem("visited", "true");
+
+                document.body.classList.add("blur-background");
 
                 let dashboard_link = "";
 
@@ -73,16 +92,17 @@
 
                 const img = document.createElement("img");
                 img.src = "{{ url_for('static', filename='images/pwnybtn.png')}}"
-                img.classList.add("absolute", "bottom-4", "left-4", "rounded-lg");
+                img.classList.add("absolute", "w-1/4", "h-auto", "max-w-full", "bottom-4", "left-4", "rounded-lg");
 
                 const text = document.createElement("p");
                 text.id = "terminal-content";
-                text.classList.add("text-lg", "text-left", "press-start-2p-regular", "mb-4", "text-white", "relative", "z-50", "whitespace-pre-wrap");
+                text.classList.add("text-lg", "text-left", "press-start-2p-regular", "mb-4", "text-white", "relative", "z-50", "whitespace-pre-wrap", "overflow-auto", "scrollbar-thumb-gray-500", "scrollbar-track-gray-800");
                 text.style.wordWrap = "break-word";
 
                 introModal.appendChild(overlay);
                 introModal.appendChild(img);
                 introModal.appendChild(text);
+                introModal.appendChild(startButtonWrapper);
                 document.body.appendChild(introModal);
 
                 setTimeout(typeText, 100);
@@ -123,7 +143,6 @@
                     "> LOADING GAME ENGINE...",
                     "> READY!",
                     brElement4,
-                    startButton,
                 ];
 
                 function typeText() {
@@ -148,6 +167,8 @@
                             i++;
                             setTimeout(typeText, speed);
                         }
+                    } else {
+                        startButtonWrapper.appendChild(startButton);
                     }
                 }
 
@@ -166,8 +187,8 @@
 
             document.addEventListener("click", (event) => {
                 if (event.target && event.target.id === "startButton") {
-                    console.log("FOO");
                     introModal.remove();
+                    document.body.classList.remove("blur-background");
                 }
             });
         </script>
