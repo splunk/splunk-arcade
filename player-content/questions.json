@@ -54,6 +54,7 @@
       "is_fixed_position": true,
       "source": "static",
       "question": "What services does your splunk-arcade-cabinet-player-XXX talk to?",
+      "static_link": "https://app.us1.signalfx.com/#/apm/troubleshooting?endTime=Now&filters=%7B%22traceFilter%22:%7B%22tags%22:%5B%7B%22tag%22:%22sf_environment%22,%22operation%22:%22IN%22,%22values%22:%5B%22gameify%22%5D%7D%5D%7D%7D&startTime=-15m",
       "choices": [
         {
           "prompt": "splunk-arcade-scoreboard, splunk-arcade-portal",
