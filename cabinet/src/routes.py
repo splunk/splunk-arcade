@@ -32,12 +32,6 @@ def _realmify_dashboard_url(url: str) -> str:
 
 DASHBOARD_URLS = {
     "default": _realmify_dashboard_url("https://app.signalfx.com/#/dashboard/"),
-    "dashboard_url": _realmify_dashboard_url(os.getenv("dashboard_url", "")),
-    "chart_imvaders_score_url": _realmify_dashboard_url(os.getenv("chart_imvaders_score_url", "")),
-    "chart_imvaders_score_by_player_url": _realmify_dashboard_url(
-        os.getenv("chart_imvaders_score_by_player_url", "")
-    ),
-    "chart_logger_score_url": _realmify_dashboard_url(os.getenv("chart_logger_score_url", "")),
 }
 FINAL_DASHBOARD_URL = DASHBOARD_URLS.get("dashboard_url", "") or DASHBOARD_URLS.get("default", "")
 
@@ -165,7 +159,12 @@ def get_question(module: str):
     )
 
     question_content = content.json()
-    if question_content.get("link_text") and not question_content.get("link"):
+
+    if question_content.get("static_link"):
+        # "static" links are links that only need to have the realm replaced, but are otherwise
+        # just stored directly in the question json
+        question_content["link"] = question_content["static_link"].replace("__REALM__", SPLUNK_OBSERVABILITY_REALM,)
+    elif question_content.get("link_text") and not question_content.get("link"):
         # for questions that provide link text but not a specific link we
         # insert the link we built from tf data + realm info
         question_content["link"] = FINAL_DASHBOARD_URL
