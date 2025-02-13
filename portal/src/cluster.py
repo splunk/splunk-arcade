@@ -59,12 +59,12 @@ def player_cloud_job_create(
                             image_pull_policy=IMAGE_PULL_POLICY,
                             resources=client.V1ResourceRequirements(
                                 requests={
-                                    "cpu": "250m",
+                                    "cpu": "64m",
                                     "memory": "128Mi",
                                 },
                                 limits={
-                                    "cpu": "500m",
-                                    "memory": "512Mi",
+                                    "cpu": "192m",
+                                    "memory": "192Mi",
                                 },
                             ),
                             env=[
@@ -191,11 +191,11 @@ def player_deployment_create(player_id: str, observability_realm: str) -> None:
                             image_pull_policy=IMAGE_PULL_POLICY,
                             resources=client.V1ResourceRequirements(
                                 requests={
-                                    "cpu": "64m",
+                                    "cpu": "32m",
                                     "memory": "128Mi",
                                 },
                                 limits={
-                                    "cpu": "192m",
+                                    "cpu": "128m",
                                     "memory": "192Mi",
                                 },
                             ),
