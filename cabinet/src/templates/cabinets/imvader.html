@@ -109,7 +109,12 @@
         return img;
       }
 
-      const playerShipImg = svgToImage(playerShipSVG);
+      function urlToImage(imgName){
+        const img = new Image();
+        img.src = '../../static/imvaders/' + imgName;
+      }
+
+      const playerShipImg = urlToImage('ship.png');
       const alienShipImgs = alienShipSVGs.map(svgToImage);
 
       // Enemies
