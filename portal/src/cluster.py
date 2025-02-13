@@ -191,12 +191,12 @@ def player_deployment_create(player_id: str, observability_realm: str) -> None:
                             image_pull_policy=IMAGE_PULL_POLICY,
                             resources=client.V1ResourceRequirements(
                                 requests={
-                                    "cpu": "250m",
+                                    "cpu": "64m",
                                     "memory": "128Mi",
                                 },
                                 limits={
-                                    "cpu": "500m",
-                                    "memory": "512Mi",
+                                    "cpu": "192m",
+                                    "memory": "192Mi",
                                 },
                             ),
                             env=[
