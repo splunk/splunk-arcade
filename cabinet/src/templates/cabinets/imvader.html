@@ -127,13 +127,13 @@
 
       // Sounds
       const shootSound = new Audio(
-        "https://assets.mixkit.co/active_storage/sfx/677/677-preview.mp3"
+        "{{ url_for('static', filename='imvaders/laser.mp3') }}"
       );
       const explosionSound = new Audio(
-        "https://assets.mixkit.co/active_storage/sfx/235/235-preview.mp3"
+        "{{ url_for('static', filename='imvaders/explode.mp3') }}"
       );
       const playerHitSound = new Audio(
-        "https://assets.mixkit.co/active_storage/sfx/1014/1014-preview.mp3"
+        "{{ url_for('static', filename='imvaders/glitch.wav') }}"
       );
       const levelUpSound = new Audio(
         "https://assets.mixkit.co/active_storage/sfx/220/220-preview.mp3"
