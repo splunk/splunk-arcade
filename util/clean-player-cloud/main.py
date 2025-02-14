@@ -66,8 +66,6 @@ def main():
     for secret in secrets.items:
         player_id = secret.metadata.name.removeprefix("tfstate-default-")
         job_name = f"{APP_NAME}-player-{player_id}-cloud-cleanup"
-        job_names.append(job_name)
-        secret_names.append(secret.metadata.name)
 
         job = client.V1Job(
             api_version="batch/v1",
@@ -140,16 +138,30 @@ def main():
         try:
             batch_v1.create_namespaced_job(namespace=NAMESPACE, body=job)
         except Exception as exc:
-            print(f"failed creating cleanup job for player {player_id} -- *not* removing secret. exception: {exc}")
+            print(f"failed creating cleanup job for player {player_id}")
 
-            # continue so we leave the state secret
-            continue
+            if "AlreadyExists" in exc.body:
+                print(" error a conflict, we'll remove secret assuming that a job pod already "
+                      "ran for this user...")
+                pass
+            else:
+                print(f"    error *not* a conflict, will not remove secret..., exception: {exc}")
+                # continue so we leave the state secret; but if "conflict" its because there was
+                # already a pod that ran for this
+                continue
+
+        job_names.append(job_name)
+        secret_names.append(secret.metadata.name)
+
 
     for job_name in job_names:
+        print(f"waiting on job {job_name}...")
+
         if not wait_cleanup_job_complete(job_name=job_name):
             print(f"job  {job_name} did not complete in time... there is prolly left over junk")
 
     for secret_name in secret_names:
+        print(f"deleting secret {secret_name}...")
         core_v1.delete_namespaced_secret(namespace=NAMESPACE, name=secret_name)
 
 
