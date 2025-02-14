@@ -10,10 +10,15 @@ MAX_QUESTION_SELECTION_ATTEMPTS = 15
 
 # mapping is obviously game, then count of seen questions: index of question to show (as in the
 # position in the array of the questions.json for the given game)
+# a: b
+# a = position in json (under game, with is_fixed_position=true
+# b = question order
 FIXED_POSITION_QUESTIONS = {
     "imvaders": {
         0: 0,
-        2: 1,
+        1: 1,
+        2: 2,
+        3: 3
     },
     "logger": {
         0: 0,
