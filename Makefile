@@ -43,6 +43,12 @@ build-tailwind: ## Builds tailwind css output files for ui components
 clean-pvcs: ## Cleanup any pvcs for redis/postgres
 	kubectl delete pvc \
 		data-splunk-arcade-postgresql-0 \
+		data-splunk-arcade-postgresql-primary-0 \
+		data-splunk-arcade-postgresql-read-0 \
+		data-splunk-arcade-postgresql-read-1 \
+		data-splunk-arcade-postgresql-read-2 \
+		data-splunk-arcade-postgresql-read-3 \
+		data-splunk-arcade-postgresql-read-4 \
 		redis-data-splunk-arcade-redis-master-0 \
 		redis-data-splunk-arcade-redis-replicas-0 \
 		redis-data-splunk-arcade-redis-replicas-1 \

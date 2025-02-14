@@ -43,6 +43,7 @@ def create_app():
     with app.app_context():
         try:
             db.session.execute(text("SELECT 1"))
+            db.create_all()
         except Exception as exc:
             # violently quit :)
             print(f"db not ready... exception: {exc}")
