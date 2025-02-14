@@ -329,11 +329,11 @@ def log():
     logf = LOGGER.info
 
     title = content.get("title", "unknown title")
-    content = content.get("message", "unknown message")
+    message = content.get("message", "unknown message")
 
     if title == "logger":
-        logf, content = _logger_log(content)
+        logf, message = _logger_log(message)
 
-    logf(f"{title} | {datetime.now()} | {content}")
+    logf(f"title: {title} | message: {message}")
 
     return {}

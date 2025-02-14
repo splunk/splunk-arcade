@@ -1,6 +1,7 @@
 import json
 from redis import StrictRedis
 
+
 def main():
     print("ensure you port forwarded redis, if this fails, thats probably why :)")
 
@@ -31,7 +32,6 @@ def main():
                 out[key] = f"<{key_type} not handled>"
         except Exception as e:
             out[key] = f"Error: {e}"
-
 
     print(json.dumps(out, indent=4))
 
