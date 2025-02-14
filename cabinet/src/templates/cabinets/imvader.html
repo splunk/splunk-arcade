@@ -45,6 +45,9 @@
       const BARRIER_RESOLUTION = 2; // Size of destructible pixels
       const BARRIER_Y = 450; // Vertical position of barriers
 
+      let ufo = null;  // Will store the UFO object when active
+      let lastUfoSpawn = Date.now();  // Tracks time since last UFO spawn
+
       function getVersion() {
         $.ajax({
           type: "GET",
@@ -90,6 +93,8 @@
         "{{ url_for('static', filename='imvaders/a3.png') }}",
       ];
 
+
+
       // Convert SVGs to images
       function svgToImage(svgString) {
         const img = new Image();
@@ -105,10 +110,13 @@
         return img;
       }
 
-      const playerShipImg = urlToImage(
-        "{{ url_for('static', filename='imvaders/ship2.png') }}"
-      );
+      const playerShipImg = urlToImage("{{ url_for('static', filename='imvaders/ship2.png') }}");
+      const ufoImg = urlToImage("{{ url_for('static', filename='imvaders/a4.png') }}");
       const alienShipImgs = alienShipURIs.map(urlToImage);
+
+      // Stars
+      const stars = [];
+      const numStars = 100;
 
       // Enemies
       const enemies = [];
@@ -212,57 +220,57 @@
 
       initBarriers();
 
-  function drawBarriers() {
-    barriers.forEach(barrier => {
-        // First pass: Draw the outer glow using alpha
-        ctx.fillStyle = 'rgba(0, 255, 0, 0.2)';
-        for (let x = 0; x < barrier.pixels.length; x++) {
-            for (let y = 0; y < barrier.pixels[x].length; y++) {
-                if (barrier.pixels[x][y]) {
-                    // Draw larger rectangle for glow
-                    ctx.fillRect(
-                        barrier.x + x * BARRIER_RESOLUTION - 2,
-                        barrier.y + y * BARRIER_RESOLUTION - 2,
-                        BARRIER_RESOLUTION + 4,
-                        BARRIER_RESOLUTION + 4
-                    );
+      function drawBarriers() {
+        barriers.forEach(barrier => {
+            // First pass: Draw the outer glow using alpha
+            ctx.fillStyle = 'rgba(0, 255, 0, 0.2)';
+            for (let x = 0; x < barrier.pixels.length; x++) {
+                for (let y = 0; y < barrier.pixels[x].length; y++) {
+                    if (barrier.pixels[x][y]) {
+                        // Draw larger rectangle for glow
+                        ctx.fillRect(
+                            barrier.x + x * BARRIER_RESOLUTION - 2,
+                            barrier.y + y * BARRIER_RESOLUTION - 2,
+                            BARRIER_RESOLUTION + 4,
+                            BARRIER_RESOLUTION + 4
+                        );
+                    }
                 }
             }
-        }
 
-        // Second pass: Draw the inner glow
-        ctx.fillStyle = 'rgba(0, 255, 0, 0.4)';
-        for (let x = 0; x < barrier.pixels.length; x++) {
-            for (let y = 0; y < barrier.pixels[x].length; y++) {
-                if (barrier.pixels[x][y]) {
-                    // Draw medium rectangle for inner glow
-                    ctx.fillRect(
-                        barrier.x + x * BARRIER_RESOLUTION - 1,
-                        barrier.y + y * BARRIER_RESOLUTION - 1,
-                        BARRIER_RESOLUTION + 2,
-                        BARRIER_RESOLUTION + 2
-                    );
+            // Second pass: Draw the inner glow
+            ctx.fillStyle = 'rgba(0, 255, 0, 0.4)';
+            for (let x = 0; x < barrier.pixels.length; x++) {
+                for (let y = 0; y < barrier.pixels[x].length; y++) {
+                    if (barrier.pixels[x][y]) {
+                        // Draw medium rectangle for inner glow
+                        ctx.fillRect(
+                            barrier.x + x * BARRIER_RESOLUTION - 1,
+                            barrier.y + y * BARRIER_RESOLUTION - 1,
+                            BARRIER_RESOLUTION + 2,
+                            BARRIER_RESOLUTION + 2
+                        );
+                    }
                 }
             }
-        }
 
-        // Final pass: Draw the solid barrier pixels
-        ctx.fillStyle = '#00ff00';
-        for (let x = 0; x < barrier.pixels.length; x++) {
-            for (let y = 0; y < barrier.pixels[x].length; y++) {
-                if (barrier.pixels[x][y]) {
-                    // Draw actual barrier pixel
-                    ctx.fillRect(
-                        barrier.x + x * BARRIER_RESOLUTION,
-                        barrier.y + y * BARRIER_RESOLUTION,
-                        BARRIER_RESOLUTION,
-                        BARRIER_RESOLUTION
-                    );
+            // Final pass: Draw the solid barrier pixels
+            ctx.fillStyle = '#00ff00';
+            for (let x = 0; x < barrier.pixels.length; x++) {
+                for (let y = 0; y < barrier.pixels[x].length; y++) {
+                    if (barrier.pixels[x][y]) {
+                        // Draw actual barrier pixel
+                        ctx.fillRect(
+                            barrier.x + x * BARRIER_RESOLUTION,
+                            barrier.y + y * BARRIER_RESOLUTION,
+                            BARRIER_RESOLUTION,
+                            BARRIER_RESOLUTION
+                        );
+                    }
                 }
             }
-        }
-    });
-}
+        });
+    }
 
       // Add damage to barrier at specific coordinates
       function damageBarrier(barrier, hitX, hitY, radius = 2) {
@@ -289,60 +297,94 @@
         }
       }
 
-      // Check collision between point and barrier
+          // Check collision between point and barrier
       function checkBarrierCollision(x, y) {
-        for (let barrier of barriers) {
-          if (
-            x >= barrier.x &&
-            x < barrier.x + barrier.width &&
-            y >= barrier.y &&
-            y < barrier.y + barrier.height
-          ) {
-            const barrierX = Math.floor((x - barrier.x) / BARRIER_RESOLUTION);
-            const barrierY = Math.floor((y - barrier.y) / BARRIER_RESOLUTION);
-
+          for (let barrier of barriers) {
             if (
-              barrierX >= 0 &&
-              barrierX < barrier.pixels.length &&
-              barrierY >= 0 &&
-              barrierY < barrier.pixels[0].length &&
-              barrier.pixels[barrierX][barrierY]
+              x >= barrier.x &&
+              x < barrier.x + barrier.width &&
+              y >= barrier.y &&
+              y < barrier.y + barrier.height
             ) {
-              damageBarrier(barrier, x, y);
-              return true;
+              const barrierX = Math.floor((x - barrier.x) / BARRIER_RESOLUTION);
+              const barrierY = Math.floor((y - barrier.y) / BARRIER_RESOLUTION);
+
+              if (
+                barrierX >= 0 &&
+                barrierX < barrier.pixels.length &&
+                barrierY >= 0 &&
+                barrierY < barrier.pixels[0].length &&
+                barrier.pixels[barrierX][barrierY]
+              ) {
+                damageBarrier(barrier, x, y);
+                return true;
+              }
             }
           }
+          return false;
         }
-        return false;
-      }
 
       function checkEnemyBarrierCollisions() {
-        enemies.forEach((enemy) => {
-          barriers.forEach((barrier) => {
-            if (
-              enemy.y + enemy.height >= barrier.y &&
-              enemy.x < barrier.x + barrier.width &&
-              enemy.x + enemy.width > barrier.x
-            ) {
-              // Create multiple damage points across the enemy width
-              const damagePoints = 5;
-              for (let i = 0; i < damagePoints; i++) {
-                const damageX =
-                  enemy.x + enemy.width * (i / (damagePoints - 1));
-                damageBarrier(barrier, damageX, barrier.y, 3); // Larger damage radius
-              }
+          enemies.forEach((enemy) => {
+            barriers.forEach((barrier) => {
+              if (
+                enemy.y + enemy.height >= barrier.y &&
+                enemy.x < barrier.x + barrier.width &&
+                enemy.x + enemy.width > barrier.x
+              ) {
+                // Create multiple damage points across the enemy width
+                const damagePoints = 5;
+                for (let i = 0; i < damagePoints; i++) {
+                  const damageX =
+                    enemy.x + enemy.width * (i / (damagePoints - 1));
+                  damageBarrier(barrier, damageX, barrier.y, 3); // Larger damage radius
+                }
 
-              // Play explosion sound for dramatic effect
-              //explosionSound.currentTime = 0;
-              //explosionSound.play();
-            }
+                // Play explosion sound for dramatic effect
+                //explosionSound.currentTime = 0;
+                //explosionSound.play();
+              }
+            });
           });
-        });
+        }
+
+      function spawnUFO() {
+        const direction = Math.random() < 0.5 ? 1 : -1;  // Randomly choose direction
+        const startX = direction === 1 ? -50 : canvas.width + 50;  // Start off-screen
+      
+        ufo = {
+          x: startX,
+          y: 30,
+          width: 40,
+          height: 20,
+          speed: 3 * direction
+        };
       }
 
-      // Stars
-      const stars = [];
-      const numStars = 100;
+      function updateUFO() {
+        if (!ufo) {
+          // Chance to spawn new UFO if enough time has passed
+          if (Date.now() - lastUfoSpawn > 10000 && Math.random() < 0.01) {
+            spawnUFO();
+            lastUfoSpawn = Date.now();
+          }
+          return;
+        }
+
+        // Move UFO
+        ufo.x += ufo.speed;
+
+        // Remove UFO if it goes off screen
+        if ((ufo.speed > 0 && ufo.x > canvas.width + 50) || 
+            (ufo.speed < 0 && ufo.x < -50)) {
+          ufo = null;
+        }
+      }
+
+      function drawUFO() {
+        if (!ufo) return;
+        ctx.drawImage(ufoImg, ufo.x, ufo.y, ufo.width, ufo.height);
+      }
 
       // Update and draw stars
       function updateStars() {
@@ -408,7 +450,26 @@
             bullets.splice(index, 1);
           }
 
-          // Check barrier collision first
+          // Check UFO collision
+          if (ufo && 
+              bullet.x < ufo.x + ufo.width &&
+              bullet.x + bullet.width > ufo.x &&
+              bullet.y < ufo.y + ufo.height &&
+              bullet.y + bullet.height > ufo.y) {
+            bullets.splice(index, 1);
+            score += 100;
+            ufo = null;
+            explosionSound.currentTime = 0;
+            explosionSound.play();
+            drawScore({
+              Score: score,
+              Lives: lives,
+              Level: level,
+            });
+            return;
+          }
+
+          // Check barrier collision 
           if (checkBarrierCollision(bullet.x + bullet.width / 2, bullet.y)) {
             bullets.splice(index, 1);
             return;
@@ -601,7 +662,7 @@
 
       let isMuted = true;
 
-      // Define button position and size
+          // Define button position and size
       const muteButtonWidth = 75;
       const muteButtonHeight = 30;
       const muteButtonX = 10;
@@ -793,6 +854,9 @@
           player.height
         );
 
+        updateUFO();
+        drawUFO();
+
         // Move and draw enemies
         moveEnemies();
         enemies.forEach((enemy) => {
@@ -827,26 +891,28 @@
       }
 
       function restartGame() {
-        score = 0;
-        lives = 3;
-        level = 1;
-        gameOver = false;
-        gameDuration = 0;
-        enemyDirection = 1;
-        enemySpeed = 1;
-        player.x = 375;
-        player.y = 530;
-        bullets.length = 0;
-        enemyBullets.length = 0;
-        initEnemies();
-        initBarriers();
-        getVersion();
-      }
+            score = 0;
+            lives = 3;
+            level = 1;
+            gameOver = false;
+            gameDuration = 0;
+            enemyDirection = 1;
+            enemySpeed = 1;
+            player.x = 375;
+            player.y = 530;
+            bullets.length = 0;
+            enemyBullets.length = 0;
+            ufo = null;
+            lastUfoSpawn = Date.now();
+            initEnemies();
+            initBarriers();
+            getVersion();
+          }
 
       // Key states
       const keys = {};
 
-      // Event listeners
+     // Event listeners
       document.addEventListener("keydown", (e) => {
         keys[e.code] = true;
         if (e.code === "Space") {
@@ -864,20 +930,21 @@
         }
       });
       document.addEventListener("keyup", (e) => {
-        keys[e.code] = false;
-      });
+            keys[e.code] = false;
+          });
 
-      // Start the game loop when all images are loaded
-      Promise.all([
-        playerShipImg.decode(),
-        ...alienShipImgs.map((img) => img.decode()),
-      ])
-        .then(() => {
-          gameLoop();
-        })
-        .catch((err) => {
-          console.error("Error loading images:", err);
-        });
+          // Start the game loop when all images are loaded
+          Promise.all([
+            playerShipImg.decode(),
+            ...alienShipImgs.map((img) => img.decode()),
+            ufoImg.decode()
+          ])
+            .then(() => {
+              gameLoop();
+            })
+            .catch((err) => {
+              console.error("Error loading images:", err);
+            });
     </script>
   </body>
 </html>
