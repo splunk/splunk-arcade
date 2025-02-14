@@ -250,10 +250,6 @@ profiles:
         path: images.player-router.tags
         value:
           - ${COMMIT_HASH}
-      # block on player job pod completion
-      - op: add
-        path: deployments.splunk-arcade.helm.values.portal.blockOnPlayerCloudJob
-        value: true
 
   # note: does *not* run player-cloud things (at least rn) meaning there will be no charts
   # setup via tf, and no correct links to them
