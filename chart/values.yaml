@@ -21,10 +21,13 @@ redis:
     enabled: false
 
 postgresql:
+  architecture: standalone
   auth:
     enablePostgresUser: true
     password: "password"
     database: "myapp"
+  primary:
+    resourcesPreset: "medium"
 
 tls:
   enabled: false

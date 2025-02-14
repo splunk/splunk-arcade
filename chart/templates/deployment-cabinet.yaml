@@ -86,8 +86,15 @@ spec:
               value: http://$(NODE_IP):13133
             - name: SECRET_KEY
               value: "SECRET_KEY"
+            - name: POSTGRES_ARCHITECTURE
+              value: "{{ $.Values.postgresql.architecture }}"
+            {{- if (eq $.Values.postgresql.architecture "standalone") }}
             - name: DATABASE_URL
               value: "postgresql://postgres:password@{{ $.Values.appName }}-postgresql/myapp"
+            {{- else }}
+            - name: DATABASE_URL
+              value: "postgresql://postgres:password@{{ $.Values.appName }}-postgresql-primary/myapp"
+            {{- end }}
             - name: REDIS_HOST
               value: "{{ $.Values.appName }}-redis-master"
             - name: OTEL_SERVICE_NAME
