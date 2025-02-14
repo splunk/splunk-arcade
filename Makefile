@@ -65,4 +65,13 @@ clean-players: ## Cleanup any created player deployments
 		--no-headers -o custom-columns=":metadata.name" \
 		| xargs -I {} kubectl delete jobs {}
 
-clean-all: clean-players clean-pvcs ## Cleanup all cruft from cluster
+clean-hanging-configmaps-and-secrets: ## Cleans any secrets/configmaps that didnt get cleaned up
+	kubectl get configmaps -l "app.kubernetes.io/name=splunk-arcade-player-cloud-outputs" \
+		--no-headers -o custom-columns=":metadata.name" \
+		| xargs -I {} kubectl delete configmaps {}
+	kubectl get secrets -l "app.kubernetes.io/name=splunk-arcade-player-cloud-state" \
+		--no-headers -o custom-columns=":metadata.name" \
+		| xargs -I {} kubectl delete secrets {}
+
+
+clean-all: clean-players clean-hanging-configmaps-and-secrets clean-pvcs ## Cleanup all cruft from cluster
