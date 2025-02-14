@@ -250,6 +250,17 @@ profiles:
         path: images.player-router.tags
         value:
           - ${COMMIT_HASH}
+      # bigger postgres for "prod"
+      - op: add
+        path: deployments.splunk-arcade.helm.values.postgresql
+        value:
+          architecture: replication
+          readReplicas:
+            replicaCount: 5
+          primary:
+            # probably much larger than necessary, but... cant hurt  (see bitname base chart for
+            # sizes)
+            resourcesPreset: "medium"
 
   # note: does *not* run player-cloud things (at least rn) meaning there will be no charts
   # setup via tf, and no correct links to them
