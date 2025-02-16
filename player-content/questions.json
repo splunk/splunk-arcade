@@ -4,7 +4,7 @@
       "is_fixed_position": true,
       "source": "static",
       "question": "What version of the IMVaders game is more error-prone than the other games?",
-      "link_text": "Click here to investigate using metrics in Splunk IM",
+      "link_text": "Click here to investigate using indexed tags in Splunk APM",
       "static_link": "https://app.__REALM__.signalfx.com/#/apm/analysis?analyze=errors&endTime=Now&filters=%7B%22traceFilter%22:%7B%22tags%22:%5B%7B%22tag%22:%22sf_environment%22,%22operation%22:%22IN%22,%22values%22:%5B%22gameify%22%5D%7D%5D%7D,%22spanFilters%22:%5B%7B%22tags%22:%5B%7B%22tag%22:%22sf_service%22,%22operation%22:%22IN%22,%22values%22:%5B%22splunk-arcade-scoreboard%22%5D%7D%5D%7D%5D%7D&selected=%5B%7B%22nodeID%22:%22l1jian%22,%22nodeTags%22:%5B%7B%22tagName%22:%22sf_service%22,%22value%22:%22splunk-arcade-scoreboard%22%7D%5D%7D%5D&serviceTo=splunk-arcade-scoreboard&startTime=-1h",
       "choices": [
         {
@@ -29,6 +29,7 @@
       "is_fixed_position": true,
       "source": "static",
       "question": "What services does your splunk-arcade-cabinet-player-__PLAYER_NAME__ talk to?",
+      "link_text": "Click here to see your game cabinet, and dependencies, in an APM map",
       "static_link": "https://app.__REALM__.signalfx.com/#/apm/troubleshooting?endTime=Now&filters=%7B%22traceFilter%22:%7B%22tags%22:%5B%7B%22tag%22:%22sf_environment%22,%22operation%22:%22IN%22,%22values%22:%5B%22gameify%22%5D%7D%5D%7D%7D&startTime=-15m",
       "choices": [
         {
