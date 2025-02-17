@@ -37,16 +37,16 @@
           "is_correct": false
         },
         {
-          "prompt": "splunk-arcade-scoreboard, postgres",
+          "prompt": "splunk-arcade-scoreboard, splunk-arcade-portal, postgres, redis",
           "is_correct": false
         },
         {
-          "prompt": "splunk-arcade-scoreboard, redis",
-          "is_correct": false
+          "prompt": "splunk-arcade-scoreboard, splunk-arcade-player-content, posgres, redis",
+          "is_correct": true
         },
         {
           "prompt": "splunk-arcade-scoreboard, postgres, redis",
-          "is_correct": true
+          "is_correct": false
         }
       ]
     },
@@ -79,7 +79,6 @@
       "is_fixed_position": true,
       "source": "static",
       "question": "If the projectile count is unusually high but scores are low, what might that indicate?",
-      "link_text": "Click here to investigate",
       "choices": [
         {
           "prompt": "Players might be missing the alien targets frequently.",
