@@ -58,6 +58,10 @@
             #canvas {
                 z-index: 2;
             }
+            
+            #foreground-canvas {
+                z-index: 3
+            }
         </style>
     </head>
     <body class="canvas-container">
@@ -65,7 +69,8 @@
             <div class="canvas-stack">
             <canvas id="background-canvas" class="canvas" width="960" height="1280"></canvas>
             <canvas id="canvas" class="canvas" width="960" height="1280"></canvas>
-                </div>
+            <canvas id="foreground-canvas" class="canvas" width="960" height="1280"></canvas>
+            </div>
             <script>
                 const defaultShortLogWidth = 190;
                 const defaultMediumLogWidth = 254;
@@ -93,6 +98,10 @@
 
                             // Get a reference to the background <canvas> element's 2-D drawing surface context
                             backgroundDrawingSurface = backgroundCanvas.getContext("2d"),
+                            
+                            // Set a foreground, for the game over screen
+                            foregroundCanvas = document.getElementById("foreground-canvas"),
+                            foregroundDrawingSurface = foregroundCanvas.getContext("2d"),
 
                             // Get a reference to the <canvas> element's width and height, in pixels
                             drawingSurfaceWidth = canvas.width,
@@ -107,8 +116,10 @@
                             drawingSurfaceWidth: drawingSurfaceWidth,
                             drawingSurfaceHeight: drawingSurfaceHeight,
 
-                            // Expose the background <canvas> element's 2-D drawing surface context
+                            // Expose the background and foreground <canvas> element's 2-D drawing surface context
                             backgroundDrawingSurface: backgroundDrawingSurface,
+                            foregroundDrawingSurface: foregroundDrawingSurface,
+
 
                             // Define an object containing references to directions the characters in our game can
                             // move in. We define it here globally for use across our whole code base
@@ -490,6 +501,7 @@
                                 // game board so we can redraw the player's character and obstacles in their
                                 // new positions
                                 Frogger.drawingSurface.clearRect(0, 0, Frogger.drawingSurfaceWidth, Frogger.drawingSurfaceHeight);
+                                Frogger.foregroundDrawingSurface.clearRect(0, 0, Frogger.drawingSurfaceWidth, Frogger.drawingSurfaceHeight);
 
                                 if (!_isPlayerFrozen) {
 
@@ -1040,9 +1052,9 @@
 
                             // Use the Arcade Classic font as previously defined, and write the text centered
                             // around the given drawing position in white
-                            Frogger.drawingSurface.font = _font;
-                            Frogger.drawingSurface.textAlign = "center";
-                            Frogger.drawingSurface.fillStyle = "#FFF";
+                            Frogger.foregroundDrawingSurface.font = _font;
+                            Frogger.foregroundDrawingSurface.textAlign = "center";
+                            Frogger.foregroundDrawingSurface.fillStyle = "#FFF";
 
                             // Write the text center aligned within the <canvas> and at the 9th row position
                             // from the top of the game board
@@ -1053,7 +1065,7 @@
 
                             const lines = text.split("\n");
                             lines.forEach((line, i) => {
-                                Frogger.drawingSurface.fillText(line, Frogger.drawingSurfaceWidth / 2, _gameBoard.rows[9+i]);
+                                Frogger.foregroundDrawingSurface.fillText(line, Frogger.drawingSurfaceWidth / 2, _gameBoard.rows[8+i]);
                             });
 
                             function handleContinue(event) {
@@ -1079,13 +1091,13 @@
 
                             // Use the Arcade Classic font as previously defined, and write the text centered
                             // around the given drawing position in yellow (hex value #FF0)
-                            Frogger.drawingSurface.font = _font;
-                            Frogger.drawingSurface.textAlign = "center";
-                            Frogger.drawingSurface.fillStyle = "#FF0";
+                            Frogger.foregroundDrawingSurface.font = _font;
+                            Frogger.foregroundDrawingSurface.textAlign = "center";
+                            Frogger.foregroundDrawingSurface.fillStyle = "#FF0";
 
                             // Write the text center aligned within the <canvas> and at the 9th row position
                             // from the top of the game board
-                            Frogger.drawingSurface.fillText("YOU WIN!", Frogger.drawingSurfaceWidth / 2, _gameBoard.rows[9]);
+                            Frogger.foregroundDrawingSurface.fillText("YOU WIN!", Frogger.drawingSurfaceWidth / 2, _gameBoard.rows[8]);
 
                             pauseLoop = true;
                             unlockQuizQuestion();
@@ -1094,7 +1106,7 @@
 
                             const lines = text.split("\n");
                             lines.forEach((line, i) => {
-                                Frogger.drawingSurface.fillText(line, Frogger.drawingSurfaceWidth / 2, _gameBoard.rows[9+i]);
+                                Frogger.foregroundDrawingSurface.fillText(line, Frogger.drawingSurfaceWidth / 2, _gameBoard.rows[8+i]);
                             });
 
                             function handleContinue(event) {
