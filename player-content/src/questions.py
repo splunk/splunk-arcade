@@ -92,7 +92,11 @@ class _Questions:
         if fixed_question_data:
             maybe_fixed_question_index = fixed_question_data.get(len(seen_questions), None)
             if maybe_fixed_question_index is not None:
-                return self.content[module][maybe_fixed_question_index]
+                the_question = self.content[module][maybe_fixed_question_index]
+                the_question["question"] = the_question["question"].replace("__PLAYER_NAME__", player_name)
+                if "link" in the_question:
+                    the_question["link"] = the_question["link"].replace("__PLAYER_NAME__", player_name)
+                return the_question
 
         attempts = 0
 
@@ -108,6 +112,9 @@ class _Questions:
                 )
 
             if maybe_question and maybe_question["question"] not in seen_questions:
+                maybe_question["question"] = maybe_question["question"].replace(
+                    "__PLAYER_NAME__", player_name
+                )
                 if "link" in maybe_question:
                     maybe_question["link"] = maybe_question["link"].replace(
                         "__PLAYER_NAME__", player_name
