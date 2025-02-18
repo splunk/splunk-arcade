@@ -11,7 +11,11 @@ IMAGE_PULL_POLICY = os.getenv("IMAGE_PULL_POLICY") or "IfNotPresent"
 ARCADE_HOST = os.getenv("ARCADE_HOST") or "www.splunkarcade.com"
 PLAYER_CONTENT_HOST = os.getenv("PLAYER_CONTENT_HOST") or f"{APP_NAME}-player-content"
 POSTGRES_ARCHITECTURE = os.getenv("POSTGRES_ARCHITECTURE") or "standalone"
-POSTGRES_URL = f"postgresql://postgres:password@{APP_NAME}-postgresql/myapp" if POSTGRES_ARCHITECTURE == "standalone" else f"postgresql://postgres:password@{APP_NAME}-postgresql-read/myapp"
+POSTGRES_URL = (
+    f"postgresql://postgres:password@{APP_NAME}-postgresql/myapp"
+    if POSTGRES_ARCHITECTURE == "standalone"
+    else f"postgresql://postgres:password@{APP_NAME}-postgresql-read/myapp"
+)
 
 
 class _Config:

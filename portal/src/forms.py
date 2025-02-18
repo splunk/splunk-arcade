@@ -2,6 +2,7 @@ import re
 
 import sqlalchemy as sa
 from flask_wtf import FlaskForm
+from markupsafe import Markup
 from wtforms import BooleanField, PasswordField, StringField, SubmitField, TextAreaField
 from wtforms.validators import DataRequired, Email, EqualTo, Length, NoneOf, ValidationError
 
@@ -59,6 +60,16 @@ class RegistrationForm(FlaskForm):
     email = StringField("Email", validators=[DataRequired(), Email()])
     password = PasswordField("Password", validators=[DataRequired()])
     password2 = PasswordField("Repeat Password", validators=[DataRequired(), EqualTo("password")])
+    accept_tos = BooleanField(
+        Markup(
+            """<a 
+                    href="https://www.splunk.com/en_us/legal/splunk-general-terms.html" 
+                    class="text-purple-400 hover:text-purple-500">
+                I accept Terms and Conditions
+            </a>"""
+        ),
+        validators=[DataRequired()],
+    )
     submit = SubmitField("Register")
 
     def validate_username(self, username):

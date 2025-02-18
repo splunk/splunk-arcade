@@ -5,7 +5,7 @@
       "source": "static",
       "question": "What version of the IMVaders game is more error-prone than the other versions?",
       "link_text": "Click here to investigate using indexed tags in Splunk APM",
-      "static_link": "https://app.__REALM__.signalfx.com/#/apm/analysis?analyze=errors&endTime=Now&filters=%7B%22traceFilter%22:%7B%22tags%22:%5B%7B%22tag%22:%22sf_environment%22,%22operation%22:%22IN%22,%22values%22:%5B%22gameify%22%5D%7D%5D%7D,%22spanFilters%22:%5B%7B%22tags%22:%5B%7B%22tag%22:%22sf_service%22,%22operation%22:%22IN%22,%22values%22:%5B%22splunk-arcade-scoreboard%22%5D%7D%5D%7D%5D%7D&selected=%5B%7B%22nodeID%22:%22l1jian%22,%22nodeTags%22:%5B%7B%22tagName%22:%22sf_service%22,%22value%22:%22splunk-arcade-scoreboard%22%7D%5D%7D%5D&serviceTo=splunk-arcade-scoreboard&startTime=-1h",
+      "link": "https://app.__REALM__.signalfx.com/#/apm/analysis?analyze=errors&endTime=Now&filters=%7B%22traceFilter%22:%7B%22tags%22:%5B%7B%22tag%22:%22sf_environment%22,%22operation%22:%22IN%22,%22values%22:%5B%22gameify%22%5D%7D%5D%7D,%22spanFilters%22:%5B%7B%22tags%22:%5B%7B%22tag%22:%22sf_service%22,%22operation%22:%22IN%22,%22values%22:%5B%22splunk-arcade-scoreboard%22%5D%7D%5D%7D%5D%7D&selected=%5B%7B%22nodeID%22:%22l1jian%22,%22nodeTags%22:%5B%7B%22tagName%22:%22sf_service%22,%22value%22:%22splunk-arcade-scoreboard%22%7D%5D%7D%5D&serviceTo=splunk-arcade-scoreboard&startTime=-1h",
       "choices": [
         {
           "prompt": ".25",
@@ -30,7 +30,7 @@
       "source": "static",
       "question": "Which endpoint is the culprit of all of those errors?",
       "link_text": "Click here to investigate using Tag Spotlight in Splunk APM",
-      "static_link": "https://app.__REALM__.signalfx.com/#/apm/analysis?analyze=errors&endTime=Now&filters=%7B%22traceFilter%22:%7B%22tags%22:%5B%7B%22tag%22:%22sf_environment%22,%22operation%22:%22IN%22,%22values%22:%5B%22gameify%22%5D%7D%5D%7D,%22spanFilters%22:%5B%7B%22tags%22:%5B%7B%22tag%22:%22sf_service%22,%22operation%22:%22IN%22,%22values%22:%5B%22splunk-arcade-scoreboard%22%5D%7D%5D%7D%5D%7D&selected=%5B%7B%22nodeID%22:%22l1jian%22,%22nodeTags%22:%5B%7B%22tagName%22:%22sf_service%22,%22value%22:%22splunk-arcade-scoreboard%22%7D%5D%7D%5D&serviceTo=splunk-arcade-scoreboard&startTime=-1h",
+      "link": "https://app.__REALM__.signalfx.com/#/apm/analysis?analyze=errors&endTime=Now&filters=%7B%22traceFilter%22:%7B%22tags%22:%5B%7B%22tag%22:%22sf_environment%22,%22operation%22:%22IN%22,%22values%22:%5B%22gameify%22%5D%7D%5D%7D,%22spanFilters%22:%5B%7B%22tags%22:%5B%7B%22tag%22:%22sf_service%22,%22operation%22:%22IN%22,%22values%22:%5B%22splunk-arcade-scoreboard%22%5D%7D%5D%7D%5D%7D&selected=%5B%7B%22nodeID%22:%22l1jian%22,%22nodeTags%22:%5B%7B%22tagName%22:%22sf_service%22,%22value%22:%22splunk-arcade-scoreboard%22%7D%5D%7D%5D&serviceTo=splunk-arcade-scoreboard&startTime=-1h",
       "choices": [
         {
           "prompt": "/player_progression",
@@ -100,7 +100,7 @@
       "source": "static",
       "question": "What services does your splunk-arcade-cabinet-player-__PLAYER_NAME__ talk to?",
       "link_text": "Click here to see your game cabinet, and dependencies, in an APM map",
-      "static_link": "https://app.__REALM__.signalfx.com/#/apm/troubleshooting?endTime=Now&filters=%7B%22traceFilter%22:%7B%22tags%22:%5B%7B%22tag%22:%22sf_environment%22,%22operation%22:%22IN%22,%22values%22:%5B%22gameify%22%5D%7D%5D%7D,%22spanFilters%22:%5B%7B%22tags%22:%5B%7B%22tag%22:%22sf_service%22,%22operation%22:%22IN%22,%22values%22:%5B%22splunk-arcade-cabinet-player-__PLAYER_NAME__%22%5D%7D%5D%7D%5D%7D&selected=%5B%7B%22nodeID%22:%225gvum%22,%22nodeTags%22:%5B%7B%22tagName%22:%22sf_service%22,%22value%22:%22splunk-arcade-cabinet-player-__PLAYER_NAME__%22%7D%5D%7D%5D&startTime=-15m",
+      "link": "https://app.__REALM__.signalfx.com/#/apm/troubleshooting?endTime=Now&filters=%7B%22traceFilter%22:%7B%22tags%22:%5B%7B%22tag%22:%22sf_environment%22,%22operation%22:%22IN%22,%22values%22:%5B%22gameify%22%5D%7D%5D%7D,%22spanFilters%22:%5B%7B%22tags%22:%5B%7B%22tag%22:%22sf_service%22,%22operation%22:%22IN%22,%22values%22:%5B%22splunk-arcade-cabinet-player-__PLAYER_NAME__%22%5D%7D%5D%7D%5D%7D&selected=%5B%7B%22nodeID%22:%225gvum%22,%22nodeTags%22:%5B%7B%22tagName%22:%22sf_service%22,%22value%22:%22splunk-arcade-cabinet-player-__PLAYER_NAME__%22%7D%5D%7D%5D&startTime=-15m",
       "choices": [
         {
           "prompt": "splunk-arcade-scoreboard, splunk-arcade-portal",
@@ -278,7 +278,7 @@
       "source": "static",
       "question": "You'll have a dashboard with some data to investigate, including a player score metric. What do you think that metric will tell us about the game’s performance or player behavior?",
       "link_text": "Click here to investigate service dependencies in Splunk APM!",
-      "static_link": "https://app.__REALM__.signalfx.com/#/apm/troubleshooting?endTime=Now&filters=%7B%22traceFilte[…]%22%5D%7D%5D%7D,%22spanFilters%22:%5B%5D%7D&startTime=-15m",
+      "link": "https://app.__REALM__.signalfx.com/#/apm/troubleshooting?endTime=Now&filters=%7B%22traceFilte[…]%22%5D%7D%5D%7D,%22spanFilters%22:%5B%5D%7D&startTime=-15m",
       "choices": [
         {
           "prompt": "It indicates how well players are performing in the game.",
@@ -328,7 +328,7 @@
       "source": "static",
       "question": "The logs are trying to WARN you about something. What is it?",
       "link_text": "Click here to investigate in Splunk Log Observer",
-      "static_link": "https://app.__REALM__.signalfx.com/#/logs?SI=%7B%22selectedIndexes%22:%5B%7B%22__typename%22:%22SplunkEnterpriseIndex%22,%22indexID%22:%22GjxB7u0A0AA:history%22,%22name%22:%22history%22%7D,%7B%22__typename%22:%22SplunkEnterpriseIndex%22,%22indexID%22:%22GjxB7u0A0AA:main%22,%22name%22:%22main%22%7D,%7B%22__typename%22:%22SplunkEnterpriseIndex%22,%22indexID%22:%22GjxB7u0A0AA:splunk-arcade%22,%22name%22:%22splunk-arcade%22%7D,%7B%22__typename%22:%22SplunkEnterpriseIndex%22,%22indexID%22:%22GjxB7u0A0AA:splunklogger%22,%22name%22:%22splunklogger%22%7D,%7B%22__typename%22:%22SplunkEnterpriseIndex%22,%22indexID%22:%22GjxB7u0A0AA:summary%22,%22name%22:%22summary%22%7D%5D%7D&astate=%7B%22isStreaming%22:false,%22showLiveTail%22:false,%22liveTailOn%22:false%7D&iq=%7B%22selectedIntegrationId%22:%22GjxB7u0A0AA%22%7D&qd=%7B%22timeRange%22:%7B%22earliest%22:%22-15m%22,%22latest%22:%22now%22%7D,%22filters%22:%5B%7B%22kind%22:%22FIELD%22,%22values%22:%5B%22logger%22%5D,%22field%22:%7B%22name%22:%22title%22%7D,%22type%22:%22include%22,%22isNumeric%22:false%7D,%7B%22kind%22:%22FIELD%22,%22values%22:%5B%22kube:container:player%22%5D,%22field%22:%7B%22name%22:%22sourcetype%22%7D,%22type%22:%22include%22,%22isNumeric%22:false%7D%5D,%22aggregations%22:%5B%7B%22field%22:%22All%20(*)%22,%22aggregationFn%22:%22COUNT%22%7D%5D,%22groupings%22:%5B%7B%22field%22:%22severity%22%7D%5D,%22resolution%22:10,%22limit%22:10000,%22summaryLimit%22:150000,%22searchTimeRules%22:%5B%5D,%22useTopRecords%22:150000%7D",
+      "link": "https://app.__REALM__.signalfx.com/#/logs?SI=%7B%22selectedIndexes%22:%5B%7B%22__typename%22:%22SplunkEnterpriseIndex%22,%22indexID%22:%22GjxB7u0A0AA:history%22,%22name%22:%22history%22%7D,%7B%22__typename%22:%22SplunkEnterpriseIndex%22,%22indexID%22:%22GjxB7u0A0AA:main%22,%22name%22:%22main%22%7D,%7B%22__typename%22:%22SplunkEnterpriseIndex%22,%22indexID%22:%22GjxB7u0A0AA:splunk-arcade%22,%22name%22:%22splunk-arcade%22%7D,%7B%22__typename%22:%22SplunkEnterpriseIndex%22,%22indexID%22:%22GjxB7u0A0AA:splunklogger%22,%22name%22:%22splunklogger%22%7D,%7B%22__typename%22:%22SplunkEnterpriseIndex%22,%22indexID%22:%22GjxB7u0A0AA:summary%22,%22name%22:%22summary%22%7D%5D%7D&astate=%7B%22isStreaming%22:false,%22showLiveTail%22:false,%22liveTailOn%22:false%7D&iq=%7B%22selectedIntegrationId%22:%22GjxB7u0A0AA%22%7D&qd=%7B%22timeRange%22:%7B%22earliest%22:%22-15m%22,%22latest%22:%22now%22%7D,%22filters%22:%5B%7B%22kind%22:%22FIELD%22,%22values%22:%5B%22logger%22%5D,%22field%22:%7B%22name%22:%22title%22%7D,%22type%22:%22include%22,%22isNumeric%22:false%7D,%7B%22kind%22:%22FIELD%22,%22values%22:%5B%22kube:container:player%22%5D,%22field%22:%7B%22name%22:%22sourcetype%22%7D,%22type%22:%22include%22,%22isNumeric%22:false%7D%5D,%22aggregations%22:%5B%7B%22field%22:%22All%20(*)%22,%22aggregationFn%22:%22COUNT%22%7D%5D,%22groupings%22:%5B%7B%22field%22:%22severity%22%7D%5D,%22resolution%22:10,%22limit%22:10000,%22summaryLimit%22:150000,%22searchTimeRules%22:%5B%5D,%22useTopRecords%22:150000%7D",
       "choices": [
         {
           "prompt": "The frog should try to find some flies.",
