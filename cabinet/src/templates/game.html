@@ -25,7 +25,13 @@
                 );
 
                 const messageContent = document.createElement("div");
-                messageContent.textContent = `Hey, you're pretty good! You unlocked ${gameId}!`;
+
+                if (gameId === "zelda") {
+                    messageContent.textContent = `Hey, you're pretty good! You unlocked the rest of the games, go have some fun!`;
+                } else {
+                    messageContent.textContent = `Hey, you're pretty good! You unlocked ${gameId}!`;
+                }
+
                 messageContent.classList.add("mb-4");
 
                 const closeButton = document.createElement("button");
