@@ -79,6 +79,9 @@ spec:
               value: "{{ $.Values.appName }}-scoreboard"
             - name: REDIS_HOST
               value: "{{ $.Values.appName }}-redis-master"
+            # player content needs this to update links and such
+            - name: SPLUNK_OBSERVABILITY_REALM
+              value: "{{ index $.Values "splunk-otel-collector" "splunkObservability" "realm" }}"
           ports:
             - name: http
               containerPort: 5000

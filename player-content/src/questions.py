@@ -4,6 +4,8 @@ from random import choice, randint, random
 
 from redis import StrictRedis
 
+SPLUNK_OBSERVABILITY_REALM = os.getenv("SPLUNK_OBSERVABILITY_REALM", "us1")
+
 # for now, 30% of the time we'll try to use a ai gen question
 OPENAI_QUESTION_CHANCE_THRESHOLD = 0.3
 MAX_QUESTION_SELECTION_ATTEMPTS = 15
@@ -96,8 +98,10 @@ class _Questions:
             if maybe_fixed_question_index is not None:
                 the_question = self.content[module][maybe_fixed_question_index]
                 the_question["question"] = the_question["question"].replace("__PLAYER_NAME__", player_name)
-                if "static_link" in the_question:
-                    the_question["static_link"] = the_question["static_link"].replace("__PLAYER_NAME__", player_name)
+                if "link" in the_question:
+                    the_question["link"] = the_question["link"].replace("__PLAYER_NAME__", player_name)
+                    the_question["link"] = the_question["link"].replace("__REALM__", SPLUNK_OBSERVABILITY_REALM,)
+
                 return the_question
 
         attempts = 0

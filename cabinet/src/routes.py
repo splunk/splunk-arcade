@@ -159,11 +159,7 @@ def get_question(module: str):
 
     question_content = content.json()
 
-    if question_content.get("static_link"):
-        # "static" links are links that only need to have the realm replaced, but are otherwise
-        # just stored directly in the question json
-        question_content["link"] = question_content["static_link"].replace("__REALM__", SPLUNK_OBSERVABILITY_REALM,)
-    elif question_content.get("link_text") and not question_content.get("link"):
+    if question_content.get("link_text") and not question_content.get("link"):
         # for questions that provide link text but not a specific link we
         # insert the link we built from tf data + realm info
         question_content["link"] = FINAL_DASHBOARD_URL
