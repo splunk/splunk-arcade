@@ -94,8 +94,8 @@ class _Questions:
             if maybe_fixed_question_index is not None:
                 the_question = self.content[module][maybe_fixed_question_index]
                 the_question["question"] = the_question["question"].replace("__PLAYER_NAME__", player_name)
-                if "link" in the_question:
-                    the_question["link"] = the_question["link"].replace("__PLAYER_NAME__", player_name)
+                if "static_link" in the_question:
+                    the_question["static_link"] = the_question["static_link"].replace("__PLAYER_NAME__", player_name)
                 return the_question
 
         attempts = 0
