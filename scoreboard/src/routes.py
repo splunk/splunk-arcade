@@ -10,7 +10,11 @@ from src.metrics import metric_factory
 routes = Blueprint("routes", __name__)
 
 NUM_IMVADERS_QUESTIONS_TO_UNLOCK_VERSION_1_75 = 3
-NUM_QUESTIONS_TO_UNLOCK_NEXT = 4
+
+NUM_QUESTIONS_TO_UNLOCK_NEXT = {
+    "imvaders": 5,
+}
+DEFAULT_NUM_QUESTIONS_TO_UNLOCK_NEXT = 4
 
 
 @routes.route("/alive", methods=["GET"])
@@ -162,11 +166,15 @@ def get_player_progression():
     ]
 
     for index, module in enumerate(modules[:-1]):
+        num_questions_to_unlock_next = NUM_QUESTIONS_TO_UNLOCK_NEXT.get(
+            module, DEFAULT_NUM_QUESTIONS_TO_UNLOCK_NEXT
+        )
+
         question_keys = redis.scan_iter(match=f"quiz:{player_name}:{module}:*")
 
         question_count = sum(1 for _ in question_keys)
 
-        if question_count >= NUM_QUESTIONS_TO_UNLOCK_NEXT:
+        if question_count >= num_questions_to_unlock_next:
             progression["level_state"][modules[index + 1]] = "unlocked"
 
         if module == "imvaders" and question_count >= NUM_IMVADERS_QUESTIONS_TO_UNLOCK_VERSION_1_75:
