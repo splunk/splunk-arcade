@@ -101,7 +101,6 @@
     {
       "source": "static",
       "question": "Are player score and projectile count sufficient to evaluate player performance?",
-      "link_text": "Click here to investigate",
       "choices": [
         {
           "prompt": "No, additional metrics like player health (lives remaining) might be useful.",
@@ -124,7 +123,6 @@
     {
       "source": "static",
       "question": "What kind of dashboard would help track player scores and projectile counts over time?",
-      "link_text": "Click here to investigate",
       "choices": [
         {
           "prompt": "A real-time graph plotting scores and projectile counts.",
@@ -147,7 +145,6 @@
     {
       "source": "static",
       "question": "How could you correlate player score trends with projectile counts?",
-      "link_text": "Click here to investigate",
       "choices": [
         {
           "prompt": "By analyzing how projectile counts increase as scores change.",
@@ -170,7 +167,6 @@
     {
       "source": "static",
       "question": "What thresholds would you set for player score or projectile count to trigger an alert for potential issues?",
-      "link_text": "Click here to investigate",
       "choices": [
         {
           "prompt": "Values based on typical player behavior during normal gameplay.",
@@ -215,7 +211,6 @@
     {
       "source": "static",
       "question": "What might it mean if projectile counts are high but player scores aren’t increasing?",
-      "link_text": "Click here to investigate",
       "choices": [
         {
           "prompt": "Players are using a lot of projectiles without hitting the alien targets.",
@@ -260,7 +255,6 @@
     {
       "source": "static",
       "question": "What Splunk Observability tool(s) can be used to form a hypothesis on why some players are advancing in levels significantly faster than others?",
-      "link_text": "Click here to investigate",
       "choices": [
         {
           "prompt": "Breakdown tool",
