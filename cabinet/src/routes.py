@@ -2,7 +2,6 @@ import logging
 import os
 import random
 import uuid
-from datetime import datetime
 
 import requests
 from flask import Blueprint, jsonify, redirect, render_template, request, url_for
