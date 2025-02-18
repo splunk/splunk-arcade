@@ -23,7 +23,8 @@ FIXED_POSITION_QUESTIONS = {
     },
     "logger": {
         0: 0,
-        2: 1,
+        1: 1,
+        2: 2,
     },
     "bughunt": {},
     "floppybird": {},
