@@ -265,18 +265,18 @@ def _logger_log(content: str):
         log_messages = [
             (LOGGER.warning, "Quantum Log Shrinkage Uncertainty: It exists… but also doesn't."),
             (LOGGER.warning, "Log Shrinkage Detected: Hope you've been practicing your jumps!"),
-            (LOGGER.error, "Structural Integrity Failing: This log shrinking to 50% nostalgia."),
-            (LOGGER.error, "Log Density Shrinkage: Someone forgot to pay the tree rent."),
-            (LOGGER.critical, "Log Vaporization Imminent: No logs left to shrink."),
+            (LOGGER.warning, "Structural Integrity Failing: This log shrinking to 50% nostalgia."),
+            (LOGGER.warning, "Log Density Shrinkage: Someone forgot to pay the tree rent."),
+            (LOGGER.warning, "Log Vaporization Imminent: No logs left to shrink."),
         ]
     elif "you killed a frog" in content:
         log_messages = [
             (
-                LOGGER.warning,
+                LOGGER.critical,
                 "Amphibian Anomaly: You exist in a quantum state of both 'ribbit' and 'rib-GONE'.",
             ),
             (
-                LOGGER.warning,
+                LOGGER.critical,
                 "Toad Traffic Violation: Failure to yield to a semi-truck. Penalty: one life.",
             ),
             (LOGGER.error, "Frog Detour Failed: Turns out the river was just hungry today."),
