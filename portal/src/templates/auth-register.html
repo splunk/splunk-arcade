@@ -88,17 +88,16 @@
                     <div class="flex justify-center">
                         <div class="mb-4">
                             <div class="flex items-center">
-                                <input
-                                        class="form-check-input bg-gray-600 border-gray-500 text-blue-500 focus:ring-blue-500 mt-1 mr-2"
-                                        type="checkbox"
-                                        id="checkbox-signup"
-                                >
-                                <label class="text-gray-300" for="checkbox-signup">
-                                    <a href="https://www.splunk.com/en_us/legal/splunk-general-terms.html" class="text-purple-400 hover:text-purple-500">
-                                        I accept Terms and Conditions
-                                    </a>
-                                </label>
+                                {{ form.accept_tos(class="form-check-input bg-gray-600 border-gray-500 text-blue-500 focus:ring-blue-500 mt-1 mr-2") }}
+                                <div>
+                                    <label class="text-gray-300">
+                                        {{ form.accept_tos.label }}
+                                    </label>
+                                </div>
                             </div>
+                            {% for error in form.accept_tos.errors %}
+                            <span class="text-red-500 text-sm">[{{ error }}]</span>
+                            {% endfor %}
                         </div>
                     </div>
 
