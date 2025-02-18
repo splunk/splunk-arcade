@@ -329,6 +329,6 @@ def log():
     if title == "logger":
         logf, message = _logger_log(message)
 
-    logf(f"title: \"{title}\" | message: \"{message}\"")
+    logf(f'title: "{title}" | message: "{message}"')
 
     return {}

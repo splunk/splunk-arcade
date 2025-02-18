@@ -158,7 +158,9 @@ def _register(player_id: str):
         player_cloud_job_completed = player_cloud_job_complete(
             player_id=player_id,
         )
-        print(f"player {player_id} cloud job (tf chart creation) state: {player_cloud_job_completed}")
+        print(
+            f"player {player_id} cloud job (tf chart creation) state: {player_cloud_job_completed}"
+        )
 
     player_deployment_create(
         player_id=player_id,
