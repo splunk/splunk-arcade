@@ -28,11 +28,9 @@ UNPROCESSABLE_ENTITY = 422
 def _realmify_dashboard_url(url: str) -> str:
     return url.replace("app.signalfx.com", f"app.{SPLUNK_OBSERVABILITY_REALM}.signalfx.com")
 
-
-DASHBOARD_URLS = {
-    "default": _realmify_dashboard_url("https://app.signalfx.com/#/dashboard/"),
-}
-FINAL_DASHBOARD_URL = DASHBOARD_URLS.get("dashboard_url", "") or DASHBOARD_URLS.get("default", "")
+FINAL_DASHBOARD_URL = _realmify_dashboard_url(
+    os.getenv("dashboard_url", "https://app.signalfx.com/#/dashboard/"),
+)
 
 
 logging.basicConfig(level=logging.INFO)
