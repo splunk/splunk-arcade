@@ -306,7 +306,7 @@
       "question": "What type of information should be included in logs to understand player actions in the game?",
       "choices": [
         {
-          "prompt": "Player actions like movements, collisions, and level completion.",
+          "prompt": "Player ID, and actions like movements, collisions, and level completion.",
           "is_correct": true
         },
         {
@@ -318,7 +318,7 @@
           "is_correct": false
         },
         {
-          "prompt": "The  player’s name",
+          "prompt": "The version of kubernetes it is deployed in.",
           "is_correct": false
         }
       ]
