@@ -378,7 +378,7 @@
       "source": "static",
       "question": "What is the longest jinja span?",
       "link_text": "Click here to see the trace",
-      "link": "https://app.us1.signalfx.com/#/apm/traces/da24bd449d4150153fd6a2c2c218ad15",
+      "link": "https://app.__REALM__.signalfx.com/#/apm/traces/da24bd449d4150153fd6a2c2c218ad15",
       "choices": [
         {
           "prompt": "jinja2.render",
@@ -395,6 +395,31 @@
         {
           "prompt": "jinja2.hair_color",
           "is_correct": false
+        }
+      ]
+    },
+    {
+      "is_fixed_position": true,
+      "source": "static",
+      "question": "What are the number of pods running at this time?",
+      "link_text": "Click here to view kubernetes navigator",
+      "link": "https://app.__REALM__.signalfx.com/#/infra/entity/k8sdeployments?dashboardId=GbkHF6BA4WY&endTimeUTC=1740008760000&mapSelection=splunk-arcade-player-router%20%7C%20splunk-arcade%20%7C%20gamify&metricClass=default&startTimeUTC=1739994360000",
+      "choices": [
+        {
+          "prompt": "2",
+          "is_correct": false
+        },
+        {
+          "prompt": "3",
+          "is_correct": false
+        },
+        {
+          "prompt": "4",
+          "is_correct": false
+        },
+        {
+          "prompt": "5",
+          "is_correct": true
         }
       ]
     },
