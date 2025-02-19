@@ -132,6 +132,10 @@ class _Questions:
                     maybe_question["link"] = maybe_question["link"].replace(
                         "__PLAYER_NAME__", player_name
                     )
+                    maybe_question["link"] = maybe_question["link"].replace(
+                        "__REALM__",
+                        SPLUNK_OBSERVABILITY_REALM,
+                    )
 
                 return maybe_question
 
