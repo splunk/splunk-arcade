@@ -399,7 +399,6 @@
       ]
     },
     {
-      "is_fixed_position": true,
       "source": "static",
       "question": "If logs show frequent \"failure\" events, what might this indicate?",
       "choices": [
