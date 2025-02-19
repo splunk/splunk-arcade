@@ -351,6 +351,56 @@
     {
       "is_fixed_position": true,
       "source": "static",
+      "question": "What's the score from this trace?",
+      "link_text": "Click here to see the trace",
+      "link": "https://app.__REALM__.signalfx.com/#/apm/traces/3517415934adc33fc4bf553d4d7bb1ec",
+      "choices": [
+        {
+          "prompt": "250",
+          "is_correct": false
+        },
+        {
+          "prompt": "370",
+          "is_correct": true
+        },
+        {
+          "prompt": "490",
+          "is_correct": false
+        },
+        {
+          "prompt": "1,000,000",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "is_fixed_position": true,
+      "source": "static",
+      "question": "What is the longest jinja span?",
+      "link_text": "Click here to see the trace",
+      "link": "https://app.us1.signalfx.com/#/apm/traces/da24bd449d4150153fd6a2c2c218ad15",
+      "choices": [
+        {
+          "prompt": "jinja2.render",
+          "is_correct": true
+        },
+        {
+          "prompt": "jinja2.load",
+          "is_correct": false
+        },
+        {
+          "prompt": "jinja2.compile",
+          "is_correct": false
+        },
+        {
+          "prompt": "jinja2.hair_color",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "is_fixed_position": true,
+      "source": "static",
       "question": "If logs show frequent \"failure\" events, what might this indicate?",
       "choices": [
         {
