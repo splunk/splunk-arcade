@@ -14,13 +14,12 @@ RFC1123_PATTERN = re.compile(r"[a-z0-9]([-a-z0-9]*[a-z0-9])?(\\.[a-z0-9]([-a-z0-
 
 def rfc1123(_, field):
     match = RFC1123_PATTERN.match(field.data)
-    if match.group() != field.data:
+    if match is None or match.group() != field.data:
         raise ValidationError(
             "Username must be valid RFC1123 style, this means: \n"
             "\tconsist of lower case alphanumeric characters, '-' or '.', and\n"
             "\tmust start and end with an alphanumeric character"
         )
-
 
 class LoginForm(FlaskForm):
     username = StringField("Username", validators=[DataRequired()])
