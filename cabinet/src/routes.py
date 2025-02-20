@@ -246,6 +246,18 @@ def get_imvaders_version():
     return {"version": ret.json()["game_versions"].get("imvaders") or 0.75}
 
 
+@routes.route("/get_logger_shrink_state", methods=["GET"])
+def get_logger_shrink_state():
+    ret = requests.get(
+        f"http://{SCOREBOARD_HOST}/player_progression",
+        headers={
+            "Player-Name": PLAYER_NAME,
+        },
+    )
+
+    return {"version": ret.json()["game_versions"].get("logger") or 1.29}
+
+
 @routes.route("/are_you_not_entertained", methods=["GET", "POST"])
 def are_you_not_entertained():
     return render_template("doom.html")

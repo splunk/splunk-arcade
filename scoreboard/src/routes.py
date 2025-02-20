@@ -10,6 +10,7 @@ from src.metrics import metric_factory
 routes = Blueprint("routes", __name__)
 
 NUM_IMVADERS_QUESTIONS_TO_UNLOCK_VERSION_1_75 = 3
+NUM_LOGGERS_QUESTIONS_TO_UNLOCK_VERSION_4_20 = 3
 
 NUM_QUESTIONS_TO_UNLOCK_NEXT = {
     "imvaders": 5,
@@ -156,6 +157,7 @@ def get_player_progression():
         },
         "game_versions": {
             "imvaders": "",
+            "logger": "1.0",
         },
     }
 
@@ -179,6 +181,9 @@ def get_player_progression():
 
         if module == "imvaders" and question_count >= NUM_IMVADERS_QUESTIONS_TO_UNLOCK_VERSION_1_75:
             progression["game_versions"]["imvaders"] = 1.75
+
+        if module == "logger" and question_count >= NUM_LOGGERS_QUESTIONS_TO_UNLOCK_VERSION_4_20:
+            progression["game_versions"]["logger"] = 4.20
 
     if (
         progression["level_state"]["logger"] == "unlocked"

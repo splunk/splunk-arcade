@@ -72,6 +72,8 @@
             <canvas id="foreground-canvas" class="canvas" width="960" height="1280"></canvas>
             </div>
             <script>
+                var enableShrinkify = true;
+
                 const defaultShortLogWidth = 190;
                 const defaultMediumLogWidth = 254;
                 const defaultLongLogWidth = 392;
@@ -410,27 +412,29 @@
                             // has reached the goal
                             _timesAtGoal++;
 
-                            curShortLogWidth -= 25;
-                            curMediumLogWidth -= 45;
-                            curLongLogWidth -= 65;
+                            if (enableShrinkify) {
+                                curShortLogWidth -= 25;
+                                curMediumLogWidth -= 45;
+                                curLongLogWidth -= 65;
 
-                            dict = {
-                                game_session_id: "{{ gamesession }}",
-                                title: "logger",
-                                player_name: "{{ user_username }}",
-                                player_id: "{{ user_uuid }}",
-                                version: "v1.0",
-                                message: "shrinkify",
-                                level: _timesAtGoal,
-                                shrinkage: curLongLogWidth
-                            };
+                                dict = {
+                                    game_session_id: "{{ gamesession }}",
+                                    title: "logger",
+                                    player_name: "{{ user_username }}",
+                                    player_id: "{{ user_uuid }}",
+                                    version: "v1.0",
+                                    message: "shrinkify",
+                                    level: _timesAtGoal,
+                                    shrinkage: curLongLogWidth
+                                };
 
-                            $.ajax({
-                                type: "POST",
-                                url: '{{ url_for("routes.log") }}',
-                                data: JSON.stringify(dict),
-                                contentType: "application/json",
-                            });
+                                $.ajax({
+                                    type: "POST",
+                                    url: '{{ url_for("routes.log") }}',
+                                    data: JSON.stringify(dict),
+                                    contentType: "application/json",
+                                });
+                            }
 
                             // Freeze the player's character movement temporarily to acknowledge they have
                             // reached the goal
@@ -532,6 +536,23 @@
                         // each frame of the game graphics and checks for collisions between the player's
                         // character and any obstacles on the game board
                         function start() {
+                            // TODO AJAX HERE TO GET SHRINK OR NOT
+                            $.ajax({
+                                type: "GET",
+                                url: '{{ url_for("routes.get_logger_shrink_state") }}',
+                                success: function (response) {
+                                    console.log("RESPONSE >>> ", response);
+                                    if (response.shrink) {
+                                        enableShrinkify = true;
+                                    } else {
+                                        enableShrinkify = false;
+                                    }
+                                },
+                                error: function (error) {
+                                    console.log("Error determining logger version:", error);
+                                },
+                            });
+
 
                             // Inform other code modules of the initial state of the game's high score
                             Frogger.observer.publish("high-score-change", _highScore);
