@@ -1,5 +1,6 @@
 import os
 import random
+import time
 import uuid
 from concurrent.futures import ThreadPoolExecutor
 from datetime import UTC, datetime
@@ -220,6 +221,8 @@ def wait_arcade():
         resp = make_response(
             redirect(f"http://{ARCADE_HOST}/player/{session["username"]}", code=302),
         )
+
+        time.sleep(1)
 
         return resp
 
