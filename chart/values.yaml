@@ -28,6 +28,18 @@ postgresql:
     database: "myapp"
   primary:
     resourcesPreset: "medium"
+    # https://stackoverflow.com/questions/30778015/how-to-increase-the-max-connections-in-postgres/32584211#32584211
+    # https://stackoverflow.com/questions/73218618/bitnami-postgresql-change-max-connections
+    extraEnvVars:
+      - name: POSTGRESQL_MAX_CONNECTIONS
+        value: "400"
+
+  readReplicas:
+    resourcesPreset: "small"
+    extraEnvVars:
+      # postgres gets v mad if not same as primary
+      - name: POSTGRESQL_MAX_CONNECTIONS
+        value: "400"
 
 tls:
   enabled: false
