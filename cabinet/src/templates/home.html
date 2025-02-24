@@ -238,37 +238,41 @@
         <main class="py-2">
             <form id="gameForm" action="{{url_for('routes.game')}}" method="POST">
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 overflow-x-auto px-6">
-                    <div data-game="imvaders" class="min-w-[300px] opacity-90 bg-gray-800 p-8 rounded-lg shadow-lg hover:shadow-2xl hover:shadow-cyan-500/50 p-4 flex flex-col items-center cursor-pointer" onclick="submitForm('imvaders', 'Fight the Space IMvaders!', 'imvader.html')">
+                    <div data-game="imvaders" class="relative min-w-[300px] opacity-90 bg-gray-800 p-8 rounded-lg shadow-lg hover:shadow-2xl hover:shadow-cyan-500/50 flex flex-col items-center cursor-pointer" onclick="submitForm('imvaders', 'Fight the Space IMvaders!', 'imvader.html')">
                         <h3 class="font-bold text-white text-lg mb-2 text-center">Space IMvaders</h3>
                         <p class="text-gray-400 text-center mb-4">Fight the Space IMvaders!<br>Ya know, for Infrastructure Monitoring.</p>
                         <img src="{{ url_for('static', filename='images/invaders_logo.png') }}" class="w-32 h-32 object-cover rounded-full">
                     </div>
 
-                    <div data-game="logger" class="min-w-[300px] opacity-90 bg-gray-800 p-8 rounded-lg shadow-lg hover:shadow-2xl hover:shadow-cyan-500/50 p-4 flex flex-col items-center cursor-pointer" onclick="submitForm('logger', 'Leap for your logs!', 'logger.html')">
+                    <div data-game="logger" class="relative min-w-[300px] opacity-90 bg-gray-800 p-8 rounded-lg shadow-lg hover:shadow-2xl hover:shadow-cyan-500/50 flex flex-col items-center cursor-not-allowed">
                         <h3 class="font-bold text-white text-lg mb-2 text-center">Logger</h3>
                         <p class="text-gray-400 text-center mb-4">Leap for your logs!<br>Keep them logs hoppin'!.</p>
                         <img src="{{ url_for('static', filename='images/frogger_logo.png') }}" class="w-32 h-32 object-cover rounded-full">
+                        <div class="locked-banner absolute bg-red-700 text-white text-sm font-bold text-center py-1 opacity-90" style="width: 110%; left: 50%; top: 50%; transform: translate(-50%, -50%) rotate(-27deg); white-space: nowrap; padding: 4px 10px; border-radius: 14px;">LOCKED - Answer questions to unlock!</div>
                     </div>
 
-                    <div data-game="bughunt" class="min-w-[300px] opacity-90 bg-gray-800 p-8 rounded-lg shadow-lg hover:shadow-2xl hover:shadow-cyan-500/50 p-4 flex flex-col items-center cursor-pointer" onclick="submitForm('bughunt', 'Hunt some bugs!', 'bughunt.html')">
+                    <div data-game="bughunt" class="relative min-w-[300px] opacity-90 bg-gray-800 p-8 rounded-lg shadow-lg hover:shadow-2xl hover:shadow-cyan-500/50 flex flex-col items-center cursor-not-allowed">
                         <h3 class="font-bold text-white text-lg mb-2 text-center">BugHunt</h3>
                         <p class="text-gray-400 text-center mb-4">Are you ready to hunt some bugs?<br><br></p>
                         <img src="{{ url_for('static', filename='images/duckhunt_logo.png') }}" class="w-28 h-28">
+                        <div class="locked-banner absolute bg-red-700 text-white text-sm font-bold text-center py-1 opacity-90" style="width: 110%; left: 50%; top: 50%; transform: translate(-50%, -50%) rotate(-27deg); white-space: nowrap; padding: 4px 10px; border-radius: 14px;">LOCKED - Answer questions to unlock!</div>
                     </div>
 
-                    <div data-game="floppybird" class="min-w-[300px] opacity-90 bg-gray-800 p-8 rounded-lg shadow-lg hover:shadow-2xl hover:shadow-cyan-500/50 p-4 flex flex-col items-center cursor-pointer" onclick="submitForm('flappybird', 'FlipFlapFlop', 'floppybird.html')">
+                    <div data-game="floppybird" class="relative min-w-[300px] opacity-90 bg-gray-800 p-8 rounded-lg shadow-lg hover:shadow-2xl hover:shadow-cyan-500/50 flex flex-col items-center cursor-not-allowed">
                         <h3 class="font-bold text-white text-lg mb-2 text-center">Floppy Bird</h3>
                         <p class="text-gray-400 text-center mb-4">More Floppy, less Flappy<br><br></p>
                         <img src="{{ url_for('static', filename='images/floppy_bird_logo.png') }}" class="w-28 h-28">
+                        <div class="locked-banner absolute bg-red-700 text-white text-sm font-bold text-center py-1 opacity-90" style="width: 110%; left: 50%; top: 50%; transform: translate(-50%, -50%) rotate(-27deg); white-space: nowrap; padding: 4px 10px; border-radius: 14px;">LOCKED - Answer questions to unlock!</div>
                     </div>
 
-                    <div data-game="zelda" class="min-w-[300px] opacity-90 bg-gray-800 p-8 rounded-lg shadow-lg hover:shadow-2xl hover:shadow-cyan-500/50 p-4 flex flex-col items-center cursor-pointer" onclick="submitForm('zelda', 'Are you the Link?', 'zelda.html')">
+                    <div data-game="zelda" class="relative min-w-[300px] opacity-90 bg-gray-800 p-8 rounded-lg shadow-lg hover:shadow-2xl hover:shadow-cyan-500/50 flex flex-col items-center cursor-not-allowed">
                         <h3 class="font-bold text-white text-lg mb-2 text-center">Zelda JS</h3>
                         <p class="text-gray-400 text-center mb-4">Are you the Link?<br><br></p>
                         <img src="{{ url_for('static', filename='images/zelda.png') }}" class="w-28 h-28">
+                        <div class="locked-banner absolute bg-red-700 text-white text-sm font-bold text-center py-1 opacity-90" style="width: 110%; left: 50%; top: 50%; transform: translate(-50%, -50%) rotate(-27deg); white-space: nowrap; padding: 4px 10px; border-radius: 14px;">LOCKED - Answer questions to unlock!</div>
                     </div>
 
-                    <div data-game="other" class="min-w-[300px] opacity-90 bg-gray-800 p-8 rounded-lg shadow-lg hover:shadow-2xl hover:shadow-cyan-500/50 p-4 flex flex-col items-center">
+                    <div data-game="other" class="relative min-w-[300px] opacity-90 bg-gray-800 p-8 rounded-lg shadow-lg hover:shadow-2xl hover:shadow-cyan-500/50 flex flex-col items-center cursor-not-allowed">
                         <h3 class="font-bold text-white text-lg mb-2 text-center">?!</h3>
                         <p class="text-gray-400 text-center mb-4">What could go here?<br><br></p>
                         <img src="{{ url_for('static', filename='images/tbd_logo.png') }}" class="w-32 h-32 object-cover rounded-full">
