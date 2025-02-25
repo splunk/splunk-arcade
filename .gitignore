@@ -33,4 +33,8 @@ venv
 
 # python things
 __pycache__
-*/node_modules
+util/questions-edit/node_modules
+util/questions-edit/public/index.html
+util/questions-edit/node_modules/array-flatten/README.md
+player-content/questions-test.json
+util/questions-edit/package-lock.json
