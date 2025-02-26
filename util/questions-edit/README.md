@@ -5,6 +5,7 @@ This is a **Node.js web application** that allows you to **edit JSON-based quiz 
 ---
 
 ## 🚀 Features
+
 - **Load and Edit Questions** from a JSON file.
 - **Validate** that each question has exactly **one correct answer**.
 - **Delete Questions** dynamically with automatic reordering.
@@ -16,46 +17,61 @@ This is a **Node.js web application** that allows you to **edit JSON-based quiz 
 ## 🛠 Installation
 
 ### **1️⃣ Prerequisites**
+
 - [Node.js](https://nodejs.org/) **(v16 or later)**
 - npm (comes with Node.js)
 
 ### **2 Install Dependencies:
+
+```sh
    npm install
+```
 
 ---
-## RUNNING THE APPLICATION:
 
-1) Start the server:
+## Running the application
+
+### **1️⃣ Start the server
+
+```sh
    node server.js
+```
 
-   OR specify a custom JSON file:
+OR specify a custom JSON file:
+
+```sh
    node server.js -f ../../player-content/questions.json
+```
 
-2) Access the UI:
-   Open a web browser and go to:
+### **2️⃣ Access the UI**
+
+- Open a browser and go to: 
+
    http://localhost:3000
 
---------------------------------------------------------------------
+---
 
-📦 splunk-arcade-editor
+## 📂 File Structure
+
+📦 questions-edit
  ├── public/          # Frontend UI (auto-generated)
  ├── server.js        # Main Node.js server
  ├── package.json     # Dependencies and scripts
  ├── README.md        # Documentation
 
---------------------------------------------------------------------
+---
 
-HOW TO USE:
+## 📌 How to Use
 
-1) Open the editor in your browser: http://localhost:3000
-2) Edit questions using the text fields.
-3) Delete questions using the "Delete" button.
-4) Ensure that one and only one correct answer is checked per question.
-5) Click "Save" to store changes in a new JSON file (*-new.json).
+1. **Open the Editor** at `http://localhost:3000`
+2. **Edit Questions** in the text fields.
+3. **Delete Questions** using the ❌ button.
+4. **Ensure One Correct Answer** is checked per question.
+5. **Click Save** to store changes in `*-new.json`.
 
---------------------------------------------------------------------
+---
 
-EXAMPLE QUESTION FORMAT:
+## 📜 Example Question Format
 
 ```json
 {
@@ -71,29 +87,35 @@ EXAMPLE QUESTION FORMAT:
 }
 ```
 
---------------------------------------------------------------------
+---
 
-VALIDATION RULES:
-- Every question must have one and only one correct answer.
-- Missing or multiple correct answers will prevent saving.
+## ⚠️ Validation Rules
+- **Every question must have one and only one correct answer.**
+- **Missing or multiple correct answers prevent saving.**
 
---------------------------------------------------------------------
+---
 
-TROUBLESHOOTING:
+## 🔧 Troubleshooting
 
-PORT ALREADY IN USE:
-- If port 3000 is already in use, try running:
-  PORT=5000 node server.js
-  Then visit http://localhost:5000
+### **Port Already in Use**
 
-FILE NOT FOUND ERROR:
-- Ensure that your JSON file exists at the specified path.
+If `3000` is in use, run:
 
---------------------------------------------------------------------
+```sh
+PORT=5000 node server.js
+```
 
-LICENSE:
+Then visit http://localhost:5000
+
+### **File Not Found Error**
+
+Ensure your JSON file exists at the specified path.
+
+---
+
+## 📜 License
 MIT License © 2024 Pieter Hagen / Splunk Arcade Team
 
---------------------------------------------------------------------
+---
 
-Enjoy Editing Your Splunk Arcade Questions!
+🚀 **Enjoy Editing Your Splunk Arcade Questions!** 🚀
