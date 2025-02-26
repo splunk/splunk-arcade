@@ -13,13 +13,18 @@ RUN apt-get update -y && \
     apt-get install -yq --no-install-recommends \
             ca-certificates \
             build-essential \
+            curl \
             gcc && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /var/cache/apt/archive/*.deb
 
+RUN curl -LsSf https://astral.sh/uv/install.sh | env UV_UNMANAGED_INSTALL="/usr/local/bin" sh
+
 # Install uv (a faster alternative to pip)
-RUN pip install --upgrade pip
-RUN pip install --no-cache-dir uv
+#RUN pip install --upgrade pip
+#RUN pip install --no-cache-dir uv
+RUN uv venv
+ENV PATH="/.venv/bin:$PATH"
 
 # Set the working directory
 WORKDIR /app
