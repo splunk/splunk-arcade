@@ -44,6 +44,13 @@
 </script>
 
 <script>
+    const gameTileOnClicks = {
+        logger: () => submitForm('logger', 'Leap for your logs!', 'logger.html'),
+        bughunt: () => submitForm('bughunt', 'Hunt some bugs!', 'bughunt.html'),
+        floppybird: () => submitForm('flappybird', 'FlipFlapFlop', 'floppybird.html'),
+        zelda: () => submitForm('zelda', 'Are you the Link?', 'zelda.html'),
+    };
+
     async function checkGameStatus() {
         try {
             let response = await fetch("{{url_for('routes.get_progression')}}");
@@ -76,37 +83,20 @@
     function updateUIWithGameState(gameState) {
         document.querySelectorAll("[data-game]").forEach(card => {
             let gameId = card.dataset.game;
-            let img = card.querySelector("img");
             let banner = card.querySelector(".locked-banner");
 
             card.classList.add("relative");
 
-            if (gameState[gameId] === "locked" && gameId !== "other") {
-                card.classList.add("cursor-not-allowed");
-                card.onclick = null;
-                card.setAttribute("title", "Answer questions to unlock games");
+            console.log("STATE > ", gameState[gameId], gameId);
 
-                if (!banner) {
-                    banner = document.createElement("div");
-                    banner.className = "locked-banner absolute bg-red-700 text-white text-sm font-bold text-center py-1 opacity-90";
-                    banner.innerText = "LOCKED - Answer questions to unlock!";
-                    banner.style.width = "110%";
-                    banner.style.left = "50%";
-                    banner.style.top = "50%";
-                    banner.style.transform = "translate(-50%, -50%) rotate(-27deg)";
-                    banner.style.whiteSpace = "nowrap";
-                    banner.style.padding = "4px 10px";
-                    banner.style.borderRadius = "14px";
-                    card.appendChild(banner);
-                }
-            } else if (gameId !== "other") {
+            if (gameState[gameId] === "unlocked" && gameId !== "other") {
                 card.classList.remove("cursor-not-allowed");
-                card.onclick = () => submitForm(gameId);
-                card.removeAttribute("title");
-                img.style.filter = "";
 
                 if (banner) {
-                    banner.remove();
+                    card.classList.remove("cursor-not-allowed");
+                    card.classList.add("cursor-pointer");
+                    card.removeChild(banner);
+                    card.onclick = gameTileOnClicks[gameId];
                 }
             }
         });

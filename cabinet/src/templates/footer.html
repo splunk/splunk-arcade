@@ -44,6 +44,7 @@
             url: '{{ url_for("routes.reset_quiz_scores") }}',
             success: function(_) {
                 alert("Quiz score data has been reset!");
+                location.reload(); // force page reload to re-render the locked banners etc
             },
             error: function(error) {
                 console.log(error);
