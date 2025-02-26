@@ -20,14 +20,12 @@ RUN apt-get update -y && \
 
 RUN curl -LsSf https://astral.sh/uv/install.sh | env UV_UNMANAGED_INSTALL="/usr/local/bin" sh
 
-# Install uv (a faster alternative to pip)
-#RUN pip install --upgrade pip
-#RUN pip install --no-cache-dir uv
-RUN uv venv
-ENV PATH="/.venv/bin:$PATH"
-
 # Set the working directory
 WORKDIR /app
+
+# Install uv (a faster alternative to pip)
+RUN uv venv
+ENV PATH="/.venv/bin:$PATH"
 
 # Copy the requirements file
 COPY requirements.txt requirements.txt
