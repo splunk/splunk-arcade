@@ -2,7 +2,8 @@ FROM debian:bookworm-slim
 
 ARG TERRAFORM_VERSION=1.10.5
 
-RUN apt-get update && \
+RUN DEBIAN_FRONTEND=noninteractive; \
+    apt-get update && \
     apt-get install -yq --no-install-recommends \
             ca-certificates \
             curl \

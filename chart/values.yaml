@@ -1,6 +1,6 @@
 ---
 appName: splunk-arcade
-arcadeHost: splunk-arcade.home
+arcadeHost: www.splunkarcade.com 
 
 # when unset openai integration is simply disabled
 openaiApiKey: ""
@@ -42,7 +42,7 @@ postgresql:
         value: "400"
 
 tls:
-  enabled: false
+  enabled: true
   secret_name: splunk-arcade-tls
 
 splunk-otel-collector:

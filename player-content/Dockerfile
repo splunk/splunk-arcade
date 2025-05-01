@@ -3,18 +3,17 @@ FROM python:3.12-slim-bullseye
 
 # Set environment variables
 ENV PYTHONUNBUFFERED=1
+ENV PIP_ROOT_USER_ACTION=ignore
 
 # Expose port 5000
 EXPOSE 5000
 
 # Install system dependencies
 # hadolint ignore=DL3008
-RUN apt-get update -y && \
+RUN DEBIAN_FRONTEND=noninteractive; \
+    apt-get update -y && \
     apt-get install -yq --no-install-recommends \
-            ca-certificates \
-            build-essential \
-            curl \
-            gcc && \
+            curl && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /var/cache/apt/archive/*.deb
 
@@ -31,7 +30,7 @@ ENV PATH="/.venv/bin:$PATH"
 COPY requirements.txt requirements.txt
 
 # Install Python dependencies using uv
-RUN uv pip install --system -r requirements.txt
+RUN uv pip install --system --upgrade pip -r requirements.txt
 
 # Copy the rest of the application code
 COPY . .

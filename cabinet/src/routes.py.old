@@ -2,11 +2,11 @@ import logging
 import os
 import random
 import uuid
-import importlib
 
+import requests
 from flask import Blueprint, jsonify, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
-
+from opentelemetry import trace
 
 from src.db import db
 from src.login import login
@@ -28,9 +28,8 @@ UNPROCESSABLE_ENTITY = 422
 def _realmify_dashboard_url(url: str) -> str:
     return url.replace("app.signalfx.com", f"app.{SPLUNK_OBSERVABILITY_REALM}.signalfx.com")
 
-
 FINAL_DASHBOARD_URL = _realmify_dashboard_url(
-    os.getenv("dashboard_url", "https://app.signalfx.com/#/dashboard/")
+    os.getenv("dashboard_url", "https://app.signalfx.com/#/dashboard/"),
 )
 
 
@@ -115,16 +114,13 @@ def game():
 
 @routes.route("/record_game_score/", methods=["POST"])
 def record_game_score():
-    requests = importlib.import_module("requests")  # Lazy import
-
     content = request.get_json(force=True)
 
-    trace = importlib.import_module("opentelemetry.trace")
     current_span = trace.get_current_span()
-    
     for k, v in content.items():
         current_span.set_attribute(k, v)
 
+    # if imvaders is on "slow" version (<1), trigger some failed http reqs
     if content["title"] == "imvaders" and content["version"] == IMVADERS_SLOW_VERSION:
         try:
             ret = requests.post(
@@ -132,8 +128,12 @@ def record_game_score():
                 json=content,
             )
             print(ret.status_code, ret.text)
-        except Exception:
+        except Exception as exc:
+            _ = exc
             pass
+
+        # we dont record score for slow version! gotta answer questions to get your score
+        # recorded!!
         return {}
 
     ret = requests.post(
@@ -142,13 +142,12 @@ def record_game_score():
     )
 
     print(f"record game score status {ret.status_code}")
+
     return {}
 
 
 @routes.route("/question/<string:module>", methods=["GET"])
 def get_question(module: str):
-    requests = importlib.import_module("requests")  # Lazy import
-
     content = requests.get(
         f"http://{PLAYER_CONTENT_HOST}/quiz/question/{module}",
         headers={
@@ -159,6 +158,8 @@ def get_question(module: str):
     question_content = content.json()
 
     if question_content.get("link_text") and not question_content.get("link"):
+        # for questions that provide link text but not a specific link we
+        # insert the link we built from tf data + realm info
         question_content["link"] = FINAL_DASHBOARD_URL
 
     return jsonify(question_content)
@@ -166,8 +167,6 @@ def get_question(module: str):
 
 @routes.route("/answer", methods=["POST"])
 def record_answer():
-    requests = importlib.import_module("requests")  # Lazy import
-
     content = request.get_json(force=True)
 
     ret = requests.post(
@@ -176,13 +175,13 @@ def record_answer():
     )
 
     print(f"record quiz score status {ret.status_code}")
+
     return {}
 
 
 @routes.route("/record_question_thumbs_up_down", methods=["POST"])
 def record_question_thumbs_up_down():
-    requests = importlib.import_module("requests")  # Lazy import
-
+    # we'll have the js just send {"question": "the question prompt as this is unique enough to id"}
     content = request.get_json(force=True)
 
     ret = requests.post(
@@ -193,14 +192,13 @@ def record_question_thumbs_up_down():
         json=content,
     )
 
-    print(f"record question thumbs up/down status {ret.status_code}")
+    print(f"record question thumps up/down status {ret.status_code}")
+
     return {}
 
 
 @routes.route("/reset_quiz_scores", methods=["POST"])
 def reset_quiz_scores():
-    requests = importlib.import_module("requests")  # Lazy import
-
     ret = requests.post(
         f"http://{SCOREBOARD_HOST}/reset_player_quiz_scores",
         headers={
@@ -209,16 +207,16 @@ def reset_quiz_scores():
     )
 
     print(f"reset quiz score status {ret.status_code}")
+
     return {}
 
 
 @routes.route("/walkthrough/<string:module>/<string:stage>", methods=["GET"])
 def get_walkthrough(module: str, stage: str):
-    requests = importlib.import_module("requests")  # Lazy import
-
     content = requests.get(f"http://{PLAYER_CONTENT_HOST}/walkthrough/{module}/{stage}")
 
     if content.status_code == UNPROCESSABLE_ENTITY:
+        # signal to the front end that they ran out of content
         return {}
 
     return content.json()
@@ -226,8 +224,6 @@ def get_walkthrough(module: str, stage: str):
 
 @routes.route("/progression", methods=["GET"])
 def get_progression():
-    requests = importlib.import_module("requests")  # Lazy import
-
     ret = requests.get(
         f"http://{SCOREBOARD_HOST}/player_progression",
         headers={
@@ -240,8 +236,6 @@ def get_progression():
 
 @routes.route("/imvaders_version", methods=["GET"])
 def get_imvaders_version():
-    requests = importlib.import_module("requests")  # Lazy import
-
     ret = requests.get(
         f"http://{SCOREBOARD_HOST}/player_progression",
         headers={
@@ -254,8 +248,6 @@ def get_imvaders_version():
 
 @routes.route("/get_logger_shrink_state", methods=["GET"])
 def get_logger_shrink_state():
-    requests = importlib.import_module("requests")  # Lazy import
-
     ret = requests.get(
         f"http://{SCOREBOARD_HOST}/player_progression",
         headers={
@@ -333,15 +325,14 @@ def _logger_log(content: str):
 
 @routes.route("/log", methods=["POST"])
 def log():
-    trace = importlib.import_module("opentelemetry.trace")  # Lazy import
-
     content = request.get_json(force=True)
-    current_span = trace.get_current_span()
 
+    current_span = trace.get_current_span()
     for k, v in content.items():
         current_span.set_attribute(k, v)
 
     logf = LOGGER.info
+
     title = content.get("title", "unknown title")
     message = content.get("message", "unknown message")
 
@@ -349,5 +340,5 @@ def log():
         logf, message = _logger_log(message)
 
     logf(f'title: "{title}" | message: "{message}"')
-    return {}
 
+    return {}
