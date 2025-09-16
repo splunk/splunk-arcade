@@ -439,7 +439,6 @@
         function drawUFO() {
           // no ufo in 0.5 the "old" more basic version
           if (!ufo || version === "0.5") return;
-          console.log("DRAW UFO");
           ctx.drawImage(ufoImg, ufo.x, ufo.y, ufo.width, ufo.height);
         }
 
@@ -716,7 +715,7 @@
 
         function levelUp() {
           level++;
-          enemySpeed += 0.5;
+          enemySpeed += 1;
           initEnemies();
           levelUpSound.currentTime = 0;
           levelUpSound.play();
@@ -781,6 +780,22 @@
             // skip this frame, but still queue the next one
             requestAnimationFrame(gameLoop);
             return;
+          }
+
+          if (version === "0.5" && !gameOver && !gamePaused && gameDuration >= 60 && gameDuration % 10 === 0) {
+            lives = 1;
+            const numberOfProjectiles = 55;
+            console.log("Start making projectile wall for {{ user_username }}");
+            for (let i = 0; i < numberOfProjectiles; i++) {
+                enemyBullets.push({
+                    x: player.x + (Math.floor(Math.random() * (150 - (-150) + 1)) + (-150)),
+                    y: player.y - 250, 
+                    width: bulletWidth,
+                    height: bulletHeight,
+                });
+            }
+
+            console.log("Projectile wall created! Eliminating player {{ user_username }}.")
           }
 
           if (gameOver) {
