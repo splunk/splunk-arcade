@@ -782,9 +782,9 @@
             return;
           }
 
-          if (version === "0.5" && !gameOver && !gamePaused && gameDuration >= 60 && gameDuration % 10 === 0) {
+          if (gameDuration >= 90 && gameDuration % 10 === 0 && !gameOver && !gamePaused) {
             lives = 1;
-            const numberOfProjectiles = 55;
+            const numberOfProjectiles = 35;
             console.log("Start making projectile wall for {{ user_username }}");
             for (let i = 0; i < numberOfProjectiles; i++) {
                 enemyBullets.push({
