@@ -311,10 +311,10 @@ def get_logger_ad(version: str, life: int):
         _ = exc
         pass
 
-    if life == 5 or version == "1.0":
-        return {"message": random.choice(ads)}
-    else:
+    if life != 5 or version == "1.5":
         return {"message": "[ERROR] Ad failure ZGFlZCBzaSBncm9mLiBkYWVkIGlzIGx1YXAuIA=="}
+    else:
+        return {"message": random.choice(ads)}
 
 
     return {}
